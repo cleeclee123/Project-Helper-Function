@@ -38,47 +38,15 @@ async function fetchGoogleSearchData(searchQuery) {
   return newGoogleSearchDataPromise;
 }
 
-// scraps the top title and links for search query
-function getGoogleSearchLinks(searchQuery) {
-  // calls fetchGoogleSearchData from axios (promise)
-  const searchData = fetchGoogleSearchData(searchQuery); 
-
-  // calls .then on promise to capture results
-  // start to scrap here 
-  searchData.then(function(data) {
-
-    // load markup with cheerio
-    let $ = cheerio.load(data);
-
-    // array : store data points
-    const links = [];
-    const titles = [];
-
-    // loop through html class ".yuRUbf" to hyperlink tag
-    $(".yuRUbf > a").each((index, element) => {
-      links[index] = $(element).attr("href");
-    });
-
-    // loop through html class ".yuRUbf" to hyperlink tag to header tag
-    $(".yuRUbf > a > h3").each((index, element) => {
-      titles[index] = $(element).text();
-    });
-
-    // fill array with result object
-    const results = [];
-    for (let i = 0; i < links.length; i++) {
-      results[i] = {
-        link: links[i],
-        title: titles[i],
-      };
-    }
-    console.log(results);
-    // return results;
-  });
-}
-
-// scraps the top title and links for search query
+// scraps the top title and links for search query with programming language as a parameter
 function getGoogleSearchLinksLang(searchQuery, pLanguage) {
+  // user choice of programming language, account for empty/null choice
+  // most likely will be a dropdown menu on client side
+  const defaultLanguage = "javascript";
+  if (!!pLanguage) {
+    pLanguage = defaultLanguage;
+  }
+
   // calls fetchGoogleSearchData from axios (promise)
   const searchData = fetchGoogleSearchData(searchQuery + " " + pLanguage); 
 
@@ -117,4 +85,4 @@ function getGoogleSearchLinksLang(searchQuery, pLanguage) {
 }
 
 
-getGoogleSearchLinksLang("is a palidrome", "javascript");
+getGoogleSearchLinksLang("is a palidrome", );
