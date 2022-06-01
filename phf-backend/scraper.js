@@ -39,6 +39,7 @@ async function fetchGoogleSearchData(searchQuery) {
 }
 
 // scraps the top title and links for search query with programming language as a parameter
+// need to return array of results object from google search data
 function getGoogleSearchLinksLang(searchQuery, pLanguage) {
   // user choice of programming language, account for empty/null choice
   // most likely will be a dropdown menu on client side
