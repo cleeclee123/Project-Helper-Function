@@ -39,22 +39,27 @@ async function fetchGoogleSearchData(searchQuery) {
 }
 
 // scraps the top title and links for search query with programming language as a parameter
-// need to return array of results object from google search data
-function getGoogleSearchLinksLang(searchQuery, pLanguage) {
+// return array of result objects from google search data
+async function getGoogleSearchLinksLang(searchQuery, pLanguage) {
+  // "c++" is not recognized, search query to "plus plus"
+  if (pLanguage === "c++") {
+    pLanguage === "c plus plus";
+  }
+  
   // user choice of programming language, account for empty/null choice
   // most likely will be a dropdown menu on client side
   const defaultLanguage = "javascript";
-  if (!!pLanguage) {
+  if (pLanguage === "" || pLanguage === null) {
     pLanguage = defaultLanguage;
   }
 
+  // encode search query to represent UTF-8, URLs can only have certain characters from ASCII set
+  const encodedPLanguage = encodeURI(pLanguage);
+
   // calls fetchGoogleSearchData from axios (promise)
-  const searchData = fetchGoogleSearchData(searchQuery + " " + pLanguage); 
+  const searchData = fetchGoogleSearchData(searchQuery + " " + encodedPLanguage); 
 
-  // calls .then on promise to capture results
-  // start to scrap here 
-  searchData.then(function(data) {
-
+  return searchData.then(async function(data) {
     // load markup with cheerio
     let $ = cheerio.load(data);
 
@@ -80,10 +85,16 @@ function getGoogleSearchLinksLang(searchQuery, pLanguage) {
         title: titles[i],
       };
     }
-    console.log(results);
-    // return results;
+    return results;
   });
 }
 
 
-getGoogleSearchLinksLang("is a palidrome", );
+// testing 
+const results = getGoogleSearchLinksLang("is a palidrome", "java");
+results.then(function(data){
+  data.forEach(function(i) {
+    console.log(i.link);
+  })
+});
+
