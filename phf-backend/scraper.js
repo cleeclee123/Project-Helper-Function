@@ -24,15 +24,12 @@ function getGoogleSearchLinks(searchQuery) {
     },
   };
 
-  // fill array with result object
-  const results = [];
-
   axios
     .get(
       `https://www.google.com/search?q=${encodedSearch} + ${languageSearch} + ${countrySearch} + ${numberOfResults} `,
       options
     )
-    .then(function({ data }) {
+    .then(async function({ data }) {
       let $ = cheerio.load(data);
 
       const links = [];
@@ -46,6 +43,8 @@ function getGoogleSearchLinks(searchQuery) {
         titles[index] = $(element).text();
       });
 
+      // fill array with result object
+      const results = [];
       for (let i = 0; i < links.length; i++) {
         results[i] = {
           link: links[i],
@@ -55,8 +54,7 @@ function getGoogleSearchLinks(searchQuery) {
 
       console.log(results);
     });
-  
-  return results;
+
 }
 
 getGoogleSearchLinks("is a palindrome");
