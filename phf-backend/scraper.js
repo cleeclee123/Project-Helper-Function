@@ -24,26 +24,28 @@ function getGoogleSearchLinks(searchQuery) {
     },
   };
 
-  return axios
+  // fill array with result object
+  const results = [];
+
+  axios
     .get(
       `https://www.google.com/search?q=${encodedSearch} + ${languageSearch} + ${countrySearch} + ${numberOfResults} `,
       options
     )
-    .then(function ({ data }) {
+    .then(function({ data }) {
       let $ = cheerio.load(data);
 
       const links = [];
       const titles = [];
 
-      $(".yuRUbf > a").each((i, el) => {
-        links[i] = $(el).attr("href");
+      $(".yuRUbf > a").each((index, element) => {
+        links[index] = $(element).attr("href");
       });
 
-      $(".yuRUbf > a > h3").each((i, el) => {
-        titles[i] = $(el).text();
+      $(".yuRUbf > a > h3").each((index, element) => {
+        titles[index] = $(element).text();
       });
 
-      const results = [];
       for (let i = 0; i < links.length; i++) {
         results[i] = {
           link: links[i],
@@ -51,8 +53,12 @@ function getGoogleSearchLinks(searchQuery) {
         };
       }
 
-      console.log(result);
+      console.log(results);
     });
+  
+  return results;
 }
 
 getGoogleSearchLinks("is a palindrome");
+
+
