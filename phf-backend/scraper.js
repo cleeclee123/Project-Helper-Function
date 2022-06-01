@@ -16,7 +16,7 @@ async function fetchGoogleSearchData(searchQuery) {
 
   // default 3,4 results
   // add "see another solution feature"
-  const numberOfResults = "&num=4";
+  const numberOfResults = "&num=3";
 
   // write header interface
   const options = {
@@ -46,73 +46,75 @@ function getGoogleSearchLinks(searchQuery) {
   // calls .then on promise to capture results
   // start to scrap here 
   searchData.then(function(data) {
-    console.log(data);
-  })
+
+    // load markup with cheerio
+    let $ = cheerio.load(data);
+
+    // array : store data points
+    const links = [];
+    const titles = [];
+
+    // loop through html class ".yuRUbf" to hyperlink tag
+    $(".yuRUbf > a").each((index, element) => {
+      links[index] = $(element).attr("href");
+    });
+
+    // loop through html class ".yuRUbf" to hyperlink tag to header tag
+    $(".yuRUbf > a > h3").each((index, element) => {
+      titles[index] = $(element).text();
+    });
+
+    // fill array with result object
+    const results = [];
+    for (let i = 0; i < links.length; i++) {
+      results[i] = {
+        link: links[i],
+        title: titles[i],
+      };
+    }
+    console.log(results);
+    // return results;
+  });
 }
 
 // scraps the top title and links for search query
-/* function getGoogleSearchLinks(searchQuery) {
-  const googleSearchData = fetchGoogleSearchData(searchQuery).()
-}  */
+function getGoogleSearchLinksLang(searchQuery, pLanguage) {
+  // calls fetchGoogleSearchData from axios (promise)
+  const searchData = fetchGoogleSearchData(searchQuery + " " + pLanguage); 
 
-/* 
-// scraps the top title and links for search query
-function getGoogleSearchLinks(searchQuery) {
-  // encode search query to represent UTF-8, URLs can only have certain characters from ASCII set
-  const encodedSearch = encodeURI(searchQuery);
+  // calls .then on promise to capture results
+  // start to scrap here 
+  searchData.then(function(data) {
 
-  // default english
-  const languageSearch = "&hl=en";
+    // load markup with cheerio
+    let $ = cheerio.load(data);
 
-  // default united states
-  const countrySearch = "&gl=us";
+    // array : store data points
+    const links = [];
+    const titles = [];
 
-  // default 3,4 results
-  // add "see another solution feature"
-  const numberOfResults = "&num=4";
+    // loop through html class ".yuRUbf" to hyperlink tag
+    $(".yuRUbf > a").each((index, element) => {
+      links[index] = $(element).attr("href");
+    });
 
-  // write header interface
-  const options = {
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36",
-    },
-  };
+    // loop through html class ".yuRUbf" to hyperlink tag to header tag
+    $(".yuRUbf > a > h3").each((index, element) => {
+      titles[index] = $(element).text();
+    });
 
-  axios
-    .get(
-      `https://www.google.com/search?q=${encodedSearch} + ${languageSearch} + ${countrySearch} + ${numberOfResults} `,
-      options
-    )
-    .then(async function({ data }) {
-      let $ = cheerio.load(data);
-
-      const links = [];
-      const titles = [];
-
-      $(".yuRUbf > a").each((index, element) => {
-        links[index] = $(element).attr("href");
-      });
-
-      $(".yuRUbf > a > h3").each((index, element) => {
-        titles[index] = $(element).text();
-      });
-
-      // fill array with result object
-      const results = [];
-      for (let i = 0; i < links.length; i++) {
-        results[i] = {
-          link: links[i],
-          title: titles[i],
-        };
-      }
-
-      console.log(results);
-    }); 
+    // fill array with result object
+    const results = [];
+    for (let i = 0; i < links.length; i++) {
+      results[i] = {
+        link: links[i],
+        title: titles[i],
+      };
+    }
+    console.log(results);
+    // return results;
+  });
 }
 
-getGoogleSearchLinks("is a palindrome");
 
- */
-
-getGoogleSearchLinks("test");
+getGoogleSearchLinksLang("is a palidrome", "javascript");
