@@ -94,7 +94,7 @@ async function getGoogleSearchLinksLang(searchQuery, pLanguage) {
 const results = getGoogleSearchLinksLang("is a palidrome", "java");
 results.then(function(data){
   data.forEach(function(i) {
-    console.log(i.link);
+    console.log(i.title + " : " + i.link);
   })
 });
 
