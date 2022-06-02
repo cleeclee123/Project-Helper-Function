@@ -38,23 +38,40 @@ async function fetchGoogleSearchData(searchQuery) {
   return newGoogleSearchDataPromise;
 }
 
+// function helper for the search function to interpret the "++" in "c++"
+function helperConvertToWord(input) {
+  var returnString = input.toLowerCase();
+  returnString = returnString.replace("+", "plus");
+  return returnString;
+}
+
 // scraps the top title and links for search query with programming language as a parameter
 // return array of result objects from google search data
 async function getGoogleSearchLinksLang(searchQuery, pLanguage) {
-  // "c++" is not recognized, search query to "plus plus"
-  if (pLanguage === "c++") {
-    pLanguage === "c plus plus";
+  // default paraemter values:
+  // default search query (result on landing page)
+  const defaultSearch = "hello world";
+  if (searchQuery === "" || 
+  searchQuery === null || 
+    // demorgans law negation of (typeof myVar === 'string' || myVar instanceof String) => string
+    (!(typeof searchQuery === "string") && 
+    !(searchQuery instanceof String))) {
+    searchQuery = defaultSearch;
   }
-  
+
   // user choice of programming language, account for empty/null choice
   // most likely will be a dropdown menu on client side
   const defaultLanguage = "javascript";
-  if (pLanguage === "" || pLanguage === null) {
+  if (pLanguage === "" || 
+      pLanguage === null || 
+      // demorgans law negation of (typeof myVar === 'string' || myVar instanceof String) => string
+      (!(typeof pLanguage === "string") && 
+      !(pLanguage instanceof String))) {
     pLanguage = defaultLanguage;
   }
 
   // encode search query to represent UTF-8, URLs can only have certain characters from ASCII set
-  const encodedPLanguage = encodeURI(pLanguage);
+  const encodedPLanguage = encodeURI(helperConvertToWord(pLanguage));
 
   // calls fetchGoogleSearchData from axios (promise)
   const searchData = fetchGoogleSearchData(searchQuery + " " + encodedPLanguage); 
@@ -63,6 +80,7 @@ async function getGoogleSearchLinksLang(searchQuery, pLanguage) {
     // load markup with cheerio
     let $ = cheerio.load(data);
 
+    // building result object
     // array : store data points
     const links = [];
     const titles = [];
@@ -187,11 +205,29 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
   // linkState will scrap the corresponding website
   // return "code" object that represents the original searchQuery and corresponding programming language
   if (linkState == 1) {
+    return resultDataLinkOne.then(async function(data) {
+      // load markup with cheerio
+      let $ = data.load(data);
 
+      // build "code" object
+
+    });
   } else if (linkState == 2) {
+    return resultDataLinkTwo.then(async function(data) {
+      // load markup with cheerio
+      let $ = data.load(data);
 
+      // build "code" object
+
+    });
   } else if (linkState == 3) {
+    return resultDataLinkThree.then(async function(data) {
+      // load markup with cheerio
+      let $ = data.load(data);
 
+      // build "code" object
+
+    });
   } else {
     throw "linkState Error";
   }
@@ -199,9 +235,8 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
 
 // testing 
-const result = ""; 
-result = fetchThirdResultData("is a palindrome", "c plus plus");
-// const result = getGoogleSearchLinksLang("is a palindrome", "c plus plus");
+// const result = fetchThirdResultData("is a palindrome", "c plus plus");
+const result = getGoogleSearchLinksLang("is a palindrome", "c++");
 result.then(function(data) {
   console.log(data);
 });
