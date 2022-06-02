@@ -116,9 +116,79 @@ async function fetchFirstResultData(searchQuery, pLanguage) {
   });
 }
 
+// function to data from the second link in the result object from axios
+async function fetchSecondResultData(searchQuery, pLanguage) {
+  // array of result objects, holds the top three results (link, title) from google
+  const results = getGoogleSearchLinksLang(searchQuery, pLanguage);
+
+  // data is array of result objects
+  // makes call to axios to get data from the first link
+  return results.then(async function(data) {
+
+    // write header interface
+    const options = {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36",
+      },
+    };
+
+    // first link data from array of result object with axios
+    const firstLinkData = await axios.get(data[1].link, options);
+
+    // new first link data promise
+    const firstLinkDataPromise = await firstLinkData.data;
+
+    return firstLinkDataPromise;
+  });
+}
+
+// function to data from the third link in the result object from axios
+async function fetchThirdResultData(searchQuery, pLanguage) {
+  // array of result objects, holds the top three results (link, title) from google
+  const results = getGoogleSearchLinksLang(searchQuery, pLanguage);
+
+  // data is array of result objects
+  // makes call to axios to get data from the first link
+  return results.then(async function(data) {
+
+    // write header interface
+    const options = {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36",
+      },
+    };
+
+    // first link data from array of result object with axios
+    const firstLinkData = await axios.get(data[2].link, options);
+
+    // new first link data promise
+    const firstLinkDataPromise = await firstLinkData.data;
+
+    return firstLinkDataPromise;
+  });
+}
+
+// function to start scraping data from result object links, takes in searchQuery, pLanguage, and state of result link
+// linkState is an int that repersents which link in the result array (1, 2, 3)
+// linkState will be a dropdown menu/next button on the frontend
+async function getResultDataLinks(searchQuery, pLanguage, linkState) {
+  /* const resultData = ""; 
+  if (linkState == 1) {
+
+  } else if (linkState == 2) {
+
+  } else if (linkState == 3) {
+
+  } else {
+    throw 
+  } */
+}
+
 
 // testing 
-const result = fetchFirstResultData("is a palindrome", "c plus plus");
+const result = fetchThirdResultData("is a palindrome", "c plus plus");
 // const result = getGoogleSearchLinksLang("is a palindrome", "c plus plus");
 result.then(function(data) {
   console.log(data);
