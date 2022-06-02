@@ -170,11 +170,22 @@ async function fetchThirdResultData(searchQuery, pLanguage) {
   });
 }
 
+// returns "code" object
 // function to start scraping data from result object links, takes in searchQuery, pLanguage, and state of result link
 // linkState is an int that repersents which link in the result array (1, 2, 3)
 // linkState will be a dropdown menu/next button on the frontend
 async function getResultDataLinks(searchQuery, pLanguage, linkState) {
-  /* const resultData = ""; 
+  // page data from link one in reuslt object array
+  const resultDataLinkOne = fetchFirstResultData(searchQuery, pLanguage);
+
+  // page data from link two in reuslt object array
+  const resultDataLinkTwo = fetchSecondResultData(searchQuery, pLanguage);
+  
+  // page data from link three in reuslt object array
+  const resultDataLinkThree = fetchThirdResultData(searchQuery, pLanguage);
+  
+  // linkState will scrap the corresponding website
+  // return "code" object that represents the original searchQuery and corresponding programming language
   if (linkState == 1) {
 
   } else if (linkState == 2) {
@@ -182,13 +193,14 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
   } else if (linkState == 3) {
 
   } else {
-    throw 
-  } */
+    throw "linkState Error";
+  }
 }
 
 
 // testing 
-const result = fetchThirdResultData("is a palindrome", "c plus plus");
+const result = ""; 
+result = fetchThirdResultData("is a palindrome", "c plus plus");
 // const result = getGoogleSearchLinksLang("is a palindrome", "c plus plus");
 result.then(function(data) {
   console.log(data);
