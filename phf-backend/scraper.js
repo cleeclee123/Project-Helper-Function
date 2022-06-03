@@ -16,7 +16,7 @@ async function fetchGoogleSearchData(searchQuery) {
 
   // default 3,4 results
   // add "see another solution feature"
-  const numberOfResults = "&num=3";
+  const numberOfResults = "&num=5";
 
   // write header interface
   const options = {
@@ -124,13 +124,13 @@ async function fetchFirstResultData(searchQuery, pLanguage) {
       },
     };
 
-    // first link data from array of result object with axios
-    const firstLinkData = await axios.get(data[0].link, options);
+    // link data from array of result object with axios
+    const linkData = await axios.get(data[0].link, options);
 
-    // new first link data promise
-    const firstLinkDataPromise = await firstLinkData.data;
+    // new link data promise
+    const linkDataPromise = await linkData.data;
 
-    return firstLinkDataPromise;
+    return linkDataPromise;
   });
 }
 
@@ -151,13 +151,13 @@ async function fetchSecondResultData(searchQuery, pLanguage) {
       },
     };
 
-    // first link data from array of result object with axios
-    const firstLinkData = await axios.get(data[1].link, options);
+    // link data from array of result object with axios
+    const linkData = await axios.get(data[1].link, options);
 
-    // new first link data promise
-    const firstLinkDataPromise = await firstLinkData.data;
+    // new link data promise
+    const linkDataPromise = await linkData.data;
 
-    return firstLinkDataPromise;
+    return linkDataPromise;
   });
 }
 
@@ -178,13 +178,67 @@ async function fetchThirdResultData(searchQuery, pLanguage) {
       },
     };
 
-    // first link data from array of result object with axios
-    const firstLinkData = await axios.get(data[2].link, options);
+    // link data from array of result object with axios
+    const linkData = await axios.get(data[2].link, options);
 
-    // new first link data promise
-    const firstLinkDataPromise = await firstLinkData.data;
+    // new link data promise
+    const linkDataPromise = await linkData.data;
 
-    return firstLinkDataPromise;
+    return linkDataPromise;
+  });
+}
+
+// function to data from the forth link in the result object from axios
+async function fetchForthResultData(searchQuery, pLanguage) {
+  // array of result objects, holds the top three results (link, title) from google
+  const results = getGoogleSearchLinksLang(searchQuery, pLanguage);
+
+  // data is array of result objects
+  // makes call to axios to get data from the first link
+  return results.then(async function(data) {
+
+    // write header interface
+    const options = {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36",
+      },
+    };
+
+    // link data from array of result object with axios
+    const linkData = await axios.get(data[3].link, options);
+
+    // new link data promise
+    const linkDataPromise = await linkData.data;
+
+    return linkDataPromise;
+  });
+}
+
+// function to data from the forth link in the result object from axios
+async function fetchFifthResultData(searchQuery, pLanguage) {
+  // array of result objects, holds the top three results (link, title) from google
+  const results = getGoogleSearchLinksLang(searchQuery, pLanguage);
+
+  // data is array of result objects
+  // makes call to axios to get data from the first link
+  return results.then(async function(data) {
+
+    // write header interface
+    const options = {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36",
+      },
+    };
+
+    // link data from array of result object with axios
+    const linkData = await axios.get(data[4].link, options);
+
+    // first link data promise
+    const linkDataPromise = await linkData.data;
+
+    return linkDataPromise;
   });
 }
 
@@ -201,6 +255,12 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
   
   // page data from link three in reuslt object array
   const resultDataLinkThree = fetchThirdResultData(searchQuery, pLanguage);
+
+  // page data from link four in reuslt object array
+  const resultDataLinkFour = fetchFourthResultData(searchQuery, pLanguage);
+
+  // page data from link five in reuslt object array
+  const resultDataLinkFive = fetchFifthResultData(searchQuery, pLanguage);
   
   // linkState will scrap the corresponding website
   // return "code" object that represents the original searchQuery and corresponding programming language
@@ -228,8 +288,24 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       // build "code" object
 
     });
+  } else if (linkState == 4) {
+    return resultDataLinkFour.then(async function(data) {
+      // load markup with cheerio
+      let $ = data.load(data);
+
+      // build "code" object
+
+    });
+  } else if (linkState == 5) {
+    return resultDataLinkFive.then(async function(data) {
+      // load markup with cheerio
+      let $ = data.load(data);
+
+      // build "code" object
+
+    });
   } else {
-    throw "linkState Error";
+    throw "linkState Error"
   }
 }
 
