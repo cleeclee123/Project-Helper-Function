@@ -329,8 +329,9 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
 /* FUNCTIONS TO IMPLEMENT */
 
-// data cleaning function 
-// comes out very messy in some cases 
+// data cleaning function, comes out very messy in some cases 
+
+// http server proxy (in server file)
 
 
 
