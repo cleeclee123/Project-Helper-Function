@@ -4,42 +4,10 @@ const promise = require("promise");
 const Captcha = require("2captcha");
 
 // write request header interface for google 
-const OPTIONS_GOOGLE = {
+const OPTIONS = {
   headers: {
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", 
-    "Accept-Encoding": "gzip, deflate, br", 
-    "Accept-Language": "en-US,en;q=0.9", 
-    "Referer": "https://www.google.com", 
-    "Sec-Ch-Ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"102\", \"Google Chrome\";v=\"102\"", 
-    "Sec-Ch-Ua-Mobile": "?0", 
-    "Sec-Ch-Ua-Platform": "\"Windows\"", 
-    "Sec-Fetch-Dest": "document", 
-    "Sec-Fetch-Mode": "navigate", 
-    "Sec-Fetch-Site": "cross-site", 
-    "Sec-Fetch-User": "?1", 
-    "Upgrade-Insecure-Requests": "1", 
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36", 
-    "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18"
-  },
-};
-
-// write request header interface for bing (just the user-agent)
-const OPTIONS_BING = {
-  headers: {
-    // "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", 
-    // "Accept-Encoding": "gzip, deflate, br", 
-    // "Accept-Language": "en-US,en;q=0.9", 
-    // "Referer": "https://www.google.com", 
-    // "Sec-Ch-Ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"102\", \"Google Chrome\";v=\"102\"", 
-    // "Sec-Ch-Ua-Mobile": "?0", 
-    // "Sec-Ch-Ua-Platform": "\"Windows\"", 
-    // "Sec-Fetch-Dest": "document", 
-    // "Sec-Fetch-Mode": "navigate", 
-    // "Sec-Fetch-Site": "cross-site", 
-    // "Sec-Fetch-User": "?1", 
-    // "Upgrade-Insecure-Requests": "1", 
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36", 
-    // "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18"
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36",
   },
 };
 
@@ -88,13 +56,12 @@ async function fetchBingSearchData(searchQuery) {
   edge case where bing's top choices have different html classes, 10 is an arbitrary number to \
   ensure that enough b_algo classes are generated
   */
-
-  const numberOfResults = "&count=10";
+  const numberOfResults = "&count=9";
 
   // bing search data with axios
   const bingSearchData = await axios.get(
     `https://www.bing.com/search?q=${encodedSearch} + ${languageSearch} + ${countrySearch} + ${numberOfResults} `,
-    OPTIONS_BING
+    OPTIONS
   );
 
   // new bing search data promise
@@ -106,7 +73,7 @@ async function fetchBingSearchData(searchQuery) {
 // function helper for the search function to interpret the "++" in "c++"
 function helperConvertToWord(input) {
   var returnString = input.toLowerCase();
-  returnString = returnString.replace("+", " plus");
+  returnString = returnString.replace("+", "plus");
   return returnString;
 }
 
@@ -143,8 +110,7 @@ async function getGoogleSearchLinksLang(searchQuery, pLanguage) {
 
   return searchData.then(async function(data) {
     // load markup with cheerio
-    let $ = cheerio.load(data, {xmlMode: true});
-    console.log($);
+    let $ = cheerio.load(data);
 
     // building result object
     // array : store data points
@@ -324,22 +290,24 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
       // build "code" object
       let code = [];
-      $("code:first > span").each((index, element) => {
-        code[index] = $(element);
+      $("code:first").each((index, element) => {
+        code[index] = $(element).text();
       });
+      
       return code;
     });
-  } /* else if (linkState == 2) {
+  } else if (linkState == 2) {
     return resultDataLinkTwo.then(async function(data) {
       // load markup with cheerio
       let $ = cheerio.load(data);
 
       // build "code" object
       let code = [];
-      $("code:first").each((index, element) => {
-        code[index] = $(element).attr("span");
+      $("code").each((index, element) => {
+        code[index] = $(element).text();
       });
-
+      
+      return code;
     });
   } else if (linkState == 3) {
     return resultDataLinkThree.then(async function(data) {
@@ -348,19 +316,30 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
       // build "code" object
       let code = [];
-      $("code:first").each((index, element) => {
-        code[index] = $(element).attr("span");
+      $("code").each((index, element) => {
+        code[index] = $(element).text();
       });
-
+      
+      return code;
     });
-  } */ else {
+  } else {
     throw "linkState Error"
   }
 }
 
-// testing 
-const result = getBingSearchLinksLang("is a palindrome", "c plus plus");
-// const result = getResultDataLinks("is a palindrome", "c++", 1);
-result.then(function(data) {
-  console.log(data[1])
+/* FUNCTIONS TO IMPLEMENT */
+
+// data cleaning function 
+// comes out very messy in some cases 
+
+
+
+// testing
+const resultg = getBingSearchLinksLang("is a palindrome", "c++");
+const resultb = getBingSearchLinksLang("is a palindrome", "c++");
+
+const code = getResultDataLinks("is a palindrome", "c++", 97)
+
+code.then(function(data) {
+  console.log(data);
 });
