@@ -3,8 +3,28 @@ const axios = require("axios");
 const promise = require("promise");
 const Captcha = require("2captcha");
 
-// write request header interface
-const OPTIONS = {
+// write request header interface for google 
+const OPTIONS_GOOGLE = {
+  headers: {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", 
+    "Accept-Encoding": "gzip, deflate, br", 
+    "Accept-Language": "en-US,en;q=0.9", 
+    "Referer": "https://www.google.com", 
+    "Sec-Ch-Ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"102\", \"Google Chrome\";v=\"102\"", 
+    "Sec-Ch-Ua-Mobile": "?0", 
+    "Sec-Ch-Ua-Platform": "\"Windows\"", 
+    "Sec-Fetch-Dest": "document", 
+    "Sec-Fetch-Mode": "navigate", 
+    "Sec-Fetch-Site": "cross-site", 
+    "Sec-Fetch-User": "?1", 
+    "Upgrade-Insecure-Requests": "1", 
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36", 
+    "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18"
+  },
+};
+
+// write request header interface for bing (just the user-agent)
+const OPTIONS_BING = {
   headers: {
     // "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", 
     // "Accept-Encoding": "gzip, deflate, br", 
@@ -28,15 +48,15 @@ async function fetchGoogleSearchData(searchQuery) {
   // encode search query to represent UTF-8, URLs can only have certain characters from ASCII set
   const encodedSearch = encodeURI(searchQuery);
 
-  // default english
+  // default language english
   const languageSearch = "&hl=en";
 
   // default united states
   const countrySearch = "&gl=us";
 
-  // default 3,4 results
+  // default 3 results
   // add "see another solution feature"
-  const numberOfResults = "&num=5";
+  const numberOfResults = "&num=3";
 
   // google search data with axios
   const googleSearchData = await axios.get(
@@ -55,20 +75,26 @@ async function fetchBingSearchData(searchQuery) {
   // encode search query to represent UTF-8, URLs can only have certain characters from ASCII set
   const encodedSearch = encodeURI(searchQuery);
 
-  // default english
+  // default language english
   const languageSearch = "&setlang=en";
 
   // default united states
   const countrySearch = "&setmkt=en-WW";
 
-  // default 3,4 results
+  // default 3 results
   // add "see another solution feature"
-  const numberOfResults = "&count=5";
+
+  /* 
+  edge case where bing's top choices have different html classes, 10 is an arbitrary number to \
+  ensure that enough b_algo classes are generated
+  */
+
+  const numberOfResults = "&count=10";
 
   // bing search data with axios
   const bingSearchData = await axios.get(
     `https://www.bing.com/search?q=${encodedSearch} + ${languageSearch} + ${countrySearch} + ${numberOfResults} `,
-    OPTIONS
+    OPTIONS_BING
   );
 
   // new bing search data promise
@@ -188,12 +214,12 @@ async function getBingSearchLinksLang(searchQuery, pLanguage) {
     const titles = [];
 
     // loop through html class ".b_algo" to embedded h2 tag to a tag then getting hyperlink
-    $("li.b_algo > h2 > a").each((index, element) => {
+    $(".b_algo > h2 > a").each((index, element) => {
       links[index] = $(element).attr("href");
     });
 
     // loop through html class ".b_algo" to embedded h2 tag to a tag then getting text
-    $("li.b_algo > h2 > a").each((index, element) => {
+    $(".b_algo > h2 > a").each((index, element) => {
       titles[index] = $(element).text();
     });
 
@@ -209,6 +235,13 @@ async function getBingSearchLinksLang(searchQuery, pLanguage) {
   });
 }
 
+/* FUNCTIONS TO IMPLEMENT */
+
+// check if google throws recaptcha exception
+// check if bing throws recaptcha/captcha exception
+// function to solve recaptcha/captcha
+
+// AT THIS POINT, SCRAPING BECOMES GENERAL / SEARCH ENGINE BECOMES IRRELEVANT (captcha/recaptcha check expcetion)
 
 // function to data from the first link in the result object from axios
 async function fetchFirstResultData(searchQuery, pLanguage) {
@@ -329,7 +362,5 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 const result = getBingSearchLinksLang("is a palindrome", "c plus plus");
 // const result = getResultDataLinks("is a palindrome", "c++", 1);
 result.then(function(data) {
-  data.forEach((i) => {
-    console.log(i);
-  })
+  console.log(data[1])
 });
