@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "2captcha": "^3.0.4",
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.11",
     "fetch": "^1.1.0",
