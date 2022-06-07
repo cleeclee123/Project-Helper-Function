@@ -463,9 +463,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
 // testing
 const code = fetchFirstGoogleResultPage("is a palindrome", "c++");
-code.then(function(data) {
-
-}).catch(function(error) {
+code.catch(function(error) {
   const message = "Our systems have detected unusual traffic from your computer network";
   if (error.response.data.includes(message)) {
     console.log("captcha")
