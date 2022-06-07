@@ -201,27 +201,28 @@ async function getBingSearchLinksLang(searchQuery, pLanguage) {
   });
 }
 
+
 /* FUNCTIONS TO IMPLEMENT */
 
-// check if google throws recaptcha exception
-// check if bing throws recaptcha/captcha exception
+/* LOW-PRIORITY: Captcha Solver Function */
 // function to solve recaptcha/captcha
 
-// AT THIS POINT, SCRAPING BECOMES GENERAL / SEARCH ENGINE BECOMES IRRELEVANT (captcha/recaptcha check expcetion)
 
-// function to data from the first link in the result object from axios
-async function fetchFirstResultData(searchQuery, pLanguage) {
+// function to get data from the first link in the google result object from axios
+async function fetchFirstGoogleResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from google
-  const results = getGoogleSearchLinksLang(searchQuery, pLanguage);
+  const resultsGoogle = getGoogleSearchLinksLang(searchQuery, pLanguage);
 
-  // data is array of result objects
-  // makes call to axios to get data from the first link
-  return results.then(async function(data) {
+  // data is array of google result objects
+  // makes call to axios to get data from the first link of google result object
+  return resultsGoogle.then(async function(data) {
+    // check for captcha
+    const message = "Our systems have detected unusual traffic from your computer network";
+    const captcha = "captcha";
 
-    
     // link data from array of result object with axios
     const linkData = await axios.get(data[0].link, OPTIONS);
-
+                          
     // new link data promise
     const linkDataPromise = await linkData.data;
 
@@ -229,14 +230,14 @@ async function fetchFirstResultData(searchQuery, pLanguage) {
   });
 }
 
-// function to data from the second link in the result object from axios
-async function fetchSecondResultData(searchQuery, pLanguage) {
+// function to get data from the second link in the google result object from axios
+async function fetchSecondGoogleResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from google
-  const results = getGoogleSearchLinksLang(searchQuery, pLanguage);
+  const resultsGoogle = getGoogleSearchLinksLang(searchQuery, pLanguage);
 
-  // data is array of result objects
-  // makes call to axios to get data from the first link
-  return results.then(async function(data) {
+  // data is array of google result objects
+  // makes call to axios to get data from the second link of google result object
+  return resultsGoogle.then(async function(data) {
 
     // link data from array of result object with axios
     const linkData = await axios.get(data[1].link, OPTIONS);
@@ -248,16 +249,16 @@ async function fetchSecondResultData(searchQuery, pLanguage) {
   });
 }
 
-// function to data from the third link in the result object from axios
-async function fetchThirdResultData(searchQuery, pLanguage) {
+// function to get data from the third link in the google result object from axios
+async function fetchThirdGoogleResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from google
-  const results = getGoogleSearchLinksLang(searchQuery, pLanguage);
+  const resultsGoogle = getGoogleSearchLinksLang(searchQuery, pLanguage);
 
-  // data is array of result objects
-  // makes call to axios to get data from the first link
-  return results.then(async function(data) {
+  // data is array of google result objects
+  // makes call to axios to get data from the third link of google result object
+  return resultsGoogle.then(async function(data) {
 
-    // link data from array of result object with axios
+    // link data from array of google result object with axios
     const linkData = await axios.get(data[2].link, OPTIONS);
 
     // new link data promise
@@ -267,24 +268,111 @@ async function fetchThirdResultData(searchQuery, pLanguage) {
   });
 }
 
+// function to get data from the first link in the bing result object from axios
+async function fetchFirstBingResultPage(searchQuery, pLanguage) {
+  // array of result objects, holds the top three results (link, title) from bing
+  const resultsBing = getBingSearchLinksLang(searchQuery, pLanguage);
+
+  // data is array of bing result objects
+  // makes call to axios to get data from the first link of bing result object
+  return resultsBing.then(async function(data) {
+
+    // link data from array of bing result object with axios
+    const linkData = await axios.get(data[0].link, OPTIONS);
+
+    // new link data promise
+    const linkDataPromise = await linkData.data;
+
+    return linkDataPromise;
+  });
+
+}
+
+// function to get data from the second link in the bing result object from axios
+async function fetchSecondBingResultPage(searchQuery, pLanguage) {
+  // array of result objects, holds the top three results (link, title) from bing
+  const resultsBing = getBingSearchLinksLang(searchQuery, pLanguage);
+
+  // data is array of bing result objects
+  // makes call to axios to get data from the second link of bing result object
+  return resultsBing.then(async function(data) {
+
+    // link data from array of result object with axios
+    const linkData = await axios.get(data[1].link, OPTIONS);
+
+    // new link data promise
+    const linkDataPromise = await linkData.data;
+
+    return linkDataPromise;
+  });
+}
+
+// function to get data from the third link in the bing result object from axios
+async function fetchThirdBingResultPage(searchQuery, pLanguage) {
+  // array of result objects, holds the top three results (link, title) from bing
+  const resultsBing = getBingSearchLinksLang(searchQuery, pLanguage);
+
+  // data is array of bing result objects
+  // makes call to axios to get data from the third link of bing result object
+  return resultsBing.then(async function(data) {
+
+    // link data from array of bing result object with axios
+    const linkData = await axios.get(data[2].link, OPTIONS);
+
+    // new link data promise
+    const linkDataPromise = await linkData.data;
+
+    return linkDataPromise;
+  });
+}
+
+async function checkCaptcha(searchQuery, pLanguage) {
+  // array of result objects, holds the top three results (link, title) from bing
+  const resultsGoogle = getGoogleSearchLinksLang(searchQuery, pLanguage);
+
+  // data is array of bing result objects
+  // makes call to axios to get data from the third link of bing result object
+  return resultsGoogle.then(async function(data) {
+
+    // link data from array of bing result object with axios
+    const linkData = await axios.get(data[0].link, OPTIONS);
+
+    // new link data promise
+    const linkDataPromise = await linkData.data;
+
+    return false;
+  });
+}
+
 // returns "code" object
 // function to start scraping data from result object links, takes in searchQuery, pLanguage, and state of result link
 // linkState is an int that repersents which link in the result array (1, 2, 3)
 // linkState will be a dropdown menu/next button on the frontend
+// default will be the code object from google search result object
 async function getResultDataLinks(searchQuery, pLanguage, linkState) {
-  // page data from link one in reuslt object array
-  const resultDataLinkOne = fetchFirstResultData(searchQuery, pLanguage);
+  // page data from corresponding link in google result object array
+  const googlePageOne = fetchFirstGoogleResultPage(searchQuery, pLanguage);
+  const googlePageTwo = fetchSecondGoogleResultPage(searchQuery, pLanguage);  
+  const googlePageThree = fetchThirdGoogleResultPage(searchQuery, pLanguage);
 
-  // page data from link two in reuslt object array
-  const resultDataLinkTwo = fetchSecondResultData(searchQuery, pLanguage);
+  // page data from corresponding link in bing result object array
+  const bingPageOne = fetchFirstBingResultPage(searchQuery, pLanguage);
+  const bingPageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);  
+  const bingPageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
+
+  // boolean state for if captcha was triggered
+  const message = "Our systems have detected unusual traffic from your computer network";
+  const captcha = "captcha";
   
-  // page data from link three in reuslt object array
-  const resultDataLinkThree = fetchThirdResultData(searchQuery, pLanguage);
-  
+  /* let googleOneHasCaptcha = false;
+  if (googlePageOne.includes(message) || googlePageOne.includes(captcha)) {
+    googleOneHasCaptcha = true;
+  } */
+
   // linkState will scrap the corresponding website
   // return "code" object that represents the original searchQuery and corresponding programming language
-  if (linkState == 1) {
-    return resultDataLinkOne.then(async function(data) {
+  if ((linkState == 1)) {
+    return googlePageOne.then(async function(data) {
       // load markup with cheerio
       let $ = cheerio.load(data);
 
@@ -296,8 +384,34 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       
       return code;
     });
+  } else if (linkState == 1) {
+    return bingPageOne.then(async function(data) {
+      // load markup with cheerio
+      let $ = cheerio.load(data);
+
+      // build "code" object
+      let code = [];
+      $("code").each((index, element) => {
+        code[index] = $(element).text();
+      });
+      
+      return code;
+    });
   } else if (linkState == 2) {
-    return resultDataLinkTwo.then(async function(data) {
+    return googlePageTwo.then(async function(data) {
+      // load markup with cheerio
+      let $ = cheerio.load(data);
+
+      // build "code" object
+      let code = [];
+      $("code").each((index, element) => {
+        code[index] = $(element).text();
+      });
+      
+      return code;
+    });
+  } else if (linkState == 2) {
+    return bingPageTwo.then(async function(data) {
       // load markup with cheerio
       let $ = cheerio.load(data);
 
@@ -310,7 +424,20 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       return code;
     });
   } else if (linkState == 3) {
-    return resultDataLinkThree.then(async function(data) {
+    return googlePageThree.then(async function(data) {
+      // load markup with cheerio
+      let $ = cheerio.load(data);
+
+      // build "code" object
+      let code = [];
+      $("code").each((index, element) => {
+        code[index] = $(element).text();
+      });
+      
+      return code;
+    });
+  } else if (linkState == 3) {
+    return bingPageThree.then(async function(data) {
       // load markup with cheerio
       let $ = cheerio.load(data);
 
@@ -323,7 +450,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       return code;
     });
   } else {
-    throw "linkState Error"
+    throw new Error("Link State Error")
   }
 }
 
@@ -334,13 +461,30 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 // http server proxy (in server file)
 
 
-
 // testing
-const resultg = getBingSearchLinksLang("is a palindrome", "c++");
-const resultb = getBingSearchLinksLang("is a palindrome", "c++");
-
-const code = getResultDataLinks("is a palindrome", "c++", 97)
-
+const code = fetchFirstGoogleResultPage("is a palindrome", "c++");
 code.then(function(data) {
-  console.log(data);
+
+}).catch(function(error) {
+  const message = "Our systems have detected unusual traffic from your computer network";
+  if (error.response.data.includes(message)) {
+    console.log("captcha")
+  }
+  console.log("here")
 });
+
+
+/*
+
+<div id="infoDiv" style="display:none; background-color:#eee; padding:10px; margin:0 0 15px 0; line-height:1.4em;">\n' +
+  
+'This page appears when Google automatically detects requests coming from your computer network which appear to be in violation of the 
+<a href="//www.google.com/policies/terms/">Terms of Service</a>. The block will expire shortly after those requests stop.  
+In the meantime, solving the above CAPTCHA will let you continue to use our services.
+<br><br>This traffic may have been sent by malicious software, a browser plug-in, or a script that sends automated requests.  
+If you share your network connection, ask your administrator for help &mdash; a different computer using the same IP address may be responsible.  
+<a href="//support.google.com/websearch/answer/86640">Learn more</a><br><br>
+Sometimes you may be asked to solve the CAPTCHA if you are using advanced terms that robots are known to use, or sending requests very quickly.\n' +
+
+
+*/
