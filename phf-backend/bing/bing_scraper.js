@@ -23,10 +23,10 @@ async function fetchBingSearchData(searchQuery) {
   // default 3 results
   // add "see another solution feature"
   /* 
-  case where bing's top choices have different html classes, 15 is an arbitrary number to 
+  edge case where bing's top choices have different html classes, 15 is an arbitrary number to 
   ensure that enough b_algo classes are generated
   */
-  const numberOfResults = "&count=20";
+  const numberOfResults = "&count=15";
 
   // bing search data with axios
   const bingSearchData = await axios.get(
@@ -150,7 +150,7 @@ async function fetchSecondBingResultPage(searchQuery, pLanguage) {
 // function to get data from the third link in the bing result object from axios
 async function fetchThirdBingResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
-  const resultsBing = buildBingResultObject(searchQuery, pLanguage);
+  const resultsBing =  buildBingResultObject(searchQuery, pLanguage);
 
   // data is array of bing result objects
   // makes call to axios to get data from the third link of bing result object
@@ -172,7 +172,6 @@ async function fetchThirdBingResultPage(searchQuery, pLanguage) {
 // linkState will be a dropdown menu/next button on the frontend
 // default will be the code object from google search result object
 async function getResultDataLinks(searchQuery, pLanguage, linkState) {
-
   // page data from corresponding link in bing result object array
   const bingPageOne = fetchFirstBingResultPage(searchQuery, pLanguage);
   const bingPageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);  
@@ -182,112 +181,55 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
   const CAPTCHA_MESSAGE = "Our systems have detected unusual traffic from your computer network";
 
   // linkState will scrap the corresponding website and checks captcha state
-  // return "code" object that represents the original searchQuery and corresponding programming language  
-  /* if (linkState === 1) {
-    return bingPageOne.then(function(dataBing) {
+  // return "code" object that represents the original searchQuery and corresponding programming language 
+  if (linkState === 1) {
+    return bingPageOne.then(async function(data) {
+      let adata = await data;
+
       // load markup with cheerio
-      let $ = cheerio.load(dataBing);
+      let $ = cheerio.load(adata);
 
       // build "code" object
       let code = [];
       $("code").each((index, element) => {
         code[index] = $(element).text();
       });
+
       return code;
-    }).catch(function(errorBing) {
-      console.log(errorBing.response.data);
     });
   } else if (linkState === 2) {
-    return bingPageTwo.then(function(dataBing) {
+    return bingPageTwo.then(async function(data) {
+      let adata = await data;
+
       // load markup with cheerio
-      let $ = cheerio.load(dataBing);
+      let $ = cheerio.load(adata);
 
       // build "code" object
       let code = [];
       $("code").each((index, element) => {
         code[index] = $(element).text();
       });
+
       return code;
-    }).catch(function(errorBing) {
-      console.log(errorBing.response.data);
     });
   } else if (linkState === 3) {
-    return bingPageThree.then(function(daatBing) {
+    return bingPageThree.then(async function(data) {
+      let adata = await data;
+
       // load markup with cheerio
-      let $ = cheerio.load(dataBing);
+      let $ = cheerio.load(adata);
 
       // build "code" object
       let code = [];
       $("code").each((index, element) => {
         code[index] = $(element).text();
       });
+
       return code;
-    }).catch(function(errorBing) {
-      console.log(errorBing.response.data);
     });
   } else {
-    throw new Error("linkState Error");
-  } */
-  
-  const bingResultObject = buildBingResultObject(searchQuery, pLanguage);
-
-  return bingResultObject.then(async function(bingResult) {
-    if (linkState === 1) {
-      const firstLink = await axios.get(bingResult[0].link, OPTIONS);
-      const firstLinkPromise = await firstLink.data;
-
-      return firstLinkPromise.then(function(pageData) {
-        // load markup with cheerio
-        let $ = cheerio.load(pageData);
-
-        // build "code" object
-        let code = [];
-        $("code").each((index, element) => {
-          code[index] = $(element).text();
-        });
-        return code;
-      }).catch(function(pageError) {
-        console.log(pageError.response.data);
-      })
-    } else if (linkState === 2) {
-      const secondLink = await axios.get(bingResult[1].link, OPTIONS);
-      const secondLinkPromise = await secondLink.data;
-
-      return secondLinkPromise.then(function(pageData) {
-        // load markup with cheerio
-        let $ = cheerio.load(pageData);
-
-        // build "code" object
-        let code = [];
-        $("code").each((index, element) => {
-          code[index] = $(element).text();
-        });
-        return code;
-      }).catch(function(pageError) {
-        console.log(pageError.response.data);
-      })
-    } else if (linkState === 3) {
-      const thirdLink = await axios.get(bingResult[2].link, OPTIONS);
-      const thirdLinkPromise = await thirdLink.data;
-
-      return thirdLinkPromise.then(function(pageData) {
-        // load markup with cheerio
-        let $ = cheerio.load(pageData);
-
-        // build "code" object
-        let code = [];
-        $("code").each((index, element) => {
-          code[index] = $(element).text();
-        });
-        return code;
-      }).catch(function(pageError) {
-        console.log(pageError.response.data);
-      })
-    }
-  }).catch((error) => {
-    console.log(error.response.data);
-  });
-
+    throw new Error("Link State Error")
+  }
 }
 
 /* FUNCTIONS TO IMPLEMENT */
@@ -297,7 +239,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 // http server proxy (in server file)
 
 // testing
-const code = getResultDataLinks("hello world", "c++", 1);
-code.then(function(data) {
-  console.log(data);
+const code = getResultDataLinks("merge sort", "javascript", 1);
+code.then(async function(data) {
+  console.log(data)
 })
