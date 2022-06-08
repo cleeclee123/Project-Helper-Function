@@ -415,9 +415,9 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
   const googlePageThree = fetchThirdGoogleResultPage(searchQuery, pLanguage);
 
   // captcha state for all google pages
-  const googlePageOneCaptchaState = await checkCaptchaGoogleOne(searchQuery, pLanguage);
-  const googlePageTwoCaptchaState = await checkCaptchaGoogleTwo(searchQuery, pLanguage);  
-  const googlePageThreeCaptchaState = await checkCaptchaGoogleThree(searchQuery, pLanguage);
+  const googlePageOneCaptchaState = checkCaptchaGoogleOne(searchQuery, pLanguage);
+  const googlePageTwoCaptchaState = checkCaptchaGoogleTwo(searchQuery, pLanguage);  
+  const googlePageThreeCaptchaState = checkCaptchaGoogleThree(searchQuery, pLanguage);
 
   // page data from corresponding link in bing result object array
   const bingPageOne = fetchFirstBingResultPage(searchQuery, pLanguage);
@@ -428,6 +428,10 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
   const bingPageOneCaptchaState = await checkCaptchaBingOne(searchQuery, pLanguage);
   const bingPageTwoCaptchaState = await checkCaptchaBingTwo(searchQuery, pLanguage);  
   const bingPageThreeCaptchaState = await checkCaptchaBingThree(searchQuery, pLanguage);
+
+  googlePageOneCaptchaState.then(function(state) {
+    console.log(state);
+  })
 
 
   // linkState will scrap the corresponding website and checks captcha state
@@ -541,9 +545,17 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
 
 // testing
-const code = getResultDataLinks("is palindrome", "c++", 1);
-code.then(function(data) {
-  console.log(data)
+const codeg = fetchFirstGoogleResultPage("is palindrome", "c++");
+const codeb = fetchFirstBingResultPage("is palindrome", "c++");
+codeg.then(function(data) {
+
+}).catch(function(error) {
+  const message = "Our systems have detected unusual traffic from your computer network";
+  if (error.response.data.includes(message)) {
+    codeb.then(function(datab) {
+      console.log(datab);
+    })
+  }
 })
 
 /*
