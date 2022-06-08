@@ -1,7 +1,7 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 
-// write request header interface for bing 
+// write request header interface for bing
 const OPTIONS = {
   headers: {
     "User-Agent":
@@ -36,7 +36,7 @@ async function fetchBingSearchData(searchQuery) {
 
   // new bing search data promise
   const newBingSearchDataPromise = await bingSearchData.data;
-  
+
   return newBingSearchDataPromise;
 }
 
@@ -53,22 +53,24 @@ async function buildBingResultObject(searchQuery, pLanguage) {
   // default paraemter values:
   // default search query (result on landing page)
   const defaultSearch = "hello world";
-  if (searchQuery === "" || 
-  searchQuery === null || 
+  if (
+    searchQuery === "" ||
+    searchQuery === null ||
     // demorgans law negation of (typeof myVar === 'string' || myVar instanceof String) => string
-    (!(typeof searchQuery === "string") && 
-    !(searchQuery instanceof String))) {
+    (!(typeof searchQuery === "string") && !(searchQuery instanceof String))
+  ) {
     searchQuery = defaultSearch;
   }
 
   // user choice of programming language, account for empty/null choice
   // most likely will be a dropdown menu on client side
   const defaultLanguage = "javascript";
-  if (pLanguage === "" || 
-      pLanguage === null || 
-      // demorgans law negation of (typeof myVar === 'string' || myVar instanceof String) => string
-      (!(typeof pLanguage === "string") && 
-      !(pLanguage instanceof String))) {
+  if (
+    pLanguage === "" ||
+    pLanguage === null ||
+    // demorgans law negation of (typeof myVar === 'string' || myVar instanceof String) => string
+    (!(typeof pLanguage === "string") && !(pLanguage instanceof String))
+  ) {
     pLanguage = defaultLanguage;
   }
 
@@ -76,9 +78,9 @@ async function buildBingResultObject(searchQuery, pLanguage) {
   const encodedPLanguage = encodeURI(helperConvertToWord(pLanguage));
 
   // calls fetchBingSearchData from axios (promise)
-  const searchData = fetchBingSearchData(searchQuery + " " + encodedPLanguage); 
-  
-  return searchData.then(async function(data) {
+  const searchData = fetchBingSearchData(searchQuery + " " + encodedPLanguage);
+
+  return searchData.then(async function (data) {
     let adata = await data;
 
     // load markup with cheerio
@@ -112,7 +114,7 @@ async function buildBingResultObject(searchQuery, pLanguage) {
 }
 
 function sleep(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
+  return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 // function to get data from the first link in the bing result object from axios
@@ -123,7 +125,7 @@ async function fetchFirstBingResultPage(searchQuery, pLanguage) {
   await sleep(1000);
   // data is array of bing result objects
   // makes call to axios to get data from the first link of bing result object
-  return await resultsBing.then(async function(data) {
+  return await resultsBing.then(async function (data) {
     await sleep(1000);
     console.log(data[0].link);
     // link data from array of bing result object with axios
@@ -144,7 +146,7 @@ async function fetchSecondBingResultPage(searchQuery, pLanguage) {
   await sleep(1000);
   // data is array of bing result objects
   // makes call to axios to get data from the second link of bing result object
-  return await resultsBing.then(async function(data) {
+  return await resultsBing.then(async function (data) {
     await sleep(1000);
     console.log(data[1].link);
     // link data from array of result object with axios
@@ -160,12 +162,12 @@ async function fetchSecondBingResultPage(searchQuery, pLanguage) {
 // function to get data from the third link in the bing result object from axios
 async function fetchThirdBingResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
-  const resultsBing =  buildBingResultObject(searchQuery, pLanguage);
+  const resultsBing = buildBingResultObject(searchQuery, pLanguage);
 
   await sleep(1000);
   // data is array of bing result objects
   // makes call to axios to get data from the third link of bing result object
-  return await resultsBing.then(async function(data) {
+  return await resultsBing.then(async function (data) {
     await sleep(1000);
     console.log(data[2].link);
     // link data from array of bing result object with axios
@@ -185,14 +187,15 @@ async function fetchThirdBingResultPage(searchQuery, pLanguage) {
 // default will be the code object from google search result object
 async function getResultDataLinks(searchQuery, pLanguage, linkState) {
   // captcha page message from response.data
-  const CAPTCHA_MESSAGE = "Our systems have detected unusual traffic from your computer network";
+  const CAPTCHA_MESSAGE =
+    "Our systems have detected unusual traffic from your computer network";
 
   // linkState will scrap the corresponding website and checks captcha state
-  // return "code" object that represents the original searchQuery and corresponding programming language 
+  // return "code" object that represents the original searchQuery and corresponding programming language
   if (linkState === 1) {
     const bingPageOne = fetchFirstBingResultPage(searchQuery, pLanguage);
 
-    return bingPageOne.then(async function(data) {
+    return bingPageOne.then(async function (data) {
       let adata = await data;
 
       // load markup with cheerio
@@ -207,9 +210,9 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       return code;
     });
   } else if (linkState === 2) {
-    const bingPageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);  
+    const bingPageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);
 
-    return bingPageTwo.then(async function(data) {
+    return bingPageTwo.then(async function (data) {
       let adata = await data;
 
       // load markup with cheerio
@@ -226,7 +229,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
   } else if (linkState === 3) {
     const bingPageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
 
-    return bingPageThree.then(async function(data) {
+    return bingPageThree.then(async function (data) {
       let adata = await data;
 
       // load markup with cheerio
@@ -241,20 +244,20 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       return code;
     });
   } else {
-    throw new Error("Link State Error")
+    throw new Error("Link State Error");
   }
 }
 
 /* FUNCTIONS TO IMPLEMENT */
 
-// data cleaning function, comes out very messy in some cases 
+// data cleaning function, comes out very messy in some cases
 
 // http server proxy (in server file)
 
 
 // testing
-const code = getResultDataLinks("reverse a linked list", "javascript", 2);
-code.then(async function(data) {
+const code = getResultDataLinks("reverse a linked list", "c++", 1);
+code.then(async function (data) {
   await sleep(1000);
-  console.log(data)
-})
+  console.log(data);
+});
