@@ -56,7 +56,7 @@ async function fetchBingSearchData(searchQuery) {
   edge case where bing's top choices have different html classes, 10 is an arbitrary number to \
   ensure that enough b_algo classes are generated
   */
-  const numberOfResults = "&count=9";
+  const numberOfResults = "&count=10";
 
   // bing search data with axios
   const bingSearchData = await axios.get(
@@ -230,19 +230,6 @@ async function fetchFirstGoogleResultPage(searchQuery, pLanguage) {
   });
 }
 
-// checks if google redirects to captcha page
-async function checkCaptchaGoogleOne(searchQuery, pLanguage) {
-  let state = false
-  const pageOne = fetchFirstGoogleResultPage(searchQuery, pLanguage);
-  return pageOne.catch(function(error) {
-    const message = "Our systems have detected unusual traffic from your computer network.";
-    if (error.response.data.includes(message)) {
-      state = true;
-    }
-    return state;
-  });
-}
-
 // function to get data from the second link in the google result object from axios
 async function fetchSecondGoogleResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from google
@@ -259,19 +246,6 @@ async function fetchSecondGoogleResultPage(searchQuery, pLanguage) {
     const linkDataPromise = await linkData.data;
 
     return linkDataPromise;
-  });
-}
-
-// checks if google redirects to captcha page
-async function checkCaptchaGoogleTwo(searchQuery, pLanguage) {
-  let state = false;
-  const pageTwo = fetchSecondGoogleResultPage(searchQuery, pLanguage);
-  return pageTwo.catch(function(error) {
-    const message = "Our systems have detected unusual traffic from your computer network";
-    if (error.response.data.includes(message)) {
-      state = true;
-    }
-    return state;
   });
 }
 
@@ -294,19 +268,6 @@ async function fetchThirdGoogleResultPage(searchQuery, pLanguage) {
   });
 }
 
-// checks if google redirects to captcha page
-async function checkCaptchaGoogleThree(searchQuery, pLanguage) {
-  let state = false;
-  const pageThree = fetchThirdGoogleResultPage(searchQuery, pLanguage);
-  return pageThree.catch(function(error) {
-    const message = "Our systems have detected unusual traffic from your computer network";
-    if (error.response.data.includes(message)) {
-      state = true;
-    }
-    return state;
-  });
-}
-
 // function to get data from the first link in the bing result object from axios
 async function fetchFirstBingResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
@@ -323,19 +284,6 @@ async function fetchFirstBingResultPage(searchQuery, pLanguage) {
     const linkDataPromise = await linkData.data;
 
     return linkDataPromise;
-  });
-}
-
-// checks if bing redirects to captcha page
-async function checkCaptchaBingOne(searchQuery, pLanguage) {
-  let state = false;
-  const pageOne = fetchFirstBingResultPage(searchQuery, pLanguage);
-  return pageOne.catch(function(error) {
-    const message = "Our systems have detected unusual traffic from your computer network";
-    if (error.response.data.includes(message)) {
-      state = true;
-    }
-    return state;
   });
 }
 
@@ -358,19 +306,6 @@ async function fetchSecondBingResultPage(searchQuery, pLanguage) {
   });
 }
 
-// checks if bing redirects to captcha page
-async function checkCaptchaBingTwo(searchQuery, pLanguage) {
-  let state = false;
-  const pageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);
-  return pageTwo.catch(function(error) {
-    const message = "Our systems have detected unusual traffic from your computer network";
-    if (error.response.data.includes(message)) {
-      state = true;
-    }
-    return state;
-  });
-}
-
 // function to get data from the third link in the bing result object from axios
 async function fetchThirdBingResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
@@ -390,19 +325,6 @@ async function fetchThirdBingResultPage(searchQuery, pLanguage) {
   });
 }
 
-// checks if bing redirects to captcha page
-async function checkCaptchaBingThree(searchQuery, pLanguage) {
-  let state = false;
-  const pageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
-  return pageThree.catch(function(error) {
-    const message = "Our systems have detected unusual traffic from your computer network";
-    if (error.response.data.includes(message)) {
-      state = true;
-    }
-    return state;
-  });
-}
-
 // returns "code" object
 // function to start scraping data from result object links, takes in searchQuery, pLanguage, and state of result link
 // linkState is an int that repersents which link in the result array (1, 2, 3)
@@ -410,49 +332,24 @@ async function checkCaptchaBingThree(searchQuery, pLanguage) {
 // default will be the code object from google search result object
 async function getResultDataLinks(searchQuery, pLanguage, linkState) {
   // page data from corresponding link in google result object array
-  const googlePageOne = fetchFirstGoogleResultPage(searchQuery, pLanguage);
-  const googlePageTwo = fetchSecondGoogleResultPage(searchQuery, pLanguage);  
-  const googlePageThree = fetchThirdGoogleResultPage(searchQuery, pLanguage);
-
-  // captcha state for all google pages
-  const googlePageOneCaptchaState = checkCaptchaGoogleOne(searchQuery, pLanguage);
-  const googlePageTwoCaptchaState = checkCaptchaGoogleTwo(searchQuery, pLanguage);  
-  const googlePageThreeCaptchaState = checkCaptchaGoogleThree(searchQuery, pLanguage);
+  const googlePageOne = await fetchFirstGoogleResultPage(searchQuery, pLanguage);
+  const googlePageTwo = await fetchSecondGoogleResultPage(searchQuery, pLanguage);  
+  const googlePageThree = await fetchThirdGoogleResultPage(searchQuery, pLanguage);
 
   // page data from corresponding link in bing result object array
-  const bingPageOne = fetchFirstBingResultPage(searchQuery, pLanguage);
-  const bingPageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);  
-  const bingPageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
+  const bingPageOne = await fetchFirstBingResultPage(searchQuery, pLanguage);
+  const bingPageTwo = await fetchSecondBingResultPage(searchQuery, pLanguage);  
+  const bingPageThree = await fetchThirdBingResultPage(searchQuery, pLanguage);
 
-  // captcha state for all bing pages
-  const bingPageOneCaptchaState = await checkCaptchaBingOne(searchQuery, pLanguage);
-  const bingPageTwoCaptchaState = await checkCaptchaBingTwo(searchQuery, pLanguage);  
-  const bingPageThreeCaptchaState = await checkCaptchaBingThree(searchQuery, pLanguage);
-
-  googlePageOneCaptchaState.then(function(state) {
-    console.log(state);
-  })
-
+  // captcha page message from response.data
+  const CAPTCHA_MESSAGE = "Our systems have detected unusual traffic from your computer network";
 
   // linkState will scrap the corresponding website and checks captcha state
-  // return "code" object that represents the original searchQuery and corresponding programming language
-  if ((linkState === 1) && (googlePageOneCaptchaState !== true)) {
-    return googlePageOne.then(async function(data) {
+  // return "code" object that represents the original searchQuery and corresponding programming language  
+  if (linkState === 1) {
+    return googlePageOne.then(function(dataGoogle) {
       // load markup with cheerio
-      let $ = cheerio.load(data);
-
-      // build "code" object
-      let code = [];
-      $("code:first").each((index, element) => {
-        code[index] = $(element).text();
-      });
-      
-      return code;
-    });
-  } else if ((linkState === 1) && (bingPageOneCaptchaState !== true)) {
-    return bingPageOne.then(async function(data) {
-      // load markup with cheerio
-      let $ = cheerio.load(data);
+      let $ = cheerio.load(dataGoogle);
 
       // build "code" object
       let code = [];
@@ -461,80 +358,85 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       });
       
       return code;
+    }).catch(function(errorGoogle) {
+      if (errorGoogle.response.data.includes(CAPTCHA_MESSAGE)) {
+        return bingPageOne.then(function(dataBing) {
+          // load markup with cheerio
+          let $ = cheerio.load(dataBing);
+
+          // build "code" object
+          let code = [];
+          $("code").each((index, element) => {
+            code[index] = $(element).text();
+          });
+          return code;
+        }).catch((errorBing) => {
+          console.log(errorBing.response);
+          throw new Error("Captcha Error");
+        });
+      }
     });
-  } else if ((linkState === 2) && (googlePageTwoCaptchaState !== true)) {
-    return googlePageTwo.then(async function(data) {
+  } else if (linkState === 2) {
+    return googlePageTwo.then(function(dataGoogle) {
       // load markup with cheerio
-      let $ = cheerio.load(data);
+      let $ = cheerio.load(dataGoogle);
 
       // build "code" object
       let code = [];
       $("code").each((index, element) => {
         code[index] = $(element).text();
       });
-      
       return code;
+    }).catch(function(errorGoogle) {
+      if (errorGoogle.response.data.includes(CAPTCHA_MESSAGE)) {
+        return bingPageTwo.then(function(dataBing) {
+          // load markup with cheerio
+          let $ = cheerio.load(dataBing);
+
+          // build "code" object
+          let code = [];
+          $("code").each((index, element) => {
+            code[index] = $(element).text();
+          });
+          return code;
+        }).catch((errorBing) => {
+          console.log(errorBing.response);
+          throw new Error("Captcha Error");
+        });
+      }
     });
-  } else if ((linkState === 2) && (bingPageTwoCaptchaState !== true)) {
-    return bingPageTwo.then(async function(data) {
+  } else if (linkState === 3) {
+    return googlePageThree.then(function(dataGoogle) {
       // load markup with cheerio
-      let $ = cheerio.load(data);
+      let $ = cheerio.load(dataGoogle);
 
       // build "code" object
       let code = [];
       $("code").each((index, element) => {
         code[index] = $(element).text();
       });
-      
       return code;
-    });
-  } else if (linkState === 3 && (googlePageThreeCaptchaState !== true)) {
-    return googlePageThree.then(async function(data) {
-      // load markup with cheerio
-      let $ = cheerio.load(data);
+    }).catch(function(errorGoogle) {
+      if (errorGoogle.response.data.includes(CAPTCHA_MESSAGE)) {
+        return bingPageThree.then(function(dataBing) {
+          // load markup with cheerio
+          let $ = cheerio.load(dataBing);
 
-      // build "code" object
-      let code = [];
-      $("code").each((index, element) => {
-        code[index] = $(element).text();
-      });
-      
-      return code;
+          // build "code" object
+          let code = [];
+          $("code").each((index, element) => {
+            code[index] = $(element).text();
+          });
+          return code;
+        }).catch((errorBing) => {
+          console.log(errorBing.response);
+          throw new Error("Captcha Error");
+        });
+      }
     });
-  } else if ((linkState === 3) && (bingPageThreeCaptchaState !== true)) {
-    return bingPageThree.then(async function(data) {
-      // load markup with cheerio
-      let $ = cheerio.load(data);
-
-      // build "code" object
-      let code = [];
-      $("code").each((index, element) => {
-        code[index] = $(element).text();
-      });
-      
-      return code;
-    });
-  } else if (googlePageOneCaptchaState === true
-            && googlePageTwoCaptchaState === true
-            && googlePageThreeCaptchaState === true
-            && bingPageOneCaptchaState === true
-            && bingPageTwoCaptchaState === true
-            && bingPageThreeCaptchaState === true) {
-              throw new Error("Captcha Error");
-            }
-    else if (googlePageOneCaptchaState === true
-            && googlePageTwoCaptchaState === true
-            && googlePageThreeCaptchaState === true) {
-              throw new Error("Google Captcha Error");
-            }
-    else if (bingPageOneCaptchaState === true
-            && bingPageTwoCaptchaState === true
-            && bingPageThreeCaptchaState === true) {
-              throw new Error("Bing Captcha Error");
-            }
-  else {
-    throw new Error("Link State Error")
-  }
+  } else {
+    throw new Error("linkState Error");
+  } 
 }
 
 /* FUNCTIONS TO IMPLEMENT */
@@ -543,32 +445,8 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
 // http server proxy (in server file)
 
-
 // testing
-const codeg = fetchFirstGoogleResultPage("is palindrome", "c++");
-const codeb = fetchFirstBingResultPage("is palindrome", "c++");
-codeg.then(function(data) {
-
-}).catch(function(error) {
-  const message = "Our systems have detected unusual traffic from your computer network";
-  if (error.response.data.includes(message)) {
-    codeb.then(function(datab) {
-      console.log(datab);
-    })
-  }
+const code = getResultDataLinks("hello world", "java", 1);
+code.then(function(data) {
+  console.log(data);
 })
-
-/*
-
-<div id="infoDiv" style="display:none; background-color:#eee; padding:10px; margin:0 0 15px 0; line-height:1.4em;">\n' +
-  
-'This page appears when Google automatically detects requests coming from your computer network which appear to be in violation of the 
-<a href="//www.google.com/policies/terms/">Terms of Service</a>. The block will expire shortly after those requests stop.  
-In the meantime, solving the above CAPTCHA will let you continue to use our services.
-<br><br>This traffic may have been sent by malicious software, a browser plug-in, or a script that sends automated requests.  
-If you share your network connection, ask your administrator for help &mdash; a different computer using the same IP address may be responsible.  
-<a href="//support.google.com/websearch/answer/86640">Learn more</a><br><br>
-Sometimes you may be asked to solve the CAPTCHA if you are using advanced terms that robots are known to use, or sending requests very quickly.\n' +
-
-
-*/
