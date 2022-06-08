@@ -3,41 +3,49 @@ const axios = require("axios");
 
 // write request header interface for google 
 const OPTIONS = {
-  headers: {
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36",
-  },
-};
+    headers: {
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", 
+      "Accept-Encoding": "gzip, deflate, br", 
+      "Accept-Language": "en-US,en;q=0.9", 
+      "Referer": "https://www.google.com", 
+      "Sec-Ch-Ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"102\", \"Google Chrome\";v=\"102\"", 
+      "Sec-Ch-Ua-Mobile": "?0", 
+      "Sec-Ch-Ua-Platform": "\"Windows\"", 
+      "Sec-Fetch-Dest": "document", 
+      "Sec-Fetch-Mode": "navigate", 
+      "Sec-Fetch-Site": "cross-site", 
+      "Sec-Fetch-User": "?1", 
+      "Upgrade-Insecure-Requests": "1", 
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+      "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18"
+    },
+  };
 
-// function to get bing search results from axios
-async function fetchBingSearchData(searchQuery) {
+// function to get google search results from axios
+async function fetchGoogleSearchData(searchQuery) {
   // encode search query to represent UTF-8, URLs can only have certain characters from ASCII set
   const encodedSearch = encodeURI(searchQuery);
 
-  // default language english
-  const languageSearch = "&setlang=en";
+  // default english
+  const languageSearch = "&hl=en";
 
   // default united states
-  const countrySearch = "&setmkt=en-WW";
+  const countrySearch = "&gl=us";
 
-  // default 3 results
+  // default 3,4 results
   // add "see another solution feature"
-  /* 
-  edge case where bing's top choices have different html classes, 15 is an arbitrary number to 
-  ensure that enough b_algo classes are generated
-  */
-  const numberOfResults = "&count=15";
+  const numberOfResults = "&num=5";
 
-  // bing search data with axios
-  const bingSearchData = await axios.get(
-    `https://www.bing.com/search?q=${encodedSearch} + ${languageSearch} + ${countrySearch} + ${numberOfResults} `,
+  // google search data with axios
+  const googleSearchData = await axios.get(
+    `https://www.google.com/search?q=${encodedSearch} + ${languageSearch} + ${countrySearch} + ${numberOfResults} `,
     OPTIONS
   );
 
-  // new bing search data promise
-  const newBingSearchDataPromise = await bingSearchData.data;
+  // new google search data promise
+  const newGoogleSearchDataPromise = await googleSearchData.data;
   
-  return newBingSearchDataPromise;
+  return newGoogleSearchDataPromise;
 }
 
 // function helper for the search function to interpret the "++" in "c++"
@@ -49,7 +57,7 @@ function helperConvertToWord(input) {
 
 // scraps the top title and links for search query with programming language as a parameter
 // return array of result objects from bing search data
-async function buildBingResultObject(searchQuery, pLanguage) {
+async function buildGoogleResultObject(searchQuery, pLanguage) {
   // default paraemter values:
   // default search query (result on landing page)
   const defaultSearch = "hello world";
@@ -76,24 +84,26 @@ async function buildBingResultObject(searchQuery, pLanguage) {
   const encodedPLanguage = encodeURI(helperConvertToWord(pLanguage));
 
   // calls fetchBingSearchData from axios (promise)
-  const searchData = fetchBingSearchData(searchQuery + " " + encodedPLanguage); 
+  const searchData = fetchGoogleSearchData(searchQuery + " " + encodedPLanguage); 
 
   return searchData.then(async function(data) {
+    let adata = await data;
+
     // load markup with cheerio
-    let $ = cheerio.load(data);
+    let $ = cheerio.load(adata);
 
     // building result object
     // array : store data points
     const links = [];
     const titles = [];
 
-    // loop through html class ".b_algo" to embedded h2 tag to a tag then getting hyperlink
-    $(".b_algo > h2 > a").each((index, element) => {
+    // loop through html class ".yuRUbf" to hyperlink tag
+    $(".yuRUbf > a").each((index, element) => {
       links[index] = $(element).attr("href");
     });
-
-    // loop through html class ".b_algo" to embedded h2 tag to a tag then getting text
-    $(".b_algo > h2 > a").each((index, element) => {
+  
+    // loop through html class ".yuRUbf" to hyperlink tag to header tag
+    $(".yuRUbf > a > h3").each((index, element) => {
       titles[index] = $(element).text();
     });
 
@@ -109,14 +119,14 @@ async function buildBingResultObject(searchQuery, pLanguage) {
   });
 }
 
-// function to get data from the first link in the bing result object from axios
-async function fetchFirstBingResultPage(searchQuery, pLanguage) {
-  // array of result objects, holds the top three results (link, title) from bing
-  const resultsBing = buildBingResultObject(searchQuery, pLanguage);
+// function to get data from the first link in the google result object from axios
+async function fetchFirstGoogleResultPage(searchQuery, pLanguage) {
+  // array of result objects, holds the top three results (link, title) from google
+  const resultsGoogle = buildGoogleResultObject(searchQuery, pLanguage);
 
-  // data is array of bing result objects
-  // makes call to axios to get data from the first link of bing result object
-  return resultsBing.then(async function(data) {
+  // data is array of google result objects
+  // makes call to axios to get data from the first link of google result object
+  return resultsGoogle.then(async function(data) {
 
     // link data from array of bing result object with axios
     const linkData = await axios.get(data[0].link, OPTIONS);

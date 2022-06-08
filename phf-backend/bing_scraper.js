@@ -1,7 +1,7 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 
-// write request header interface for google 
+// write request header interface for bing 
 const OPTIONS = {
   headers: {
     "User-Agent":
@@ -77,10 +77,12 @@ async function buildBingResultObject(searchQuery, pLanguage) {
 
   // calls fetchBingSearchData from axios (promise)
   const searchData = fetchBingSearchData(searchQuery + " " + encodedPLanguage); 
-
+  
   return searchData.then(async function(data) {
+    let adata = await data;
+
     // load markup with cheerio
-    let $ = cheerio.load(data);
+    let $ = cheerio.load(adata);
 
     // building result object
     // array : store data points
@@ -109,15 +111,21 @@ async function buildBingResultObject(searchQuery, pLanguage) {
   });
 }
 
+function sleep(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
 // function to get data from the first link in the bing result object from axios
 async function fetchFirstBingResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
   const resultsBing = buildBingResultObject(searchQuery, pLanguage);
 
+  await sleep(1000);
   // data is array of bing result objects
   // makes call to axios to get data from the first link of bing result object
-  return resultsBing.then(async function(data) {
-
+  return await resultsBing.then(async function(data) {
+    await sleep(1000);
+    console.log(data[0].link);
     // link data from array of bing result object with axios
     const linkData = await axios.get(data[0].link, OPTIONS);
 
@@ -133,10 +141,12 @@ async function fetchSecondBingResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
   const resultsBing = buildBingResultObject(searchQuery, pLanguage);
 
+  await sleep(1000);
   // data is array of bing result objects
   // makes call to axios to get data from the second link of bing result object
-  return resultsBing.then(async function(data) {
-
+  return await resultsBing.then(async function(data) {
+    await sleep(1000);
+    console.log(data[1].link);
     // link data from array of result object with axios
     const linkData = await axios.get(data[1].link, OPTIONS);
 
@@ -152,10 +162,12 @@ async function fetchThirdBingResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
   const resultsBing =  buildBingResultObject(searchQuery, pLanguage);
 
+  await sleep(1000);
   // data is array of bing result objects
   // makes call to axios to get data from the third link of bing result object
-  return resultsBing.then(async function(data) {
-
+  return await resultsBing.then(async function(data) {
+    await sleep(1000);
+    console.log(data[2].link);
     // link data from array of bing result object with axios
     const linkData = await axios.get(data[2].link, OPTIONS);
 
@@ -172,17 +184,14 @@ async function fetchThirdBingResultPage(searchQuery, pLanguage) {
 // linkState will be a dropdown menu/next button on the frontend
 // default will be the code object from google search result object
 async function getResultDataLinks(searchQuery, pLanguage, linkState) {
-  // page data from corresponding link in bing result object array
-  const bingPageOne = fetchFirstBingResultPage(searchQuery, pLanguage);
-  const bingPageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);  
-  const bingPageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
-
   // captcha page message from response.data
   const CAPTCHA_MESSAGE = "Our systems have detected unusual traffic from your computer network";
 
   // linkState will scrap the corresponding website and checks captcha state
   // return "code" object that represents the original searchQuery and corresponding programming language 
   if (linkState === 1) {
+    const bingPageOne = fetchFirstBingResultPage(searchQuery, pLanguage);
+
     return bingPageOne.then(async function(data) {
       let adata = await data;
 
@@ -198,6 +207,8 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       return code;
     });
   } else if (linkState === 2) {
+    const bingPageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);  
+
     return bingPageTwo.then(async function(data) {
       let adata = await data;
 
@@ -213,6 +224,8 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       return code;
     });
   } else if (linkState === 3) {
+    const bingPageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
+
     return bingPageThree.then(async function(data) {
       let adata = await data;
 
@@ -238,8 +251,10 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
 // http server proxy (in server file)
 
+
 // testing
-const code = getResultDataLinks("merge sort", "javascript", 1);
+const code = getResultDataLinks("reverse a linked list", "javascript", 2);
 code.then(async function(data) {
+  await sleep(1000);
   console.log(data)
 })
