@@ -24,7 +24,7 @@ async function fetchGoogleSearchData(searchQuery) {
 
   // default 3 results
   // add "see another solution feature"
-  const numberOfResults = "&num=3";
+  const numberOfResults = "&num=4";
 
   // google search data with axios
   const googleSearchData = await axios.get(
@@ -230,6 +230,19 @@ async function fetchFirstGoogleResultPage(searchQuery, pLanguage) {
   });
 }
 
+// checks if google redirects to captcha page
+async function checkCaptchaGoogleOne(searchQuery, pLanguage) {
+  let state = false
+  const pageOne = fetchFirstGoogleResultPage(searchQuery, pLanguage);
+  return pageOne.catch(function(error) {
+    const message = "Our systems have detected unusual traffic from your computer network.";
+    if (error.response.data.includes(message)) {
+      state = true;
+    }
+    return state;
+  });
+}
+
 // function to get data from the second link in the google result object from axios
 async function fetchSecondGoogleResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from google
@@ -246,6 +259,19 @@ async function fetchSecondGoogleResultPage(searchQuery, pLanguage) {
     const linkDataPromise = await linkData.data;
 
     return linkDataPromise;
+  });
+}
+
+// checks if google redirects to captcha page
+async function checkCaptchaGoogleTwo(searchQuery, pLanguage) {
+  let state = false;
+  const pageTwo = fetchSecondGoogleResultPage(searchQuery, pLanguage);
+  return pageTwo.catch(function(error) {
+    const message = "Our systems have detected unusual traffic from your computer network";
+    if (error.response.data.includes(message)) {
+      state = true;
+    }
+    return state;
   });
 }
 
@@ -268,6 +294,19 @@ async function fetchThirdGoogleResultPage(searchQuery, pLanguage) {
   });
 }
 
+// checks if google redirects to captcha page
+async function checkCaptchaGoogleThree(searchQuery, pLanguage) {
+  let state = false;
+  const pageThree = fetchThirdGoogleResultPage(searchQuery, pLanguage);
+  return pageThree.catch(function(error) {
+    const message = "Our systems have detected unusual traffic from your computer network";
+    if (error.response.data.includes(message)) {
+      state = true;
+    }
+    return state;
+  });
+}
+
 // function to get data from the first link in the bing result object from axios
 async function fetchFirstBingResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
@@ -285,7 +324,19 @@ async function fetchFirstBingResultPage(searchQuery, pLanguage) {
 
     return linkDataPromise;
   });
+}
 
+// checks if bing redirects to captcha page
+async function checkCaptchaBingOne(searchQuery, pLanguage) {
+  let state = false;
+  const pageOne = fetchFirstBingResultPage(searchQuery, pLanguage);
+  return pageOne.catch(function(error) {
+    const message = "Our systems have detected unusual traffic from your computer network";
+    if (error.response.data.includes(message)) {
+      state = true;
+    }
+    return state;
+  });
 }
 
 // function to get data from the second link in the bing result object from axios
@@ -304,6 +355,19 @@ async function fetchSecondBingResultPage(searchQuery, pLanguage) {
     const linkDataPromise = await linkData.data;
 
     return linkDataPromise;
+  });
+}
+
+// checks if bing redirects to captcha page
+async function checkCaptchaBingTwo(searchQuery, pLanguage) {
+  let state = false;
+  const pageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);
+  return pageTwo.catch(function(error) {
+    const message = "Our systems have detected unusual traffic from your computer network";
+    if (error.response.data.includes(message)) {
+      state = true;
+    }
+    return state;
   });
 }
 
@@ -326,21 +390,16 @@ async function fetchThirdBingResultPage(searchQuery, pLanguage) {
   });
 }
 
-async function checkCaptcha(searchQuery, pLanguage) {
-  // array of result objects, holds the top three results (link, title) from bing
-  const resultsGoogle = getGoogleSearchLinksLang(searchQuery, pLanguage);
-
-  // data is array of bing result objects
-  // makes call to axios to get data from the third link of bing result object
-  return resultsGoogle.then(async function(data) {
-
-    // link data from array of bing result object with axios
-    const linkData = await axios.get(data[0].link, OPTIONS);
-
-    // new link data promise
-    const linkDataPromise = await linkData.data;
-
-    return false;
+// checks if bing redirects to captcha page
+async function checkCaptchaBingThree(searchQuery, pLanguage) {
+  let state = false;
+  const pageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
+  return pageThree.catch(function(error) {
+    const message = "Our systems have detected unusual traffic from your computer network";
+    if (error.response.data.includes(message)) {
+      state = true;
+    }
+    return state;
   });
 }
 
@@ -355,23 +414,25 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
   const googlePageTwo = fetchSecondGoogleResultPage(searchQuery, pLanguage);  
   const googlePageThree = fetchThirdGoogleResultPage(searchQuery, pLanguage);
 
+  // captcha state for all google pages
+  const googlePageOneCaptchaState = await checkCaptchaGoogleOne(searchQuery, pLanguage);
+  const googlePageTwoCaptchaState = await checkCaptchaGoogleTwo(searchQuery, pLanguage);  
+  const googlePageThreeCaptchaState = await checkCaptchaGoogleThree(searchQuery, pLanguage);
+
   // page data from corresponding link in bing result object array
   const bingPageOne = fetchFirstBingResultPage(searchQuery, pLanguage);
   const bingPageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);  
   const bingPageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
 
-  // boolean state for if captcha was triggered
-  const message = "Our systems have detected unusual traffic from your computer network";
-  const captcha = "captcha";
-  
-  /* let googleOneHasCaptcha = false;
-  if (googlePageOne.includes(message) || googlePageOne.includes(captcha)) {
-    googleOneHasCaptcha = true;
-  } */
+  // captcha state for all bing pages
+  const bingPageOneCaptchaState = await checkCaptchaBingOne(searchQuery, pLanguage);
+  const bingPageTwoCaptchaState = await checkCaptchaBingTwo(searchQuery, pLanguage);  
+  const bingPageThreeCaptchaState = await checkCaptchaBingThree(searchQuery, pLanguage);
 
-  // linkState will scrap the corresponding website
+
+  // linkState will scrap the corresponding website and checks captcha state
   // return "code" object that represents the original searchQuery and corresponding programming language
-  if ((linkState == 1)) {
+  if ((linkState === 1) && (googlePageOneCaptchaState !== true)) {
     return googlePageOne.then(async function(data) {
       // load markup with cheerio
       let $ = cheerio.load(data);
@@ -384,7 +445,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       
       return code;
     });
-  } else if (linkState == 1) {
+  } else if ((linkState === 1) && (bingPageOneCaptchaState !== true)) {
     return bingPageOne.then(async function(data) {
       // load markup with cheerio
       let $ = cheerio.load(data);
@@ -397,7 +458,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       
       return code;
     });
-  } else if (linkState == 2) {
+  } else if ((linkState === 2) && (googlePageTwoCaptchaState !== true)) {
     return googlePageTwo.then(async function(data) {
       // load markup with cheerio
       let $ = cheerio.load(data);
@@ -410,7 +471,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       
       return code;
     });
-  } else if (linkState == 2) {
+  } else if ((linkState === 2) && (bingPageTwoCaptchaState !== true)) {
     return bingPageTwo.then(async function(data) {
       // load markup with cheerio
       let $ = cheerio.load(data);
@@ -423,7 +484,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       
       return code;
     });
-  } else if (linkState == 3) {
+  } else if (linkState === 3 && (googlePageThreeCaptchaState !== true)) {
     return googlePageThree.then(async function(data) {
       // load markup with cheerio
       let $ = cheerio.load(data);
@@ -436,7 +497,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       
       return code;
     });
-  } else if (linkState == 3) {
+  } else if ((linkState === 3) && (bingPageThreeCaptchaState !== true)) {
     return bingPageThree.then(async function(data) {
       // load markup with cheerio
       let $ = cheerio.load(data);
@@ -449,7 +510,25 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       
       return code;
     });
-  } else {
+  } else if (googlePageOneCaptchaState === true
+            && googlePageTwoCaptchaState === true
+            && googlePageThreeCaptchaState === true
+            && bingPageOneCaptchaState === true
+            && bingPageTwoCaptchaState === true
+            && bingPageThreeCaptchaState === true) {
+              throw new Error("Captcha Error");
+            }
+    else if (googlePageOneCaptchaState === true
+            && googlePageTwoCaptchaState === true
+            && googlePageThreeCaptchaState === true) {
+              throw new Error("Google Captcha Error");
+            }
+    else if (bingPageOneCaptchaState === true
+            && bingPageTwoCaptchaState === true
+            && bingPageThreeCaptchaState === true) {
+              throw new Error("Bing Captcha Error");
+            }
+  else {
     throw new Error("Link State Error")
   }
 }
@@ -462,15 +541,10 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
 
 // testing
-const code = fetchFirstGoogleResultPage("is a palindrome", "c++");
-code.catch(function(error) {
-  const message = "Our systems have detected unusual traffic from your computer network";
-  if (error.response.data.includes(message)) {
-    console.log("captcha")
-  }
-  console.log("here")
-});
-
+const code = getResultDataLinks("is palindrome", "c++", 1);
+code.then(function(data) {
+  console.log(data)
+})
 
 /*
 
