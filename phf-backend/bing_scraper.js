@@ -208,6 +208,11 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       });
 
       return code;
+    }).catch(async function(error) {
+      if (error.response.includes(CAPTCHA_MESSAGE)) {
+        throw new Error("Captcha Error")
+      }
+      throw new Error("Link State 1 Error")
     });
   } else if (linkState === 2) {
     const bingPageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);
@@ -225,6 +230,11 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       });
 
       return code;
+    }).catch(async function(error) {
+      if (error.response.includes(CAPTCHA_MESSAGE)) {
+        throw new Error("Captcha Error")
+      }
+      throw new Error("Link State 1 Error")
     });
   } else if (linkState === 3) {
     const bingPageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
@@ -242,6 +252,11 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       });
 
       return code;
+    }).catch(async function(error) {
+      if (error.response.includes(CAPTCHA_MESSAGE)) {
+        throw new Error("Captcha Error")
+      }
+      throw new Error("Link State 1 Error")
     });
   } else {
     throw new Error("Link State Error");
@@ -253,7 +268,6 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 // data cleaning function, comes out very messy in some cases
 
 // http server proxy (in server file)
-
 
 // testing
 const code = getResultDataLinks("reverse a linked list", "c++", 1);
