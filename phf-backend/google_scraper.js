@@ -147,7 +147,7 @@ async function fetchFirstGoogleResultPage(searchQuery, pLanguage) {
 }
 
 // function to get data from the second link in the google result object from axios
-async function fetchGoogleBingResultPage(searchQuery, pLanguage) {
+async function fetchSecondGoogleResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from google
   const resultsBing = buildGoogleResultObject(searchQuery, pLanguage);
 
@@ -168,7 +168,7 @@ async function fetchGoogleBingResultPage(searchQuery, pLanguage) {
 }
 
 // function to get data from the third link in the google result object from axios
-async function fetchGoogleBingResultPage(searchQuery, pLanguage) {
+async function fetchThirdGoogleResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from google
   const resultsGoogle = buildGoogleResultObject(searchQuery, pLanguage);
 
@@ -201,9 +201,9 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
   // linkState will scrap the corresponding website and checks captcha state
   // return "code" object that represents the original searchQuery and corresponding programming language
   if (linkState === 1) {
-    const bingPageOne = fetchFirstBingResultPage(searchQuery, pLanguage);
+    const googlePageOne = fetchFirstGoogleResultPage(searchQuery, pLanguage);
 
-    return bingPageOne.then(async function (data) {
+    return googlePageOne.then(async function (data) {
       let adata = await data;
 
       // load markup with cheerio
