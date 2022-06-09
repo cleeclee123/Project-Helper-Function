@@ -94,7 +94,9 @@ async function buildBingResultObject(searchQuery, pLanguage) {
   const encodedPLanguage = encodeURI(helperConvertToWord(pLanguage));
 
   // calls fetchBingSearchData from axios (promise)
-  const searchData = fetchBingSearchData(searchQuery + " " + encodedPLanguage);
+  const searchData = fetchBingSearchData(
+    searchQuery + " " + encodedPLanguage
+  );
 
   return searchData.then(async function (data) {
     let adata = await data;
@@ -342,7 +344,6 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
     throw new Error("Link State Error");
   }
 }
-
 
 // simple testing
 const code = getResultDataLinks("hello world", "java", 3);
