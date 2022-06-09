@@ -216,6 +216,11 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       });
 
       return code;
+    }).catch(async function(error) {
+      if (error.response.data.includes(CAPTCHA_MESSAGE)) {
+        throw new Error("Captcha Error")
+      }
+      throw new Error("Link State 1 Error")
     });
   } else if (linkState === 2) {
     const bingPageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);
@@ -233,6 +238,11 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       });
 
       return code;
+    }).catch(async function(error) {
+      if (error.response.data.includes(CAPTCHA_MESSAGE)) {
+        throw new Error("Captcha Error")
+      }
+      throw new Error("Link State 1 Error")
     });
   } else if (linkState === 3) {
     const bingPageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
@@ -250,6 +260,11 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       });
 
       return code;
+    }).catch(async function(error) {
+      if (error.response.data.includes(CAPTCHA_MESSAGE)) {
+        throw new Error("Captcha Error")
+      }
+      throw new Error("Link State 1 Error")
     });
   } else {
     throw new Error("Link State Error");

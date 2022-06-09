@@ -234,7 +234,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       if (error.response.includes(CAPTCHA_MESSAGE)) {
         throw new Error("Captcha Error")
       }
-      throw new Error("Link State 1 Error")
+      throw new Error("Link State 2 Error")
     });
   } else if (linkState === 3) {
     const bingPageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
@@ -256,7 +256,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
       if (error.response.includes(CAPTCHA_MESSAGE)) {
         throw new Error("Captcha Error")
       }
-      throw new Error("Link State 1 Error")
+      throw new Error("Link State 3 Error")
     });
   } else {
     throw new Error("Link State Error");
