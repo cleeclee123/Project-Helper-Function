@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "devStartBing": "node bing_scraper.js",
-    "devStartGoogle": "node google_scraper.js"
+    "BingScraper": "node bing_scraper.js",
+    "GoogleScraper": "node google_scraper.js"
   },
   "keywords": [],
   "author": "",
