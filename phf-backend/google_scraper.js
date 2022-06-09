@@ -211,9 +211,25 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
       // build "code" object
       let code = [];
+
+      // loop through code tag on page
       $("code").each((index, element) => {
         code[index] = $(element).text();
       });
+
+      // if code array is empty, loop through all tags with class "code"
+      if (code.length === 0 || code === undefined) {
+        $(".code").each((index, element) => {
+          code[index] = $(element).text();
+        })
+      }
+
+      // if code array is empty, loop through pre tag on page
+      if (code.length === 0 || code === undefined) {
+        $("pre").each((index, element) => {
+          code[index] = $(element).text();
+        })
+      }
 
       return code;
     }).catch(async function(error) {
@@ -234,9 +250,25 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
       // build "code" object
       let code = [];
+
+      // loop through code tag on page
       $("code").each((index, element) => {
         code[index] = $(element).text();
       });
+
+      // if code array is empty, loop through all tags with class "code"
+      if (code.length === 0 || code === undefined) {
+        $(".code").each((index, element) => {
+          code[index] = $(element).text();
+        })
+      }
+
+      // if code array is empty, loop through pre tag on page
+      if (code.length === 0 || code === undefined) {
+        $("pre").each((index, element) => {
+          code[index] = $(element).text();
+        })
+      }
 
       return code;
     }).catch(async function(error) {
@@ -257,9 +289,25 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
       // build "code" object
       let code = [];
+
+      // loop through code tag on page
       $("code").each((index, element) => {
         code[index] = $(element).text();
       });
+
+      // if code array is empty, loop through all tags with class "code"
+      if (code.length === 0 || code === undefined) {
+        $(".code").each((index, element) => {
+          code[index] = $(element).text();
+        })
+      }
+
+      // if code array is empty, loop through pre tag on page
+      if (code.length === 0 || code === undefined) {
+        $("pre").each((index, element) => {
+          code[index] = $(element).text();
+        })
+      }
 
       return code;
     }).catch(async function(error) {
