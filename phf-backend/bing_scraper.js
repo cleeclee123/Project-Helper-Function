@@ -4,8 +4,20 @@ const axios = require("axios");
 // write request header interface for bing
 const OPTIONS = {
   headers: {
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", 
+    // "Accept-Encoding": "gzip, deflate, br", 
+    "Accept-Language": "en-US,en;q=0.9", 
+    "Referer": "https://www.bing.com", 
+    "Sec-Ch-Ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"102\", \"Google Chrome\";v=\"102\"", 
+    "Sec-Ch-Ua-Mobile": "?0", 
+    "Sec-Ch-Ua-Platform": "\"Windows\"", 
+    "Sec-Fetch-Dest": "document", 
+    "Sec-Fetch-Mode": "navigate", 
+    "Sec-Fetch-Site": "cross-site", 
+    "Sec-Fetch-User": "?1", 
+    "Upgrade-Insecure-Requests": "1", 
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+    "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18"
   },
 };
 
@@ -203,15 +215,32 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
       // build "code" object
       let code = [];
+
+      // loop through code tag on page
       $("code").each((index, element) => {
         code[index] = $(element).text();
       });
 
+      // if code array is empty, loop through all tags with class "code"
+      if (code.length === 0 || code === undefined) {
+        $(".code").each((index, element) => {
+          code[index] = $(element).text();
+        })
+      }
+
+      // if code array is empty, loop through pre tag on page
+      if (code.length === 0 || code === undefined) {
+        $("pre").each((index, element) => {
+          code[index] = $(element).text();
+        })
+      }
+
       return code;
     }).catch(async function(error) {
-      if (error.response.includes(CAPTCHA_MESSAGE)) {
+      /* if (error.response.includes(CAPTCHA_MESSAGE)) {
         throw new Error("Captcha Error")
-      }
+      } */
+      console.log(error);
       throw new Error("Link State 1 Error")
     });
   } else if (linkState === 2) {
@@ -225,15 +254,32 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
       // build "code" object
       let code = [];
+
+      // loop through code tag on page
       $("code").each((index, element) => {
         code[index] = $(element).text();
       });
 
+      // if code array is empty, loop through all tags with class "code"
+      if (code.length === 0 || code === undefined) {
+        $(".code").each((index, element) => {
+          code[index] = $(element).text();
+        })
+      }
+
+      // if code array is empty, loop through pre tag on page
+      if (code.length === 0 || code === undefined) {
+        $("pre").each((index, element) => {
+          code[index] = $(element).text();
+        })
+      }
+
       return code;
     }).catch(async function(error) {
-      if (error.response.includes(CAPTCHA_MESSAGE)) {
+      /* if (error.response.includes(CAPTCHA_MESSAGE)) {
         throw new Error("Captcha Error")
-      }
+      } */
+      console.log(error);
       throw new Error("Link State 2 Error")
     });
   } else if (linkState === 3) {
@@ -247,15 +293,32 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
       // build "code" object
       let code = [];
+
+      // loop through code tag on page
       $("code").each((index, element) => {
         code[index] = $(element).text();
       });
 
+      // if code array is empty, loop through all tags with class "code"
+      if (code.length === 0 || code === undefined) {
+        $(".code").each((index, element) => {
+          code[index] = $(element).text();
+        })
+      }
+
+      // if code array is empty, loop through pre tag on page
+      if (code.length === 0 || code === undefined) {
+        $("pre").each((index, element) => {
+          code[index] = $(element).text();
+        })
+      }
+
       return code;
     }).catch(async function(error) {
-      if (error.response.includes(CAPTCHA_MESSAGE)) {
+      /* if (error.response.includes(CAPTCHA_MESSAGE)) {
         throw new Error("Captcha Error")
-      }
+      } */
+      console.log(error);
       throw new Error("Link State 3 Error")
     });
   } else {
@@ -270,7 +333,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 // http server proxy (in server file)
 
 // testing
-const code = getResultDataLinks("reverse a linked list", "c++", 1);
+const code = getResultDataLinks("hello world", "c++", 1);
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
