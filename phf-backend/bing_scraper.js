@@ -342,7 +342,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 // http server proxy (in server file)
 
 // testing
-const code = getResultDataLinks("hello world", "c++", 1);
+const code = getResultDataLinks("two sum", "javascript", 1);
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
