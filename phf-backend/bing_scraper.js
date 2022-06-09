@@ -345,7 +345,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
 
 // simple testing
-const code = getResultDataLinks("hello world", "coffeescript", 2);
+const code = getResultDataLinks("hello world", "java", 3);
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
