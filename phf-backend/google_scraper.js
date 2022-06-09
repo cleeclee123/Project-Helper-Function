@@ -4,20 +4,20 @@ const axios = require("axios");
 // write request header interface for bing
 const OPTIONS = {
   headers: {
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", 
-    "Accept-Encoding": "gzip, deflate, br", 
-    "Accept-Language": "en-US,en;q=0.9", 
-    "Referer": "https://www.google.com", 
-    "Sec-Ch-Ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"102\", \"Google Chrome\";v=\"102\"", 
-    "Sec-Ch-Ua-Mobile": "?0", 
-    "Sec-Ch-Ua-Platform": "\"Windows\"", 
-    "Sec-Fetch-Dest": "document", 
-    "Sec-Fetch-Mode": "navigate", 
-    "Sec-Fetch-Site": "cross-site", 
-    "Sec-Fetch-User": "?1", 
-    "Upgrade-Insecure-Requests": "1", 
+    // "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", 
+    // "Accept-Encoding": "gzip, deflate, br", 
+    // "Accept-Language": "en-US,en;q=0.9", 
+    // "Referer": "https://www.google.com", 
+    // "Sec-Ch-Ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"102\", \"Google Chrome\";v=\"102\"", 
+    // "Sec-Ch-Ua-Mobile": "?0", 
+    // "Sec-Ch-Ua-Platform": "\"Windows\"", 
+    // "Sec-Fetch-Dest": "document", 
+    // "Sec-Fetch-Mode": "navigate", 
+    // "Sec-Fetch-Site": "cross-site", 
+    // "Sec-Fetch-User": "?1", 
+    // "Upgrade-Insecure-Requests": "1", 
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
-    "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18"
+    // "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18"
   },
 };
 
@@ -149,7 +149,7 @@ async function fetchFirstGoogleResultPage(searchQuery, pLanguage) {
 // function to get data from the second link in the google result object from axios
 async function fetchSecondGoogleResultPage(searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from google
-  const resultsBing = buildGoogleResultObject(searchQuery, pLanguage);
+  const resultsGoogle = buildGoogleResultObject(searchQuery, pLanguage);
 
   await sleep(1000);
   // data is array of google result objects
@@ -217,15 +217,16 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
       return code;
     }).catch(async function(error) {
-      if (error.response.data.includes(CAPTCHA_MESSAGE)) {
+      /* if (error.response.data.includes(CAPTCHA_MESSAGE)) {
         throw new Error("Captcha Error")
-      }
-      throw new Error("Link State 1 Error")
+      } */
+      console.log(error);
+      throw new Error("Link State 1 Error");
     });
   } else if (linkState === 2) {
-    const bingPageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);
+    const googlePageTwo = fetchSecondGoogleResultPage(searchQuery, pLanguage);
 
-    return bingPageTwo.then(async function (data) {
+    return googlePageTwo.then(async function (data) {
       let adata = await data;
 
       // load markup with cheerio
@@ -239,15 +240,16 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
       return code;
     }).catch(async function(error) {
-      if (error.response.data.includes(CAPTCHA_MESSAGE)) {
-        throw new Error("Captcha Error")
-      }
-      throw new Error("Link State 1 Error")
+      /* if (error.response.data.includes(CAPTCHA_MESSAGE)) {
+        throw new Error("Captcha Error");
+      } */
+      console.log(error);
+      throw new Error("Link State 2 Error");
     });
   } else if (linkState === 3) {
-    const bingPageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
+    const googlePageThree = fetchThirdGoogleResultPage(searchQuery, pLanguage);
 
-    return bingPageThree.then(async function (data) {
+    return googlePageThree.then(async function (data) {
       let adata = await data;
 
       // load markup with cheerio
@@ -261,10 +263,11 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
       return code;
     }).catch(async function(error) {
-      if (error.response.data.includes(CAPTCHA_MESSAGE)) {
+      /* if (error.repsonse.data.includes(CAPTCHA_MESSAGE)) {
         throw new Error("Captcha Error")
-      }
-      throw new Error("Link State 1 Error")
+      } */
+      console.log(error);
+      throw new Error("Link State 3 Error");
     });
   } else {
     throw new Error("Link State Error");
@@ -279,7 +282,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
 
 // testing
-const code = getResultDataLinks("reverse a linked list", "c++", 1);
+const code = getResultDataLinks("hello world", "java", 2);
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
