@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "BingScraper": "node bing_scraper.js",
-    "GoogleScraper": "node google_scraper.js"
+    "GoogleScraper": "node google_scraper.js",
+    "devStartN": "node server.js",
+    "devStartNM": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +17,7 @@
     "2captcha": "^3.0.4",
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.11",
+    "express": "^4.18.1",
     "fetch": "^1.1.0",
     "node-fetch": "^3.2.4",
     "nodemon": "^2.0.16",
