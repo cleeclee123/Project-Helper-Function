@@ -55,6 +55,7 @@ async function fetchGoogleSearchData(searchQuery) {
 function helperConvertToWord(input) {
   var returnString = input.toLowerCase();
   returnString = returnString.replace("+", "plus");
+  returnString = returnString.replace("#", "sharp");
   return returnString;
 }
 
@@ -334,7 +335,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 }
 
 // simple testing
-const code = getResultDataLinks("hello world", "javascript", 1);
+const code = getResultDataLinks("how to write hello world", "ruby on rails", 1);
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);

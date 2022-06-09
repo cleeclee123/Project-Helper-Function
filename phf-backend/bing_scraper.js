@@ -59,6 +59,7 @@ async function fetchBingSearchData(searchQuery) {
 function helperConvertToWord(input) {
   var returnString = input.toLowerCase();
   returnString = returnString.replace("+", "plus");
+  returnString = returnString.replace("#", "sharp");
   return returnString;
 }
 
