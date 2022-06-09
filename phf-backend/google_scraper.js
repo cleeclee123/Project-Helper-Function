@@ -320,6 +320,13 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
           });
         }
 
+        // if code array is empty, loop through td tag on page
+        if (code.length === 0 || code === undefined) {
+          $("td").each((index, element) => {
+            code[index] = $(element).text();
+          });
+        }
+
         return code;
       })
       .catch(async function (error) {
@@ -335,7 +342,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 }
 
 // simple testing
-const code = getResultDataLinks("how to write hello world", "ruby on rails", 1);
+const code = getResultDataLinks("hello world", "coffeescript", 1);
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
