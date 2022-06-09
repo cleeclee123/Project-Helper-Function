@@ -337,7 +337,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 
 
 // simple testing
-const code = getResultDataLinks("two sum", "javascript", 1);
+const code = getResultDataLinks("binary tree level order traversal", "c++", 1);
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
