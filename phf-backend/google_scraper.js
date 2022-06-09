@@ -24,6 +24,13 @@ const OPTIONS = {
   },
 };
 
+async function generateProxy() {
+  let ip_address = [];
+  let port_numbers = [];
+
+  const proxyData = await axios.get("https://sslproxies.org/")
+}
+
 // function to get google search results from axios
 async function fetchGoogleSearchData(searchQuery) {
   // encode search query to represent UTF-8, URLs can only have certain characters from ASCII set
