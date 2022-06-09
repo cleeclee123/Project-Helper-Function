@@ -333,13 +333,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
   }
 }
 
-/* FUNCTIONS TO IMPLEMENT */
-
-// data cleaning function, comes out very messy in some cases
-
-// http server proxy (in server file)
-
-// testing
+// simple testing
 const code = getResultDataLinks("hello world", "java", 1);
 code.then(async function (data) {
   await sleep(1000);
