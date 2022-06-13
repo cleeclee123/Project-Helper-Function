@@ -36,7 +36,7 @@ async function generateProxy() {
   return proxy;
 }
 
-// write request header interface for bing
+// write request header interface for google
 const OPTIONS = {
   headers: {
     Accept:
