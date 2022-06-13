@@ -241,7 +241,7 @@ async function fetchThirdBingResultPage(searchQuery, pLanguage) {
 // linkState is an int that repersents which link in the result array (1, 2, 3)
 // linkState will be a dropdown menu/next button on the frontend
 // default will be the code object from google search result object
-async function getResultDataLinks(searchQuery, pLanguage, linkState) {
+module.exports = async function getResultDataLinks(searchQuery, pLanguage, linkState) {
   // captcha page message from response.data
   const CAPTCHA_MESSAGE =
     "Our systems have detected unusual traffic from your computer network";
@@ -384,8 +384,14 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 }
 
 // simple testing
-const code = getResultDataLinks("smallest substring of all characters", "python", 3);
+/* const code = getResultDataLinks("smallest substring of all characters", "python", 3);
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
-});
+}); */
+
+/* const proxy = generateProxy();
+proxy.then(async function(data) {
+  console.log(data);
+})
+*/
