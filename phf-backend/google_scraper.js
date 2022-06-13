@@ -58,7 +58,7 @@ const OPTIONS = {
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
       "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
     Proxy:
-      generateProxy(),
+      await generateProxy(),
   },
 };
 
