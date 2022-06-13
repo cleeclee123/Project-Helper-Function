@@ -1,6 +1,7 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 
+// scraps sslproxies.org for port numbers and ip addresses
 async function generateProxy() {
   let ip_addresses = [];
   let port_numbers = [];

@@ -1,8 +1,12 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 
+/* disregard this */
 // state must either be 0 === ip_address or 1 === port_numbers
 // returns the corresponding array (for axios header proxy options)
+/* disregard this */
+
+// scraps sslproxies.org for port numbers and ip addresses
 async function generateProxy(/* state */) {
   /* if (state !== 0 || state !== 1) {
     throw new Error("Generate Proxy State Error");
