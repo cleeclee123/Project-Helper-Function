@@ -346,7 +346,7 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 }
 
 // simple testing
-const code = getResultDataLinks("hello world", "java", 3);
+const code = getResultDataLinks("smallest substring of all characters", "python", 3);
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);

@@ -25,10 +25,38 @@ const OPTIONS = {
 };
 
 async function generateProxy() {
-  let ip_address = [];
+  let ip_addresses = [];
   let port_numbers = [];
 
-  const proxyData = await axios.get("https://sslproxies.org/")
+  await axios
+    .get("https://sslproxies.org/")
+    .then(async function (response) {
+      // load html data with cheerio 
+      const $ = cheerio.load(response.data);
+
+      // loop through table tag, first class name nth-child
+      $("td:nth-child(1)").each((index, element) => {
+        ip_addresses[index] = $(element).text();
+      });
+
+      // loop through table tag, second class name nth-child
+      $("td:nth-child(2)").each((index, element) => {
+        port_numbers[index] = $(element).text();
+      });
+      
+      ip_addresses.join(", ");
+      port_numbers.join(", ");  
+
+    })
+    .catch(async function (error) {
+      console.log(error.response);
+      throw new Error("Proxy Rotation Scrap Error");
+    });
+
+  let random_number = Math.floor(Math.random() * 100);
+  let proxy = `http://${ip_addresses[random_number]}:${port_numbers[random_number]}`;
+      
+  return proxy;
 }
 
 // function to get google search results from axios
@@ -349,8 +377,13 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 }
 
 // simple testing
-const code = getResultDataLinks("hello world", "coffeescript", 1);
+/* const code = getResultDataLinks("smallest substring of all characters", "javascript", 2);
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
-});
+}); */
+
+const proxy = generateProxy();
+proxy.then(async function(data) {
+  console.log(data);
+})
