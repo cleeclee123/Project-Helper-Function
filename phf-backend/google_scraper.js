@@ -1,7 +1,13 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 
-async function generateProxy() {
+// state must either be 0 === ip_address or 1 === port_numbers
+// returns the corresponding array (for axios header proxy options)
+async function generateProxy(/* state */) {
+  /* if (state !== 0 || state !== 1) {
+    throw new Error("Generate Proxy State Error");
+  } */
+
   let ip_addresses = [];
   let port_numbers = [];
 
@@ -32,8 +38,17 @@ async function generateProxy() {
 
   let random_number = Math.floor(Math.random() * 100);
   let proxy = `http://${ip_addresses[random_number]}:${port_numbers[random_number]}`;
-      
+  
   return proxy;
+
+  /* if (state === 0) {
+    return ip_addresses[random_number];
+  } else if (state === 1) {
+    return port_numbers[random_number];
+  } else {
+    // should never get here
+    throw new Error("Generate Proxy State Error");
+  } */
 }
 
 // write request header interface for google
@@ -58,7 +73,7 @@ const OPTIONS = {
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
       "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
     Proxy:
-      await generateProxy(),
+      generateProxy(),
   },
 };
 
@@ -380,13 +395,14 @@ async function getResultDataLinks(searchQuery, pLanguage, linkState) {
 }
 
 // simple testing
-/* const code = getResultDataLinks("smallest substring of all characters", "javascript", 2);
+const code = getResultDataLinks("smallest substring of all characters", "javascript", 2);
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
-}); */
+});
 
-const proxy = generateProxy();
+/* const proxy = generateProxy();
 proxy.then(async function(data) {
   console.log(data);
 })
+ */
