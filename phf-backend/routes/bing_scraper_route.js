@@ -15,7 +15,7 @@ router.post("/bingsearch/:searchquery/:planguage/:linkstate", async function(req
         languageChoice,
         stateChoice,
       )) || "Search Failed";
-  
+   
     // code object from corresponding linkstate website from bing search result object to json
     bingResultObjectCode.then(async function (data) {
       const toJson = JSON.stringify(data);
