@@ -54,6 +54,33 @@ async function generateProxy(/* state */) {
   } */
 }
 
+// function to rotate user agents by scrapping github repo
+async function rotateUserAgent() {
+  let userAgents = [];
+
+  await axios
+    .get("https://github.com/tamimibrahim17/List-of-user-agents/blob/master/Chrome.txt")
+    .then(async function (repsonse) {
+      // load html with cheerio
+      const $ = cheerio.load(repsonse.data);
+
+      // loop through tr tag, loop through table tag, grab second nth-child
+      $("tr > td:nth-child(2)").each((index, element) => {
+        userAgents[index] = $(element).text();
+      });
+
+      userAgents.join(", ");
+    })
+    .catch(async function(error) {
+      console.log(error.response);
+      throw new Error("User Agent Rotation Error");
+    });
+
+  let randomNumber = Math.floor(Math.random() * 100);
+  let rotatedUserAgent = userAgents[randomNumber];
+  return rotatedUserAgent;
+}
+
 // write request header interface for google
 const OPTIONS = {
   headers: {
@@ -71,8 +98,7 @@ const OPTIONS = {
     "Sec-Fetch-Site": "cross-site",
     "Sec-Fetch-User": "?1",
     "Upgrade-Insecure-Requests": "1",
-    "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+    "User-Agent": rotateUserAgent(),
     "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
     Proxy: generateProxy(),
   },
