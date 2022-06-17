@@ -20,8 +20,8 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use('/googlescraper', googleScraper);
-app.use("/bingscraper", bingScraper);
+app.use('/googlescraper', googleScraper).response.send(200);
+app.use("/bingscraper", bingScraper).response.send(200);
 
 // catch 404 and forward to error handler
 app.use(function(request, response) {
