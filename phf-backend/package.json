@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "BingScraper": "node bing_scraper.js",
+    "BingScraper": "node ./scrapers/bing_scraper.js",
     "GoogleScraper": "node google_scraper.js",
     "devStartN": "node server.js",
     "devStartNM": "nodemon server.js"

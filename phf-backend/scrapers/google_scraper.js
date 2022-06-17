@@ -18,7 +18,7 @@ async function generateProxy(/* state */) {
   await axios
     .get("https://sslproxies.org/")
     .then(async function (response) {
-      // load html data with cheerio 
+      // load html data with cheerio
       const $ = cheerio.load(response.data);
 
       // loop through table tag, first class name nth-child
@@ -30,10 +30,9 @@ async function generateProxy(/* state */) {
       $("td:nth-child(2)").each((index, element) => {
         port_numbers[index] = $(element).text();
       });
-      
-      ip_addresses.join(", ");
-      port_numbers.join(", ");  
 
+      ip_addresses.join(", ");
+      port_numbers.join(", ");
     })
     .catch(async function (error) {
       console.log(error.response);
@@ -42,7 +41,7 @@ async function generateProxy(/* state */) {
 
   let random_number = Math.floor(Math.random() * 100);
   let proxy = `http://${ip_addresses[random_number]}:${port_numbers[random_number]}`;
-  
+
   return proxy;
 
   /* if (state === 0) {
@@ -60,24 +59,22 @@ const OPTIONS = {
   headers: {
     Accept:
       "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-      // "Accept-Encoding": "gzip, deflate, br",
-      "Accept-Language": "en-US,en;q=0.9",
-    Referer: 
-      "https://www.google.com",
-      "Sec-Ch-Ua":
-        '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
-      "Sec-Ch-Ua-Mobile": "?0",
-      "Sec-Ch-Ua-Platform": '"Windows"',
-      "Sec-Fetch-Dest": "document",
-      "Sec-Fetch-Mode": "navigate",
-      "Sec-Fetch-Site": "cross-site",
-      "Sec-Fetch-User": "?1",
-      "Upgrade-Insecure-Requests": "1",
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
-      "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
-    Proxy:
-      generateProxy(),
+    // "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "en-US,en;q=0.9",
+    Referer: "https://www.google.com",
+    "Sec-Ch-Ua":
+      '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
+    "Sec-Ch-Ua-Mobile": "?0",
+    "Sec-Ch-Ua-Platform": '"Windows"',
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "cross-site",
+    "Sec-Fetch-User": "?1",
+    "Upgrade-Insecure-Requests": "1",
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+    "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
+    Proxy: generateProxy(),
   },
 };
 
@@ -256,7 +253,11 @@ async function fetchThirdGoogleResultPage(searchQuery, pLanguage) {
 // linkState is an int that repersents which link in the result array (1, 2, 3)
 // linkState will be a dropdown menu/next button on the frontend
 // default will be the code object from google search result object
-module.exports = async function getResultDataLinks(searchQuery, pLanguage, linkState) {
+module.exports = async function getResultDataLinks(
+  searchQuery,
+  pLanguage,
+  linkState
+) {
   // captcha page message from response.data
   const CAPTCHA_MESSAGE =
     "Our systems have detected unusual traffic from your computer network";
@@ -396,7 +397,7 @@ module.exports = async function getResultDataLinks(searchQuery, pLanguage, linkS
   } else {
     throw new Error("Link State Error");
   }
-}
+};
 
 // simple testing
 /* const code = getResultDataLinks("smallest substring of all characters", "javascript", 2);
