@@ -12,12 +12,12 @@ async function generateProxy() {
       // load html data with cheerio 
       const $ = cheerio.load(response.data);
 
-      // loop through table tag, first class name nth-child
+      // loop through table tag, grab second nth-child
       $("td:nth-child(1)").each((index, element) => {
         ipAddresses[index] = $(element).text();
       });
 
-      // loop through table tag, second class name nth-child
+      // loop through table tag, grab second nth-child
       $("td:nth-child(2)").each((index, element) => {
         portNumbers[index] = $(element).text();
       });
@@ -47,7 +47,7 @@ async function rotateUserAgent() {
       // load html with cheerio
       const $ = cheerio.load(repsonse.data);
 
-      // loop through table tag, first class name nth-child
+      // loop through tr tag, loop through table tag, grab second nth-child
       $("tr > td:nth-child(2)").each((index, element) => {
         userAgents[index] = $(element).text();
       });
