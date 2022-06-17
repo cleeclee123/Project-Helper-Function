@@ -65,8 +65,11 @@ async function rotateUserAgent() {
       const $ = cheerio.load(repsonse.data);
 
       // loop through tr tag, loop through table tag, grab second nth-child
+      // check for space (valid user agent) and will only scrap windows uas
       $("tr > td:nth-child(2)").each((index, element) => {
-        userAgents[index] = $(element).text();
+        if ($(element).text().includes(" ") && $(element).text().includes("(Windows")) {
+          userAgents[index] = $(element).text();
+        }
       });
 
       userAgents.join(", ");
@@ -78,7 +81,7 @@ async function rotateUserAgent() {
 
   let randomNumber = Math.floor(Math.random() * 100);
   let rotatedUserAgent = userAgents[randomNumber];
-  return rotatedUserAgent;
+  return String(rotatedUserAgent);
 }
 
 // write request header interface for google

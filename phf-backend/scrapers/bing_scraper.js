@@ -37,7 +37,7 @@ async function generateProxy() {
   return proxy;
 }
 
-// function to rotate user agents by scrapping github repo
+// function to rotate user agents by scrapping github repo, returns a string
 async function rotateUserAgent() {
   let userAgents = [];
 
@@ -48,8 +48,11 @@ async function rotateUserAgent() {
       const $ = cheerio.load(repsonse.data);
 
       // loop through tr tag, loop through table tag, grab second nth-child
+      // check for space (valid user agent) and will only scrap windows uas
       $("tr > td:nth-child(2)").each((index, element) => {
-        userAgents[index] = $(element).text();
+        if ($(element).text().includes(" ") && $(element).text().includes("(Windows")) {
+          userAgents[index] = $(element).text();
+        }
       });
 
       userAgents.join(", ");
@@ -61,7 +64,7 @@ async function rotateUserAgent() {
 
   let randomNumber = Math.floor(Math.random() * 100);
   let rotatedUserAgent = userAgents[randomNumber];
-  return rotatedUserAgent;
+  return String(rotatedUserAgent);
 }
 
 // write request header interface for bing
@@ -422,8 +425,7 @@ proxy.then(async function(data) {
   console.log(data);
 })
 */
-
-const test = rotateUserAgent();
-test.then(async function(data) {
+const ua = rotateUserAgent();
+ua.then(async function(data) {
   console.log(data);
 })
