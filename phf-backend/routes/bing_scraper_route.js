@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const bingResultObject = require("./scrapers/bing_scraper");
+const bingResultObject = require("../scrapers/bing_scraper");
 
 // get route for bing search result object
 router.post("/bingsearch", async function (request, response) {
