@@ -20,16 +20,15 @@ app.get("/google", async function (request, response) {
   var stateChoice = request.query.ls;
 
   // call to scraper function
-  /* const results =
+  const results =
     (await googleResultObject.getResultDataLinks(
       searchQuery,
       languageChoice,
-      stateChoice,
-    )) || "Search Failed"; */
+      stateChoice
+    )) || "Search Failed"; 
 
   // code object from corresponding linkstate website from google search result object to json
-  const test = await googleResultObject.getResultDataLinks(searchQuery, languageChoice, stateChoice);
-  response.send(test);
+  response.send(results);
 });
 
 // bing scraper route
