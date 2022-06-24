@@ -7,7 +7,7 @@ const axios = require("axios");
 /* disregard this */
 
 // scraps sslproxies.org for port numbers and ip addresses
-async function generateProxy(/* state */) {
+const generateProxy = async function (/* state */) {
   /* if (state !== 0 || state !== 1) {
     throw new Error("Generate Proxy State Error");
   } */
@@ -55,7 +55,7 @@ async function generateProxy(/* state */) {
 }
 
 // function to rotate user agents by scrapping github repo
-async function rotateUserAgent() {
+const rotateUserAgent = async function () {
   let userAgents = [];
 
   await axios
@@ -108,7 +108,7 @@ const OPTIONS = {
 };
 
 // function to get google search results from axios
-async function fetchGoogleSearchData(searchQuery) {
+const fetchGoogleSearchData = async function (searchQuery) {
   // encode search query to represent UTF-8, URLs can only have certain characters from ASCII set
   const encodedSearch = encodeURI(searchQuery);
 
@@ -135,7 +135,7 @@ async function fetchGoogleSearchData(searchQuery) {
 }
 
 // function helper for the search function to interpret the "++" in "c++"
-function helperConvertToWord(input) {
+const helperConvertToWord = function (input) {
   var returnString = input.toLowerCase();
   returnString = returnString.replace("+", "plus");
   returnString = returnString.replace("#", "sharp");
@@ -144,7 +144,7 @@ function helperConvertToWord(input) {
 
 // scraps the top title and links for search query with programming language as a parameter
 // return array of result objects from google search data
-async function buildGoogleResultObject(searchQuery, pLanguage) {
+const buildGoogleResultObject = async function (searchQuery, pLanguage) {
   // default paraemter values:
   // default search query (result on landing page)
   const defaultSearch = "hello world";
@@ -210,12 +210,12 @@ async function buildGoogleResultObject(searchQuery, pLanguage) {
   });
 }
 
-function sleep(time) {
+const sleep = function (time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 // function to get data from the first link in the google result object from axios
-async function fetchFirstGoogleResultPage(searchQuery, pLanguage) {
+const fetchFirstGoogleResultPage = async function (searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
   const resultsGoogle = buildGoogleResultObject(searchQuery, pLanguage);
 
@@ -236,7 +236,7 @@ async function fetchFirstGoogleResultPage(searchQuery, pLanguage) {
 }
 
 // function to get data from the second link in the google result object from axios
-async function fetchSecondGoogleResultPage(searchQuery, pLanguage) {
+const fetchSecondGoogleResultPage = async function (searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from google
   const resultsGoogle = buildGoogleResultObject(searchQuery, pLanguage);
 
@@ -257,7 +257,7 @@ async function fetchSecondGoogleResultPage(searchQuery, pLanguage) {
 }
 
 // function to get data from the third link in the google result object from axios
-async function fetchThirdGoogleResultPage(searchQuery, pLanguage) {
+const fetchThirdGoogleResultPage = async function (searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from google
   const resultsGoogle = buildGoogleResultObject(searchQuery, pLanguage);
 
@@ -282,7 +282,7 @@ async function fetchThirdGoogleResultPage(searchQuery, pLanguage) {
 // linkState is an int that repersents which link in the result array (1, 2, 3)
 // linkState will be a dropdown menu/next button on the frontend
 // default will be the code object from google search result object
-module.exports = async function getResultDataLinks(
+const getResultDataLinks = async function (
   searchQuery,
   pLanguage,
   linkState
@@ -426,6 +426,10 @@ module.exports = async function getResultDataLinks(
   } else {
     throw new Error("Link State Error");
   }
+};
+
+module.exports = {
+  getResultDataLinks,
 };
 
 // simple testing
