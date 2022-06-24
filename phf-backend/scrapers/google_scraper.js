@@ -52,44 +52,33 @@ const generateProxy = async function (/* state */) {
     // should never get here
     throw new Error("Generate Proxy State Error");
   } */
-}
+};
 
 // function to rotate user agents by scrapping github repo
-const rotateUserAgent = async function () {
-  let userAgents = [];
-
-  await axios
-    .get("https://github.com/tamimibrahim17/List-of-user-agents/blob/master/Chrome.txt")
-    .then(async function (repsonse) {
-      // load html with cheerio
-      const $ = cheerio.load(repsonse.data);
-
-      // loop through tr tag, loop through table tag, grab second nth-child
-      // check for space (valid user agent) and will only scrap windows uas
-      $("tr > td:nth-child(2)").each((index, element) => {
-        if ($(element).text().includes(" ") && $(element).text().includes("(Windows")) {
-          userAgents[index] = $(element).text();
-        }
-      });
-
-      userAgents.join(", ");
-    })
-    .catch(async function(error) {
-      // console.log(error.response);
-      throw new Error("User Agent Rotation Error");
-    });
-
-  let randomNumber = Math.floor(Math.random() * 100);
+const rotateUserAgent = function () {
+  let userAgents = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (X11; CrOS x86_64 10066.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:70.0) Gecko/20100101 Firefox/70.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:70.0) Gecko/20100101 Firefox/70.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36 Edg/102.0.100.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/604.1 Edg/102.0.100.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36 OPR/65.0.3467.48",
+    "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36 OPR/65.0.3467.48",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Safari/605.1.15",
+  ];
+  let randomNumber = Math.floor(Math.random() * userAgents.length - 1);
   let rotatedUserAgent = userAgents[randomNumber];
   return String(rotatedUserAgent);
-}
+};
 
 // write request header interface for google
 const OPTIONS = {
   headers: {
     Accept:
       "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-    // "Accept-Encoding": "gzip, deflate, br",
+    //"Accept-Encoding": "gzip, deflate, br",
     "Accept-Language": "en-US,en;q=0.9",
     Referer: "https://www.google.com",
     "Sec-Ch-Ua":
@@ -101,7 +90,7 @@ const OPTIONS = {
     "Sec-Fetch-Site": "cross-site",
     "Sec-Fetch-User": "?1",
     "Upgrade-Insecure-Requests": "1",
-    "User-Agent": /* rotateUserAgent(), */ "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+    "User-Agent": rotateUserAgent(),
     "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
     Proxy: generateProxy(),
   },
@@ -120,7 +109,7 @@ const fetchGoogleSearchData = async function (searchQuery) {
 
   // default 3,4 results
   // add "see another solution feature"
-  const numberOfResults = "&num=5";
+  const numberOfResults = "&num=4";
 
   // google search data with axios
   const googleSearchData = await axios.get(
@@ -132,7 +121,7 @@ const fetchGoogleSearchData = async function (searchQuery) {
   const newGoogleSearchDataPromise = await googleSearchData.data;
 
   return newGoogleSearchDataPromise;
-}
+};
 
 // function helper for the search function to interpret the "++" in "c++"
 const helperConvertToWord = function (input) {
@@ -140,7 +129,7 @@ const helperConvertToWord = function (input) {
   returnString = returnString.replace("+", "plus");
   returnString = returnString.replace("#", "sharp");
   return returnString;
-}
+};
 
 // scraps the top title and links for search query with programming language as a parameter
 // return array of result objects from google search data
@@ -208,11 +197,11 @@ const buildGoogleResultObject = async function (searchQuery, pLanguage) {
     }
     return results;
   });
-}
+};
 
 const sleep = function (time) {
   return new Promise((resolve) => setTimeout(resolve, time));
-}
+};
 
 // function to get data from the first link in the google result object from axios
 const fetchFirstGoogleResultPage = async function (searchQuery, pLanguage) {
@@ -233,7 +222,7 @@ const fetchFirstGoogleResultPage = async function (searchQuery, pLanguage) {
 
     return linkDataPromise;
   });
-}
+};
 
 // function to get data from the second link in the google result object from axios
 const fetchSecondGoogleResultPage = async function (searchQuery, pLanguage) {
@@ -254,7 +243,7 @@ const fetchSecondGoogleResultPage = async function (searchQuery, pLanguage) {
 
     return linkDataPromise;
   });
-}
+};
 
 // function to get data from the third link in the google result object from axios
 const fetchThirdGoogleResultPage = async function (searchQuery, pLanguage) {
@@ -275,18 +264,14 @@ const fetchThirdGoogleResultPage = async function (searchQuery, pLanguage) {
 
     return linkDataPromise;
   });
-}
+};
 
 // returns "code" object
 // function to start scraping data from result object links, takes in searchQuery, pLanguage, and state of result link
 // linkState is an int that repersents which link in the result array (1, 2, 3)
 // linkState will be a dropdown menu/next button on the frontend
 // default will be the code object from google search result object
-const getResultDataLinks = async function (
-  searchQuery,
-  pLanguage,
-  linkState
-) {
+const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
   // captcha page message from response.data
   const CAPTCHA_MESSAGE =
     "Our systems have detected unusual traffic from your computer network";
@@ -430,7 +415,7 @@ const getResultDataLinks = async function (
 
 module.exports = {
   getResultDataLinks,
-  fetchGoogleSearchData
+  fetchGoogleSearchData,
 };
 
 // simple testing
@@ -441,10 +426,9 @@ code.then(async function (data) {
 }); */
 
 const test = buildGoogleResultObject("hello world", "c++");
-test.then(async function(data) {
+test.then(async function (data) {
   console.log(data);
 });
-
 
 /* const proxy = generateProxy();
 proxy.then(async function(data) {
