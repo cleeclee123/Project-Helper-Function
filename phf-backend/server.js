@@ -17,18 +17,19 @@ app.get("/testing", function (request, response) {
 app.get("/google", async function (request, response) {
   var searchQuery = request.query.sq;
   var languageChoice = request.query.lang;
-  var stateChoice = request.params.ls;
+  var stateChoice = request.query.ls;
 
   // call to scraper function
-  const results =
+  /* const results =
     (await googleResultObject.getResultDataLinks(
       searchQuery,
       languageChoice,
       stateChoice,
-    )) || "Search Failed";
+    )) || "Search Failed"; */
 
   // code object from corresponding linkstate website from google search result object to json
-  response.send(results);
+  const test = await googleResultObject.getResultDataLinks(searchQuery, languageChoice, stateChoice);
+  response.send(test);
 });
 
 // bing scraper route
@@ -45,8 +46,6 @@ app.get("/bing", async function (request, response) {
       stateChoice
     )) || "Search Failed"; 
   
-  //const results = await bingResultObject.fetchFirstBingResultPage(searchQuery, languageChoice);
-
   // code object from corresponding linkstate website from bing search result object to json
   response.send(results);
 });
