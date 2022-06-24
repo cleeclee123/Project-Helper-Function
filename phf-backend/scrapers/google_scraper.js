@@ -101,7 +101,7 @@ const OPTIONS = {
     "Sec-Fetch-Site": "cross-site",
     "Sec-Fetch-User": "?1",
     "Upgrade-Insecure-Requests": "1",
-    "User-Agent": rotateUserAgent(),
+    "User-Agent": /* rotateUserAgent(), */ "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
     "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
     Proxy: generateProxy(),
   },
@@ -430,6 +430,7 @@ const getResultDataLinks = async function (
 
 module.exports = {
   getResultDataLinks,
+  fetchGoogleSearchData
 };
 
 // simple testing
@@ -439,11 +440,11 @@ code.then(async function (data) {
   console.log(data);
 }); */
 
-/* const test = buildGoogleResultObject("hello world", "c++");
+const test = buildGoogleResultObject("hello world", "c++");
 test.then(async function(data) {
   console.log(data);
 });
- */
+
 
 /* const proxy = generateProxy();
 proxy.then(async function(data) {

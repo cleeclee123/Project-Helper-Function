@@ -9,8 +9,8 @@ app.get("/", function (request, response) {
 });
 
 // testing parameters
-app.get("/testing/", function (request, response) {
-  response.send("Hello " + request.query.age1 + request.query.age2);
+app.get("/testing", function (request, response) {
+  response.send(googleResultObject.fetchGoogleSearchData(request.query.sq));
 });
 
 // google scraper route
