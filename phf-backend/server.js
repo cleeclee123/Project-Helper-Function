@@ -28,9 +28,7 @@ app.get("/google", async function (request, response) {
     )) || "Search Failed";
 
   // code object from corresponding linkstate website from google search result object to json
-  results.then(async function (data) {
-    response.send(data);
-  });
+  response.send(results);
 });
 
 // bing scraper route

@@ -293,7 +293,7 @@ const getResultDataLinks = async function (
 
   // linkState will scrap the corresponding website and checks captcha state
   // return "code" object that represents the original searchQuery and corresponding programming language
-  if (linkState === 1) {
+  if (linkState === "1") {
     const googlePageOne = fetchFirstGoogleResultPage(searchQuery, pLanguage);
 
     return googlePageOne
@@ -334,7 +334,7 @@ const getResultDataLinks = async function (
         console.log(error);
         throw new Error("Link State 1 Error");
       });
-  } else if (linkState === 2) {
+  } else if (linkState === "2") {
     const googlePageTwo = fetchSecondGoogleResultPage(searchQuery, pLanguage);
 
     return googlePageTwo
@@ -375,7 +375,7 @@ const getResultDataLinks = async function (
         console.log(error);
         throw new Error("Link State 2 Error");
       });
-  } else if (linkState === 3) {
+  } else if (linkState === "3") {
     const googlePageThree = fetchThirdGoogleResultPage(searchQuery, pLanguage);
 
     return googlePageThree
@@ -433,11 +433,17 @@ module.exports = {
 };
 
 // simple testing
-/* const code = getResultDataLinks("smallest substring of all characters", "javascript", 2);
+/* const code = getResultDataLinks("hello world", "c++", "1");
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
-});  */
+}); */
+
+const test = buildGoogleResultObject("hello world", "c++");
+test.then(async function(data) {
+  console.log(data);
+});
+
 
 /* const proxy = generateProxy();
 proxy.then(async function(data) {
