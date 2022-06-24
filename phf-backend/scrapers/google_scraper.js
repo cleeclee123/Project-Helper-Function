@@ -75,7 +75,7 @@ const rotateUserAgent = async function () {
       userAgents.join(", ");
     })
     .catch(async function(error) {
-      console.log(error.response);
+      // console.log(error.response);
       throw new Error("User Agent Rotation Error");
     });
 
@@ -439,11 +439,11 @@ code.then(async function (data) {
   console.log(data);
 }); */
 
-const test = buildGoogleResultObject("hello world", "c++");
+/* const test = buildGoogleResultObject("hello world", "c++");
 test.then(async function(data) {
   console.log(data);
 });
-
+ */
 
 /* const proxy = generateProxy();
 proxy.then(async function(data) {

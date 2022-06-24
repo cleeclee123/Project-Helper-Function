@@ -27,7 +27,7 @@ const generateProxy = async function () {
 
     })
     .catch(async function (error) {
-      console.log(error.response);
+      // console.log(error.response);
       throw new Error("Proxy Rotation Scrap Error");
     });
 
