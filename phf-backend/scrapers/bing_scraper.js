@@ -278,7 +278,7 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
 
   // linkState will scrap the corresponding website and checks captcha state
   // return "code" object that represents the original searchQuery and corresponding programming language
-  if (linkState === 1) {
+  if (linkState === "1") {
     const bingPageOne = fetchFirstBingResultPage(searchQuery, pLanguage);
 
     return bingPageOne
@@ -319,7 +319,7 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
         console.log(error);
         throw new Error("Link State 1 Error");
       });
-  } else if (linkState === 2) {
+  } else if (linkState === "2") {
     const bingPageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);
 
     return bingPageTwo
@@ -360,7 +360,7 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
         console.log(error);
         throw new Error("Link State 2 Error");
       });
-  } else if (linkState === 3) {
+  } else if (linkState === "3") {
     const bingPageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
 
     return bingPageThree
@@ -415,6 +415,8 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
 
 module.exports = {
   getResultDataLinks,
+  fetchFirstBingResultPage,
+  buildBingResultObject
 };
 
 // simple testing

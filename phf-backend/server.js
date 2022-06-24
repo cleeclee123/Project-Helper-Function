@@ -1,50 +1,64 @@
-const https = require("https");
-const fs = require("fs");
+const googleResultObject = require("./scrapers/google_scraper");
+const bingResultObject = require("./scrapers/bing_scraper");
 const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-
-// import routes here
-const googleScraper = require("./routes/google_scraper_route");
-const bingScraper = require("./routes/bing_scraper_route");
-
-// default configs
 const app = express();
 const PORT = 8080;
- 
-// CORS middleware
-// - for calling the API from different locations by hitting endpoints in browser
-app.use(cors());
 
-// configs for body parser middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-app.use('/googlescraper', googleScraper).response.send(200);
-app.use("/bingscraper", bingScraper).response.send(200);
-
-// catch 404 and forward to error handler
-app.use(function(request, response) {
-  var error = new Error('Not Found');
-  error.status = 404;
-  next(err);
-});
-
-// error handler
-app.use(function(error, request,response, next) {
-  // set locals, only providing error in development
-  response.locals.message = error.message;
-  response.locals.error = request.app.get('env') === 'development' ? error : {};
-
-  // render the error page
-  response.status(error.status || 500);
-  response.render('error');
-});
-
-app.get("/", (request, response) => {
+app.get("/", function (request, response) {
   response.send("Hello World");
 });
 
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}!`);
+// testing parameters
+app.get("/testing/", function (request, response) {
+  response.send("Hello " + request.query.age1 + request.query.age2);
+});
+
+// google scraper route
+app.get("/google", async function (request, response) {
+  var searchQuery = request.query.sq;
+  var languageChoice = request.query.lang;
+  var stateChoice = request.params.ls;
+
+  // call to scraper function
+  const results =
+    (await googleResultObject.getResultDataLinks(
+      searchQuery,
+      languageChoice,
+      stateChoice,
+    )) || "Search Failed";
+
+  // code object from corresponding linkstate website from google search result object to json
+  results.then(async function (data) {
+    response.send(data);
+  });
+});
+
+// bing scraper route
+app.get("/bing", async function (request, response) {
+  var searchQuery = request.query.sq;
+  var languageChoice = request.query.lang;
+  var stateChoice = request.query.ls;
+
+  // call to scraper function
+  const results =
+    (await bingResultObject.getResultDataLinks(
+      searchQuery,
+      languageChoice,
+      stateChoice
+    )) || "Search Failed"; 
+  
+  //const results = await bingResultObject.fetchFirstBingResultPage(searchQuery, languageChoice);
+
+  // code object from corresponding linkstate website from bing search result object to json
+  response.send(results);
+});
+
+// route doesn't exist 
+app.use(function (request, response, next) {
+  response.status(404).send("Not found");
+});
+
+// start at port
+app.listen(PORT, function () {
+  console.log(`Server started on ${PORT}`);
 });

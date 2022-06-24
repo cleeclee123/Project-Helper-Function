@@ -437,7 +437,7 @@ module.exports = {
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
-}); */
+});  */
 
 /* const proxy = generateProxy();
 proxy.then(async function(data) {
