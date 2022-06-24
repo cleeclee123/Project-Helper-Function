@@ -2,7 +2,7 @@ const cheerio = require("cheerio");
 const axios = require("axios");
 
 // scraps sslproxies.org for port numbers and ip addresses
-async function generateProxy() {
+const generateProxy = async function () {
   let ipAddresses = [];
   let portNumbers = [];
 
@@ -38,7 +38,7 @@ async function generateProxy() {
 }
 
 // function to rotate user agents by scrapping github repo, returns a string
-async function rotateUserAgent() {
+const rotateUserAgent = async function () {
   let userAgents = [];
 
   await axios
@@ -93,7 +93,7 @@ const OPTIONS = {
 };
 
 // function to get bing search results from axios
-async function fetchBingSearchData(searchQuery) {
+const fetchBingSearchData = async function (searchQuery) {
   // encode search query to represent UTF-8, URLs can only have certain characters from ASCII set
   const encodedSearch = encodeURI(searchQuery);
 
@@ -124,7 +124,7 @@ async function fetchBingSearchData(searchQuery) {
 }
 
 // function helper for the search function to interpret the "++" in "c++"
-function helperConvertToWord(input) {
+const helperConvertToWord = function (input) {
   var returnString = input.toLowerCase();
   returnString = returnString.replace("+", "plus");
   returnString = returnString.replace("#", "sharp");
@@ -133,7 +133,7 @@ function helperConvertToWord(input) {
 
 // scraps the top title and links for search query with programming language as a parameter
 // return array of result objects from bing search data
-async function buildBingResultObject(searchQuery, pLanguage) {
+const buildBingResultObject = async function (searchQuery, pLanguage) {
   // default paraemter values:
   // default search query (result on landing page)
   const defaultSearch = "hello world";
@@ -199,12 +199,12 @@ async function buildBingResultObject(searchQuery, pLanguage) {
   });
 }
 
-function sleep(time) {
+const sleep = function (time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 // function to get data from the first link in the bing result object from axios
-async function fetchFirstBingResultPage(searchQuery, pLanguage) {
+const fetchFirstBingResultPage = async function (searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
   const resultsBing = buildBingResultObject(searchQuery, pLanguage);
 
@@ -225,7 +225,7 @@ async function fetchFirstBingResultPage(searchQuery, pLanguage) {
 }
 
 // function to get data from the second link in the bing result object from axios
-async function fetchSecondBingResultPage(searchQuery, pLanguage) {
+const fetchSecondBingResultPage = async function (searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
   const resultsBing = buildBingResultObject(searchQuery, pLanguage);
 
@@ -246,7 +246,7 @@ async function fetchSecondBingResultPage(searchQuery, pLanguage) {
 }
 
 // function to get data from the third link in the bing result object from axios
-async function fetchThirdBingResultPage(searchQuery, pLanguage) {
+const fetchThirdBingResultPage = async function (searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
   const resultsBing = buildBingResultObject(searchQuery, pLanguage);
 
@@ -271,7 +271,7 @@ async function fetchThirdBingResultPage(searchQuery, pLanguage) {
 // linkState is an int that repersents which link in the result array (1, 2, 3)
 // linkState will be a dropdown menu/next button on the frontend
 // default will be the code object from google search result object
-module.exports = async function getResultDataLinks(searchQuery, pLanguage, linkState) {
+const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
   // captcha page message from response.data
   const CAPTCHA_MESSAGE =
     "Our systems have detected unusual traffic from your computer network";
@@ -411,7 +411,11 @@ module.exports = async function getResultDataLinks(searchQuery, pLanguage, linkS
   } else {
     throw new Error("Link State Error");
   }
-}
+};
+
+module.exports = {
+  getResultDataLinks,
+};
 
 // simple testing
 /* const code = getResultDataLinks("smallest substring of all characters", "python", 3);
