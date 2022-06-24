@@ -8,12 +8,15 @@ router.post("/bingsearch", async function (request, response) {
   var languageChoice = request.query.searchquery;
   var stateChoice = request.params.linkstate;
 
-  const results = ((await bingResultObject.getResultDataLinks(
-    searchQuery,
-    languageChoice,
-    stateChoice
-  )) || "Search Failed");
-
+  // call to scraper function
+  const results =
+    (await bingResultObject.getResultDataLinks(
+      searchQuery,
+      languageChoice,
+      stateChoice
+    )) || "Search Failed";
+  
+  // code object from corresponding linkstate website from bing search result object to json
   results.then(async function (data) {
     response.send(data);
   });

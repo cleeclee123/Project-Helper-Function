@@ -3,13 +3,13 @@ const router = express.Router();
 const googleResultObject = require("./scrapers/google_scraper");
 
 // get route for google search result object
-router.post("/googlesearch/:searchquery/:planguage/:linkstate", async function(request, response) {
-  var searchQuery = request.params.searchquery;
-  var languageChoice = request.params.planguage;
+router.post("/googlesearch", async function(request, response) {
+  var searchQuery = request.query.searchquery;
+  var languageChoice = request.query.searchquery;
   var stateChoice = request.params.linkstate;
 
   // call to scraper function
-  const googleResultObjectCode =
+  const results =
     (await googleResultObject(
       searchQuery,
       languageChoice,
@@ -17,9 +17,8 @@ router.post("/googlesearch/:searchquery/:planguage/:linkstate", async function(r
     )) || "Search Failed";
 
   // code object from corresponding linkstate website from google search result object to json
-  googleResultObjectCode.then(async function (data) {
-    const toJson = JSON.stringify(data);
-    response.send(toJson);
+  results.then(async function (data) {
+    response.send(data);
   });
 });
 
