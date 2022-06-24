@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const googleResultObject = require("./scrapers/google_scraper");
+const googleResultObject = require("../scrapers/google_scraper");
 
 // get route for google search result object
 router.post("/googlesearch", async function(request, response) {
