@@ -431,7 +431,8 @@ proxy.then(async function(data) {
   console.log(data);
 })
 */
-const ua = rotateUserAgent();
+/* const ua = rotateUserAgent();
 ua.then(async function(data) {
   console.log(data);
 })
+ */
