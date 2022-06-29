@@ -1,0 +1,23 @@
+#light .color-nav {
+  background-color: rgb(219, 219, 219);
+}
+
+#dark .color-nav {
+  background-color: rgb(70, 69, 69);
+}
+
+#light .nav-title {
+  color: black;
+}
+
+#dark .nav-title {
+  color: white;
+}
+
+#light .nav-links {
+  color: black;
+}
+
+#dark .nav-links {
+  color: white;
+}
