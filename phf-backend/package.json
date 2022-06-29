@@ -8,7 +8,7 @@
     "BingScraper": "node ./scrapers/bing_scraper.js",
     "GoogleScraper": "node ./scrapers/google_scraper.js",
     "devServerN": "node server.js",
-    "devServer": "nodemon server.js"
+    "devServerNM": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
