@@ -1,21 +1,38 @@
-.main-container {
-  font-family: arial;
-  font-size: 24px;
-  margin: 25px;
-  width: 350px;
-  height: 200px;
-  outline: dashed 1px black;
-  /* Setup */
+.home-container {
   position: relative;
+  padding-bottom: 125rem;
 }
 
-.main-title {
-  width: 50px;
-  height: 50px;
-  background-color: red;
-  /* Center vertically and horizontally */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: -25px 0 0 -25px; 
+
+#light .content-welcome {
+  color: black;
+  width: 40%;
+  margin: 0 auto;
+}
+#dark .content-welcome {
+  color: white;
+  width: 40%;
+  margin: 0 auto;
+}
+
+#light .content-info {
+  color: black;
+  width: 40%;
+  margin: 0 auto;
+}
+#dark .content-info {
+  color: white;
+  width: 40%;
+  margin: 0 auto;
+}
+
+#light .content-code {
+  color: black;
+  width: 40%;
+  margin: 0 auto;
+}
+#dark .content-code {
+  color: white;
+  width: 40%;
+  margin: 0 auto;
 }

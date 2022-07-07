@@ -2,10 +2,7 @@ import "./App.css";
 import { createContext, useState } from "react";
 import ReactSwitch from "react-switch";
 import NavbarComp from "./components/NavbarComp";
-import { Routes, Route, Router } from "react-router-dom";
 import Home from "./components/Home";
-import About from "./components/About";
-import Code from "./components/Code";
 
 export const ThemeContext = createContext(null);
 
@@ -23,7 +20,8 @@ function App() {
         <div className="switch">
           <label> {theme === "light" ? "Light Mode" : "Dark Mode"} </label>
           <ReactSwitch onChange={toggleTheme} checked={theme === "dark"} />
-        </div>        
+        </div>
+        <Home/>
       </div>
     </ThemeContext.Provider>
   );
