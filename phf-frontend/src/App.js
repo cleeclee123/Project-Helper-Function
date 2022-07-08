@@ -3,6 +3,8 @@ import { createContext, useState } from "react";
 import ReactSwitch from "react-switch";
 import NavbarComp from "./components/NavbarComp";
 import Home from "./components/Home";
+import Footer from "./components/Footer";
+
 
 export const ThemeContext = createContext(null);
 
@@ -15,14 +17,16 @@ function App() {
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <NavbarComp />
       <div className="App" id={theme}>
-        <NavbarComp />
         <div className="switch">
-          <label> {theme === "light" ? "Light Mode" : "Dark Mode"} </label>
           <ReactSwitch onChange={toggleTheme} checked={theme === "dark"} />
         </div>
-        <Home/>
+        <div>
+          <Home/>
+        </div> 
       </div>
+      <Footer/>
     </ThemeContext.Provider>
   );
 }
