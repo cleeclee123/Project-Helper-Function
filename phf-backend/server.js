@@ -5,8 +5,9 @@ const app = express();
 const PORT = 8080;
 
 // overrides the CORS header that the server has in place with the open wildcard value
-app.use((request, response) => {
+app.use((request, response, next) => {
   response.header('Access-Control-Allow-Origin', '*');
+  next();
 });
 
 app.get("/", function (request, response) {
