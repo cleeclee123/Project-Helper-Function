@@ -47,8 +47,22 @@ export default function Home() {
       });
   }
 
-
   // bing code object fetcher
+  const fetchBingCodeObj = async function() {
+    const params = {
+      sq: searchQuery, 
+      lang: language,
+      ls: linkState.toString(),
+    }
+    return await axios.get('http://localhost:8080/bing', { params })
+      .then((response) => {
+        console.log(response);
+        return response;
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+  }
 
   return (
     <div className="home-container">
@@ -111,9 +125,12 @@ export default function Home() {
           {linkState}
           <button onClick={() => setLinkState(linkState + 1)}>
             Next Answer
-          </button>
+          </button> &nbsp;
           <button onClick={() => fetchGoogleCodeObj()}>
             Test API Google
+          </button> &nbsp;
+          <button onClick={() => fetchBingCodeObj()}>
+            Test API Bing
           </button>
         </div>
       </div>
