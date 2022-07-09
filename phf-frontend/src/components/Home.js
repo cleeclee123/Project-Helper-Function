@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import Editor from "./Editor";
-import Footer from "./Footer";
+import axios from "axios";
 import "./styles/Home.css";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [language, setLanguage] = useState("");
+  const [linkState, setLinkState] = useState(1);
+
+  // handles linkstate for getting other search results
+  if (linkState > 3) {
+    setLinkState(1);
+  }
 
   // onChange handler
   const handleChangeQuery = (event) => {
@@ -24,15 +30,35 @@ export default function Home() {
     console.log(language);
   };
 
+  // google code object fetcher
+  const fetchGoogleCodeObj = async function() {
+    const params = {
+      sq: searchQuery, 
+      lang: language,
+      ls: linkState.toString(),
+    }
+    return await axios.get('http://localhost:8080/google', { params })
+      .then((response) => {
+        console.log(response);
+        return response;
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+  }
+
+
+  // bing code object fetcher
+
   return (
     <div className="home-container">
       <div className="content-code">
         <div className="code-search">
           <div className="code-dropdown">
             <form id="form" role="select" onSubmit={handleClick}>
-              <label for="lang">Choose a Language:</label>
+              <label for="lang">Choose or Type a Language:</label>
               &nbsp;&nbsp;
-              <select name="lang" id="lang" onChange={handleChangeLang}>
+              <select className="lang-select" name="lang" id="lang" onChange={handleChangeLang}>
                 <optgroup label="Programming Languages">
                   <option value="html">HTML</option>
                   <option value="javascript">JavaScript</option>
@@ -81,6 +107,15 @@ export default function Home() {
           </div>
         </div>
         <Editor/>
+        <div className="code-nextAnswer">
+          {linkState}
+          <button onClick={() => setLinkState(linkState + 1)}>
+            Next Answer
+          </button>
+          <button onClick={() => fetchGoogleCodeObj()}>
+            Test API Google
+          </button>
+        </div>
       </div>
 
       <div className="out-ph"><h1> Output/Compiler Here </h1></div>
