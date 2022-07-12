@@ -1,6 +1,6 @@
 .home-container {
   position: relative;
-  padding-bottom: 10rem;
+  padding-bottom: 12rem;
   clear: both;
 }
 
@@ -73,5 +73,10 @@
   float: right;
   padding-right: 10rem;
   transform: translateY(200%);
+}
+
+.code-nextAnswer {
+  padding-top: 1rem;
+  padding-bottom: 3rem;
 }
 

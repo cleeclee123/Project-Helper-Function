@@ -1,12 +1,17 @@
-import React, { useState } from "react";
-import Editor from "./Editor";
+import React, { useState, useRef } from "react";
+import ReactDOM from "react-dom";
+// import Editor from "./Editor";
 import axios from "axios";
 import "./styles/Home.css";
+
+import Editor from "@monaco-editor/react";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [language, setLanguage] = useState("");
   const [linkState, setLinkState] = useState(1);
+  const [codeObjectGoogle, setCodeObjectGoogle] = useState("");
+  const [codeObjectBing, setCodeObjectBing] = useState("");
 
   // handles linkstate for getting other search results
   if (linkState > 3) {
@@ -26,8 +31,12 @@ export default function Home() {
   // onClick handler
   const handleClick = (event) => {
     event.preventDefault();
-    console.log(searchQuery);
-    console.log(language);
+    fetchGoogleCodeObj();
+  };
+
+  const handleClickState = (event) => {
+    event.preventDefault();
+    setLinkState(linkState + 1);
   };
 
   // google code object fetcher
@@ -39,8 +48,9 @@ export default function Home() {
     }
     return await axios.get('http://localhost:8080/google', { params })
       .then((response) => {
-        console.log(response);
-        return response;
+        // console.log(response);
+        // return response;
+        setCodeObjectGoogle(response.data.toString())
       })
       .catch((error) => {
         console.log(error)
@@ -56,13 +66,25 @@ export default function Home() {
     }
     return await axios.get('http://localhost:8080/bing', { params })
       .then((response) => {
-        console.log(response);
-        return response;
+        // console.log(response);
+        // return response;
+        setCodeObjectBing(response.data.toString())
       })
       .catch((error) => {
         console.log(error)
       });
   }
+
+  function handleEditorChange(value, event) {
+    console.log(value);
+  }
+
+  console.log(searchQuery);
+  console.log(language);
+  console.log(linkState);
+
+  // console.log(codeObjectBing);
+  console.log(codeObjectGoogle);
 
   return (
     <div className="home-container">
@@ -106,8 +128,8 @@ export default function Home() {
                   type="text"
                   placeholder="Search here"
                   aria-label="Set users search query"
-                  onChange={handleChangeQuery}
                   value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
                 />
                 <button
                   onClick={handleClick}
@@ -120,18 +142,22 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <Editor/>
+        <Editor
+          height="70vh"
+          defaultValue="// some comment"
+          theme="vs-dark"
+          language={language}
+          value={codeObjectGoogle}
+          onChange={handleEditorChange}
+        />
         <div className="code-nextAnswer">
-          {linkState}
-          <button onClick={() => setLinkState(linkState + 1)}>
+          {linkState} 
+          &nbsp;
+          <button onClick={handleClickState}>
             Next Answer
-          </button> &nbsp;
-          <button onClick={() => fetchGoogleCodeObj()}>
-            Test API Google
-          </button> &nbsp;
-          <button onClick={() => fetchBingCodeObj()}>
-            Test API Bing
           </button>
+          &nbsp;
+          Press Search Again
         </div>
       </div>
 
