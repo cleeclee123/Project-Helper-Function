@@ -65,6 +65,18 @@
   cursor: pointer;
 }
 
+.next-button {
+  float: left;
+  width: 20%;
+  padding: 11px;
+  background: #2196f3;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none; /* Prevent double borders */
+  cursor: pointer;
+}
+
 .search-button:hover {
   background: #0b7dda;
 }
@@ -75,8 +87,11 @@
   transform: translateY(200%);
 }
 
+.code-editor {
+  padding-bottom: 1rem;
+}
+
 .code-nextAnswer {
-  padding-top: 1rem;
-  padding-bottom: 3rem;
+  padding-bottom: 1rem;
 }
 

@@ -7,9 +7,11 @@ import "./styles/Home.css";
 import Editor from "@monaco-editor/react";
 
 export default function Home() {
+  const [searchEngine, setSearchEngine] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [language, setLanguage] = useState("");
   const [linkState, setLinkState] = useState(1);
+  const [codeObjectResult, setCodeObjectResult] = useState("");
   const [codeObjectGoogle, setCodeObjectGoogle] = useState("");
   const [codeObjectBing, setCodeObjectBing] = useState("");
 
@@ -18,20 +20,14 @@ export default function Home() {
     setLinkState(1);
   }
 
-  // onChange handler
-  const handleChangeQuery = (event) => {
-    setSearchQuery(event.target.value);
+  // hnadle state for engine by dropdown
+  const handleChangeEngine = (event) => {
+    setSearchEngine(event.target.value);
   };
 
-  // onClick handler
+  // handle state for language by dropdown
   const handleChangeLang = (event) => {
     setLanguage(event.target.value);
-  };
-
-  // onClick handler
-  const handleClick = (event) => {
-    event.preventDefault();
-    fetchGoogleCodeObj();
   };
 
   const handleClickState = (event) => {
@@ -40,61 +36,99 @@ export default function Home() {
   };
 
   // google code object fetcher
-  const fetchGoogleCodeObj = async function() {
+  const fetchGoogleCodeObj = async function () {
     const params = {
-      sq: searchQuery, 
+      sq: searchQuery,
       lang: language,
       ls: linkState.toString(),
-    }
-    return await axios.get('http://localhost:8080/google', { params })
+    };
+    return await axios
+      .get("http://localhost:8080/google", { params })
       .then((response) => {
         // console.log(response);
         // return response;
-        setCodeObjectGoogle(response.data.toString())
+        setCodeObjectGoogle(response.data.toString());
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
       });
-  }
+  };
 
   // bing code object fetcher
-  const fetchBingCodeObj = async function() {
+  const fetchBingCodeObj = async function () {
     const params = {
-      sq: searchQuery, 
+      sq: searchQuery,
       lang: language,
       ls: linkState.toString(),
-    }
-    return await axios.get('http://localhost:8080/bing', { params })
+    };
+    return await axios
+      .get("http://localhost:8080/bing", { params })
       .then((response) => {
         // console.log(response);
         // return response;
-        setCodeObjectBing(response.data.toString())
+        setCodeObjectBing(response.data.toString());
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
       });
-  }
+  };
+
+  // onClick handler
+  // handle which scraper to run given search engine state
+  const handleClick = async (event) => {
+    event.preventDefault();
+    if (searchEngine === "google") {
+      await fetchGoogleCodeObj();
+      setCodeObjectResult(codeObjectGoogle);
+      console.log("Search Engine: Google");
+    } else if (searchEngine === "bing") {
+      await fetchBingCodeObj();
+      setCodeObjectResult(codeObjectBing);
+      console.log("Search Engine: Bing");
+    }
+  };
 
   function handleEditorChange(value, event) {
     console.log(value);
   }
 
+  console.log(searchEngine);
   console.log(searchQuery);
   console.log(language);
   console.log(linkState);
 
   // console.log(codeObjectBing);
-  console.log(codeObjectGoogle);
+  // console.log(codeObjectGoogle);
 
   return (
     <div className="home-container">
       <div className="content-code">
         <div className="code-search">
+          <label for="lang">Choose a Search Engine:</label>
+          &nbsp;&nbsp;
+          <select
+            className="engine-select"
+            name="engine"
+            id="engine"
+            onChange={handleChangeEngine}
+          >
+            <optgroup label="Search Engines">
+              <option value="google">Google</option>
+              <option value="bing">Bing</option>
+              <option value="duckduckgo">Duck Duck Go</option>
+              <option value="yahoo">Yahoo</option>
+            </optgroup>
+          </select>
           <div className="code-dropdown">
             <form id="form" role="select" onSubmit={handleClick}>
               <label for="lang">Choose or Type a Language:</label>
               &nbsp;&nbsp;
-              <select className="lang-select" name="lang" id="lang" onChange={handleChangeLang}>
+              <select
+                className="lang-select"
+                name="lang"
+                id="lang"
+                onChange={handleChangeLang}
+              >
                 <optgroup label="Programming Languages">
                   <option value="html">HTML</option>
                   <option value="javascript">JavaScript</option>
@@ -129,7 +163,7 @@ export default function Home() {
                   placeholder="Search here"
                   aria-label="Set users search query"
                   value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <button
                   onClick={handleClick}
@@ -142,27 +176,24 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <Editor
-          height="70vh"
-          defaultValue="// some comment"
-          theme="vs-dark"
-          language={language}
-          value={codeObjectGoogle}
-          onChange={handleEditorChange}
-        />
+        <div className="code-editor">
+          <Editor
+            height="60vh"
+            defaultValue="// some comment"
+            theme="vs-dark"
+            language={language}
+            value={codeObjectResult}
+            onChange={handleEditorChange}
+          />
+        </div>
         <div className="code-nextAnswer">
-          {linkState} 
-          &nbsp;
-          <button onClick={handleClickState}>
-            Next Answer
-          </button>
-          &nbsp;
-          Press Search Again
+          <button className="next-button" onClick={handleClickState}>Next Answer: {linkState}</button>
         </div>
       </div>
 
-      <div className="out-ph"><h1> Output/Compiler Here </h1></div>
-
+      <div className="out-ph">
+        <h1> Output/Compiler Here </h1>
+      </div>
     </div>
   );
 }

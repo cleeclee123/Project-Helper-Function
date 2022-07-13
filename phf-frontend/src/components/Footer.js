@@ -6,7 +6,7 @@ import "./styles/NavbarComp.css";
 export default class NavbarComp extends Component {
   render() {
     return (
-      <div className="navbar-wrapper">
+      <div className="navbar-wrapper-footer">
         <Navbar className="color-nav" varient="dark" expand="lg">
           <Container>
             <Navbar.Brand href="/" className="nav-title">
