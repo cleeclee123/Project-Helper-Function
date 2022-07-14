@@ -7,18 +7,13 @@ import "./styles/Home.css";
 import Editor from "@monaco-editor/react";
 
 export default function Home() {
-  const [searchEngine, setSearchEngine] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [language, setLanguage] = useState("");
+  const [searchEngine, setSearchEngine] = useState("google");
+  const [searchQuery, setSearchQuery] = useState("How to print Hello World");
+  const [language, setLanguage] = useState("javascript");
   const [linkState, setLinkState] = useState(1);
-  const [codeObjectResult, setCodeObjectResult] = useState("");
+  const [codeObjectResult, setCodeObjectResult] = useState(`console.log("Hello World")`);
   const [codeObjectGoogle, setCodeObjectGoogle] = useState("");
   const [codeObjectBing, setCodeObjectBing] = useState("");
-
-  // handles linkstate for getting other search results
-  if (linkState > 3) {
-    setLinkState(1);
-  }
 
   // hnadle state for engine by dropdown
   const handleChangeEngine = (event) => {
@@ -28,11 +23,6 @@ export default function Home() {
   // handle state for language by dropdown
   const handleChangeLang = (event) => {
     setLanguage(event.target.value);
-  };
-
-  const handleClickState = (event) => {
-    event.preventDefault();
-    setLinkState(linkState + 1);
   };
 
   // google code object fetcher
@@ -77,6 +67,7 @@ export default function Home() {
   // handle which scraper to run given search engine state
   const handleClick = async (event) => {
     event.preventDefault();
+    setLinkState(linkState + 1);
     if (searchEngine === "google") {
       await fetchGoogleCodeObj();
       setCodeObjectResult(codeObjectGoogle);
@@ -88,6 +79,12 @@ export default function Home() {
     }
   };
 
+  // handles linkstate for getting other search results
+  if (linkState > 3) {
+    setLinkState(1);
+  }
+
+  // test editor 
   function handleEditorChange(value, event) {
     console.log(value);
   }
@@ -99,12 +96,13 @@ export default function Home() {
 
   // console.log(codeObjectBing);
   // console.log(codeObjectGoogle);
+  //console.log(codeObjectResult);
 
   return (
     <div className="home-container">
       <div className="content-code">
         <div className="code-search">
-          <label for="lang">Choose a Search Engine:</label>
+          <label htmlFor="lang">Choose a Search Engine:</label>
           &nbsp;&nbsp;
           <select
             className="engine-select"
@@ -121,7 +119,7 @@ export default function Home() {
           </select>
           <div className="code-dropdown">
             <form id="form" role="select" onSubmit={handleClick}>
-              <label for="lang">Choose or Type a Language:</label>
+              <label htmlFor="lang">Choose or Type a Language:</label>
               &nbsp;&nbsp;
               <select
                 className="lang-select"
@@ -130,10 +128,10 @@ export default function Home() {
                 onChange={handleChangeLang}
               >
                 <optgroup label="Programming Languages">
-                  <option value="html">HTML</option>
                   <option value="javascript">JavaScript</option>
+                  <option value="html">HTML</option>
                   <option value="java">Java</option>
-                  <option value="cplusplus">C++</option>
+                  <option value="c plus plus">C++</option>
                   <option value="c">C</option>
                   <option value="csharp">C#</option>
                   <option value="python">Python</option>
@@ -178,7 +176,7 @@ export default function Home() {
         </div>
         <div className="code-editor">
           <Editor
-            height="60vh"
+            height="70vh"
             defaultValue="// some comment"
             theme="vs-dark"
             language={language}
@@ -186,9 +184,10 @@ export default function Home() {
             onChange={handleEditorChange}
           />
         </div>
-        <div className="code-nextAnswer">
+        {/* Don't really need because Search Button handles linkState */}
+        {/* <div className="code-nextAnswer">
           <button className="next-button" onClick={handleClickState}>Next Answer: {linkState}</button>
-        </div>
+        </div> */}
       </div>
 
       <div className="out-ph">
