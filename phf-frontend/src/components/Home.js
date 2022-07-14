@@ -1,6 +1,4 @@
-import React, { useState, useRef } from "react";
-import ReactDOM from "react-dom";
-// import Editor from "./Editor";
+import React, { useState } from "react";
 import axios from "axios";
 import "./styles/Home.css";
 
