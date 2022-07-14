@@ -15,14 +15,23 @@ export default function Home() {
 
   // hnadle state for engine by dropdown
   const handleChangeEngine = (event) => {
+    event.preventDefault();
     setSearchEngine(event.target.value);
   };
 
   // handle state for language by dropdown
   const handleChangeLang = (event) => {
+    event.preventDefault();
     setLanguage(event.target.value);
-    setLinkState(0);
+    setLinkState(1);
   };
+
+  // handle state for search query by input
+  const handeChangeSearchQuery = (event) => {
+    event.preventDefault();
+    setSearchQuery(event.target.value);
+    setLinkState(1);
+  }
 
   // google code object fetcher
   const fetchGoogleCodeObj = async function () {
@@ -160,7 +169,7 @@ export default function Home() {
                   placeholder="Search here"
                   aria-label="Set users search query"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={handeChangeSearchQuery}
                 />
                 <button
                   onClick={handleClick}
