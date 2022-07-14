@@ -10,8 +10,7 @@ export default function Home() {
   const [language, setLanguage] = useState("javascript");
   const [linkState, setLinkState] = useState(1);
   const [codeObjectResult, setCodeObjectResult] = useState(`console.log("Hello World")`);
-  const [codeObjectGoogle, setCodeObjectGoogle] = useState("");
-  const [codeObjectBing, setCodeObjectBing] = useState("");
+  const [buttonText, setButtonText] = useState("Search"); 
 
   // hnadle state for engine by dropdown
   const handleChangeEngine = (event) => {
@@ -24,6 +23,7 @@ export default function Home() {
     event.preventDefault();
     setLanguage(event.target.value);
     setLinkState(1);
+    setButtonText("Search");
   };
 
   // handle state for search query by input
@@ -31,6 +31,7 @@ export default function Home() {
     event.preventDefault();
     setSearchQuery(event.target.value);
     setLinkState(1);
+    setButtonText("Search");
   }
 
   // google code object fetcher
@@ -45,7 +46,7 @@ export default function Home() {
       .then((response) => {
         // console.log(response);
         // return response;
-        setCodeObjectGoogle(response.data.toString());
+        setCodeObjectResult(response.data.toString());
       })
       .catch((error) => {
         console.log(error);
@@ -64,7 +65,7 @@ export default function Home() {
       .then((response) => {
         // console.log(response);
         // return response;
-        setCodeObjectBing(response.data.toString());
+        setCodeObjectResult(response.data.toString());
       })
       .catch((error) => {
         console.log(error);
@@ -73,17 +74,14 @@ export default function Home() {
 
   // onClick handler
   // handle which scraper to run given search engine state
-  const handleClick = async (event) => {
+  const handleClick = (event) => {
     event.preventDefault();
+    setButtonText("Next Answer");
     setLinkState(linkState + 1);
     if (searchEngine === "google") {
-      await fetchGoogleCodeObj();
-      setCodeObjectResult(codeObjectGoogle);
-      console.log("Search Engine: Google");
+      fetchGoogleCodeObj();
     } else if (searchEngine === "bing") {
-      await fetchBingCodeObj();
-      setCodeObjectResult(codeObjectBing);
-      console.log("Search Engine: Bing");
+      fetchBingCodeObj();
     }
   };
 
@@ -104,7 +102,7 @@ export default function Home() {
 
   // console.log(codeObjectBing);
   // console.log(codeObjectGoogle);
-  //console.log(codeObjectResult);
+  // console.log(codeObjectResult);
 
   return (
     <div className="home-container">
@@ -175,8 +173,9 @@ export default function Home() {
                   onClick={handleClick}
                   type="submit"
                   className="search-button"
+                  id="searchButton"
                 >
-                  Search
+                  { buttonText }
                 </button>
               </form>
             </div>
@@ -194,7 +193,7 @@ export default function Home() {
         </div>
         {/* Don't really need because Search Button handles linkState */}
         {/* <div className="code-nextAnswer">
-          <button className="next-button" onClick={handleClickState}>Next Answer: {linkState}</button>
+          <button className="next-button" onClick={handleNextAnswer}>Next Answer: {linkState}</button>
         </div> */}
       </div>
 
