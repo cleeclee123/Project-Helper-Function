@@ -213,7 +213,7 @@ const fetchFirstBingResultPage = async function (searchQuery, pLanguage) {
   // makes call to axios to get data from the first link of bing result object
   return await resultsBing.then(async function (data) {
     await sleep(1000);
-    // console.log(data[0].link);
+    console.log("bing linkstate 1", data[0].link);
     // link data from array of bing result object with axios
     const linkData = await axios.get(data[0].link, OPTIONS);
 
@@ -234,7 +234,7 @@ const fetchSecondBingResultPage = async function (searchQuery, pLanguage) {
   // makes call to axios to get data from the second link of bing result object
   return await resultsBing.then(async function (data) {
     await sleep(1000);
-    // console.log(data[1].link);
+    console.log("bing linkstate 2", data[1].link);
     // link data from array of result object with axios
     const linkData = await axios.get(data[1].link, OPTIONS);
 
@@ -255,7 +255,7 @@ const fetchThirdBingResultPage = async function (searchQuery, pLanguage) {
   // makes call to axios to get data from the third link of bing result object
   return await resultsBing.then(async function (data) {
     await sleep(1000);
-    // console.log(data[2].link);
+    console.log("bing linkstate 3", data[2].link);
     // link data from array of bing result object with axios
     const linkData = await axios.get(data[2].link, OPTIONS);
 
