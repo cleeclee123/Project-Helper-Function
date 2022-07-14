@@ -23,6 +23,7 @@ export default function Home() {
   // handle state for language by dropdown
   const handleChangeLang = (event) => {
     setLanguage(event.target.value);
+    setLinkState(0);
   };
 
   // google code object fetcher
