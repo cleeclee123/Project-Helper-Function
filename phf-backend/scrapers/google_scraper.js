@@ -213,7 +213,7 @@ const fetchFirstGoogleResultPage = async function (searchQuery, pLanguage) {
   // makes call to axios to get data from the first link of google result object
   return await resultsGoogle.then(async function (data) {
     await sleep(1000);
-    // console.log(data[0].link);
+    console.log("google linkstate 1", data[0].link);
     // link data from array of google result object with axios
     const linkData = await axios.get(data[0].link, OPTIONS);
 
@@ -234,7 +234,7 @@ const fetchSecondGoogleResultPage = async function (searchQuery, pLanguage) {
   // makes call to axios to get data from the second link of google result object
   return await resultsGoogle.then(async function (data) {
     await sleep(1000);
-    // console.log(data[1].link);
+    console.log("google linkstate 2", data[1].link);
     // link data from array of result object with axios
     const linkData = await axios.get(data[1].link, OPTIONS);
 
@@ -255,7 +255,7 @@ const fetchThirdGoogleResultPage = async function (searchQuery, pLanguage) {
   // makes call to axios to get data from the third link of google result object
   return await resultsGoogle.then(async function (data) {
     await sleep(1000);
-    // console.log(data[2].link);
+    console.log("google linkstate 3", data[2].link);
     // link data from array of google result object with axios
     const linkData = await axios.get(data[2].link, OPTIONS);
 
