@@ -95,29 +95,6 @@ export default function Home() {
     console.log(value);
   }
 
-  const getOutput = async function () {
-    const options = {
-      method: 'POST',
-      url: 'https://judge0-ce.p.rapidapi.com/submissions',
-      params: {base64_encoded: 'true', fields: '*'},
-      headers: {
-        'content-type': 'application/json',
-        'Content-Type': 'application/json',
-        'X-RapidAPI-Key': 'fb89168a22mshfed78d6b1a25269p11f506jsn545597322244',
-        'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
-      },
-      data: '{"language_id":74,"source_code":"Y29uc29sZS5sb2coImhlbGxvIHdvcmxkIik=","stdin":"SnVkZ2Uw"}'
-    };
-    
-    return await axios
-      .request(options)
-      .then(function (response) {
-        console.log(response.data);
-      }).catch(function (error) {
-        console.error(error);
-      });
-  }
-
   // getOutput();
   // console.log(searchEngine);
   // console.log(searchQuery);
