@@ -5,30 +5,29 @@
 }
 
 .content-code {
-  padding-left: 7rem;
-  float: left;
+  float: center;
   clear: both;
 }
 
 #light .content-info {
   color: black;
-  width: 60%;
+  width: 70%;
   margin: 0 auto;
 }
 #dark .content-info {
   color: white;
-  width: 60%;
+  width: 70%;
   margin: 0 auto;
 }
 
 #light .content-code {
   color: black;
-  width: 60%;
+  width: 70%;
   margin: 0 auto;
 }
 #dark .content-code {
   color: white;
-  width: 60%;
+  width: 70%;
   margin: 0 auto;
 }
 

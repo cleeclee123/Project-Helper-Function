@@ -95,10 +95,34 @@ export default function Home() {
     console.log(value);
   }
 
-  console.log(searchEngine);
-  console.log(searchQuery);
-  console.log(language);
-  console.log(linkState);
+  const getOutput = async function () {
+    const options = {
+      method: 'POST',
+      url: 'https://judge0-ce.p.rapidapi.com/submissions',
+      params: {base64_encoded: 'true', fields: '*'},
+      headers: {
+        'content-type': 'application/json',
+        'Content-Type': 'application/json',
+        'X-RapidAPI-Key': 'fb89168a22mshfed78d6b1a25269p11f506jsn545597322244',
+        'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
+      },
+      data: '{"language_id":74,"source_code":"Y29uc29sZS5sb2coImhlbGxvIHdvcmxkIik=","stdin":"SnVkZ2Uw"}'
+    };
+    
+    return await axios
+      .request(options)
+      .then(function (response) {
+        console.log(response.data);
+      }).catch(function (error) {
+        console.error(error);
+      });
+  }
+
+  // getOutput();
+  // console.log(searchEngine);
+  // console.log(searchQuery);
+  // console.log(language);
+  // console.log(linkState);
 
   // console.log(codeObjectBing);
   // console.log(codeObjectGoogle);
@@ -197,9 +221,9 @@ export default function Home() {
         </div> */}
       </div>
 
-      <div className="out-ph">
+      {/* <div className="out-ph">
         <h1> Output/Compiler Here </h1>
-      </div>
+      </div> */}
     </div>
   );
 }
