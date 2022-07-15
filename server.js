@@ -56,7 +56,7 @@ app.get("/bing", async function (request, response) {
 });
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('../phf-frontend/build'))
+  app.use(express.static('phf-frontend/build'))
 }
 
 // route doesn't exist 
