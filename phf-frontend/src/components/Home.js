@@ -42,7 +42,7 @@ export default function Home() {
       ls: linkState.toString(),
     };
     return await axios
-      .get("http://localhost:8080/google", { params })
+      .get("https://dry-brook-48028.herokuapp.com/google", { params })
       .then((response) => {
         // console.log(response);
         // return response;
@@ -61,7 +61,7 @@ export default function Home() {
       ls: linkState.toString(),
     };
     return await axios
-      .get("http://localhost:8080/bing", { params })
+      .get("https://dry-brook-48028.herokuapp.com/bing", { params })
       .then((response) => {
         // console.log(response);
         // return response;
