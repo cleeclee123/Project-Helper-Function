@@ -8,7 +8,11 @@
     "BingScraper": "node ./scrapers/bing_scraper.js",
     "GoogleScraper": "node ./scrapers/google_scraper.js",
     "devServerN": "node server.js",
-    "devServerNM": "nodemon server.js"
+    "devServerNM": "nodemon server.js",
+    "build": "cd phf-frontend && npm run build",
+    "install-client": "cd phf-frontend && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",

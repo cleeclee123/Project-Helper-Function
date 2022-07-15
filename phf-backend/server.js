@@ -2,7 +2,7 @@ const googleResultObject = require("./scrapers/google_scraper");
 const bingResultObject = require("./scrapers/bing_scraper");
 const express = require("express");
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 // overrides the CORS header that the server has in place with the open wildcard value
 app.use((request, response, next) => {
@@ -54,6 +54,10 @@ app.get("/bing", async function (request, response) {
   // code object from corresponding linkstate website from bing search result object to json
   response.send(results);
 });
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('../phf-frontend/build'))
+}
 
 // route doesn't exist 
 app.use(function (request, response, next) {
