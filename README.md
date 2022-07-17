@@ -2,7 +2,7 @@
 
 https://projecthelperfunctionv2.herokuapp.com/
 
-Find the code snippet that your looking for.
+Find the code snippet that you are looking for.
 1. Choose your Search Engine: Google or Bing (More coming later)
 2. Choose what programming language you need 
 3. Type in what you are looking for
