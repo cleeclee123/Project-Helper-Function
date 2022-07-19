@@ -16,6 +16,8 @@ export default function Home() {
   const handleChangeEngine = (event) => {
     event.preventDefault();
     setSearchEngine(event.target.value);
+    setLinkState(1);
+    setButtonText("Search");
   };
 
   // handle state for language by dropdown
@@ -96,10 +98,10 @@ export default function Home() {
   }
 
   // getOutput();
-  // console.log(searchEngine);
-  // console.log(searchQuery);
-  // console.log(language);
-  // console.log(linkState);
+  console.log(searchEngine);
+  console.log(searchQuery);
+  console.log(language);
+  console.log(linkState);
 
   // console.log(codeObjectBing);
   // console.log(codeObjectGoogle);
