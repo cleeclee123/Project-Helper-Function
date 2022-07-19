@@ -9,6 +9,7 @@
     "GoogleScraper": "node ./scrapers/google_scraper.js",
     "devServerN": "node server.js",
     "devServerNM": "nodemon server.js",
+    "devForever": "forever start server.js",
     "build": "cd phf-frontend && npm run build",
     "install-client": "cd phf-frontend && npm install",
     "heroku-postbuild": "npm run install-client && npm run build",
