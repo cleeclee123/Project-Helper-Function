@@ -1,4 +1,4 @@
-# Project-Helper-Function V1 (test)
+# Project-Helper-Function V1 
 
 https://projecthelperfunctionv2.herokuapp.com/
 
@@ -9,3 +9,7 @@ Find the code snippet that you are looking for.
 4. Press Search
 
 You will get the code you searched for in the editor below!
+
+Update 7/19/2022
+- Better Error handling
+- Using Forever.js
