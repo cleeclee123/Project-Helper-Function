@@ -276,6 +276,12 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
   const CAPTCHA_MESSAGE =
     "Our systems have detected unusual traffic from your computer network";
 
+  const ERROR_MESSAGE = 
+    "An Error has occured, please try again";
+
+  const BAD_SCRAP = 
+    "We didn't have anything to scrape, please try again using a different engine";
+
   // linkState will scrap the corresponding website and checks captcha state
   // return "code" object that represents the original searchQuery and corresponding programming language
   if (linkState === "1") {
@@ -308,6 +314,11 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
           $("pre").each((index, element) => {
             code[index] = $(element).text();
           });
+        }
+
+        // if code is empty
+        if (code.length === 0 || code == undefined) {
+          return BAD_SCRAP;
         }
 
         return code;
@@ -349,6 +360,11 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
           $("pre").each((index, element) => {
             code[index] = $(element).text();
           });
+        }
+
+        // if code is empty
+        if (code.length === 0 || code == undefined) {
+          return BAD_SCRAP;
         }
 
         return code;
@@ -397,6 +413,11 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
           $("td").each((index, element) => {
             code[index] = $(element).text();
           });
+        }
+
+        // if code is empty
+        if (code.length === 0 || code == undefined) {
+          return BAD_SCRAP;
         }
 
         return code;
