@@ -277,10 +277,10 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
     "Our systems have detected unusual traffic from your computer network";
 
   const ERROR_MESSAGE = 
-    "An Error has occured, please try again";
+    "// An Error has occured, please try again";
 
   const BAD_SCRAP = 
-    "We didn't have anything to scrape, please try again using a different engine";
+    "// We didn't have anything to scrape, please try again using a different engine";
 
   // linkState will scrap the corresponding website and checks captcha state
   // return "code" object that represents the original searchQuery and corresponding programming language
