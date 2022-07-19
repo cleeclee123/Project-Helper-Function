@@ -276,6 +276,12 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
   const CAPTCHA_MESSAGE =
     "Our systems have detected unusual traffic from your computer network";
 
+  const ERROR_MESSAGE = 
+    "An Error has occured, please try again";
+
+  const BAD_SCRAP = 
+    "We didn't have anything to scrape, please try again using a different engine";
+
   // linkState will scrap the corresponding website and checks captcha state
   // return "code" object that represents the original searchQuery and corresponding programming language
   if (linkState === "1") {
@@ -309,6 +315,11 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
             code[index] = $(element).text();
           });
         }
+        
+        // if code is empty
+        if (code.length === 0 || code == undefined) {
+          return BAD_SCRAP;
+        }
 
         return code;
       })
@@ -317,7 +328,8 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
         throw new Error("Captcha Error")
       } */
         console.log(error);
-        throw new Error("Link State 1 Error");
+        return ERROR_MESSAGE;
+        // throw new Error("Link State 1 Error");
       });
   } else if (linkState === "2") {
     const googlePageTwo = fetchSecondGoogleResultPage(searchQuery, pLanguage);
@@ -351,6 +363,11 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
           });
         }
 
+        // if code is empty
+        if (code.length === 0 || code == undefined) {
+          return BAD_SCRAP;
+        }
+
         return code;
       })
       .catch(async function (error) {
@@ -358,7 +375,8 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
         throw new Error("Captcha Error");
       } */
         console.log(error);
-        throw new Error("Link State 2 Error");
+        return ERROR_MESSAGE;
+        //throw new Error("Link State 2 Error");
       });
   } else if (linkState === "3") {
     const googlePageThree = fetchThirdGoogleResultPage(searchQuery, pLanguage);
@@ -399,6 +417,11 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
           });
         }
 
+        // if code is empty
+        if (code.length === 0 || code == undefined) {
+          return BAD_SCRAP;
+        }
+
         return code;
       })
       .catch(async function (error) {
@@ -406,10 +429,12 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
         throw new Error("Captcha Error")
       } */
         console.log(error);
-        throw new Error("Link State 3 Error");
+        return ERROR_MESSAGE;
+        //throw new Error("Link State 3 Error");
       });
   } else {
-    throw new Error("Link State Error");
+    return ERROR_MESSAGE;
+    // throw new Error("Link State Error");
   }
 };
 
@@ -420,11 +445,11 @@ module.exports = {
 };
 
 // simple testing
-/* const code = getResultDataLinks("web sockets", "c++", "1");
+const code = getResultDataLinks("hello world", "typescript", "1");
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
-}); */
+});
 
 /* const test = buildGoogleResultObject("hello world", "c++");
 test.then(async function (data) {
