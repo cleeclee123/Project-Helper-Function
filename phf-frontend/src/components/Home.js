@@ -36,6 +36,9 @@ export default function Home() {
     setButtonText("Search");
   }
 
+  // error message for axios fail
+  const ERROR_MESSAGE = "// An Error has occured, please try again"
+
   // google code object fetcher
   const fetchGoogleCodeObj = async function () {
     const params = {
@@ -51,6 +54,7 @@ export default function Home() {
         setCodeObjectResult(response.data.toString());
       })
       .catch((error) => {
+        setCodeObjectResult(ERROR_MESSAGE);
         console.log(error);
       });
   };
@@ -70,6 +74,7 @@ export default function Home() {
         setCodeObjectResult(response.data.toString());
       })
       .catch((error) => {
+        setCodeObjectResult(ERROR_MESSAGE);
         console.log(error);
       });
   };
