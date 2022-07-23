@@ -1,6 +1,8 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 
+const ERROR_MESSAGE_R = "Sorry, an error as occured. Please try again";
+
 /* disregard this */
 // state must either be 0 === ip_address or 1 === port_numbers
 // returns the corresponding array (for axios header proxy options)
@@ -35,8 +37,9 @@ const generateProxy = async function (/* state */) {
       port_numbers.join(", ");
     })
     .catch(async function (error) {
-      console.log(error.response);
-      throw new Error("Proxy Rotation Scrap Error");
+      // console.log(error.response);
+      // throw new Error("Proxy Rotation Scrap Error");
+      return `${ERROR_MESSAGE_R} ${error}`;
     });
 
   let random_number = Math.floor(Math.random() * 100);

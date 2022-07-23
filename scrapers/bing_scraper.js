@@ -1,6 +1,8 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 
+const ERROR_MESSAGE_R = "Sorry, an error as occured. Please try again"
+
 // scraps sslproxies.org for port numbers and ip addresses
 const generateProxy = async function () {
   let ipAddresses = [];
@@ -28,7 +30,8 @@ const generateProxy = async function () {
     })
     .catch(async function (error) {
       // console.log(error.response);
-      throw new Error("Proxy Rotation Scrap Error");
+      // throw new Error("Proxy Rotation Scrap Error");
+      return `${ERROR_MESSAGE_R} ${error}`
     });
 
   let randomNumber = Math.floor(Math.random() * 100);
@@ -58,8 +61,9 @@ const rotateUserAgent = async function () {
       userAgents.join(", ");
     })
     .catch(async function(error) {
-      console.log(error.response);
-      throw new Error("User Agent Rotation Error");
+      // console.log(error.response);
+      // throw new Error("User Agent Rotation Error");
+      return `${ERROR_MESSAGE_R} ${error}`;
     });
 
   let randomNumber = Math.floor(Math.random() * 100);
