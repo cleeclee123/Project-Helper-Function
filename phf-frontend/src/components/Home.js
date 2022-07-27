@@ -9,8 +9,26 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("How to print Hello World");
   const [language, setLanguage] = useState("javascript");
   const [linkState, setLinkState] = useState(1);
-  const [codeObjectResult, setCodeObjectResult] = useState(`console.log("Hello World")`);
-  const [buttonText, setButtonText] = useState("Search"); 
+  const [codeObjectResult, setCodeObjectResult] = useState(
+    `console.log("Hello World");`
+  );
+  const [buttonText, setButtonText] = useState("Search");
+
+  // handle comment icon
+  function handleCommentIcon(currentLanguage) {
+    if (currentLanguage == "python") {
+      return "#";
+    } else if (currentLanguage == "html") {
+      return "< ! ╌";
+    }
+    return "//";
+  }
+  function endHTMLComment(currentLanguage) {
+    if (currentLanguage === "html") {
+      return "╌>";
+    }
+    return "";
+  }
 
   // hnadle state for engine by dropdown
   const handleChangeEngine = (event) => {
@@ -18,6 +36,11 @@ export default function Home() {
     setSearchEngine(event.target.value);
     setLinkState(1);
     setButtonText("Search");
+    setCodeObjectResult(
+      `${handleCommentIcon(event.target.value)} Your Code Snippet for ${
+        event.target.value
+      } ${endHTMLComment(event.target.value)}`
+    );
   };
 
   // handle state for language by dropdown
@@ -26,6 +49,11 @@ export default function Home() {
     setLanguage(event.target.value);
     setLinkState(1);
     setButtonText("Search");
+    setCodeObjectResult(
+      `${handleCommentIcon(event.target.value)} Your Code Snippet for ${
+        event.target.value
+      } ${endHTMLComment(event.target.value)}`
+    );
   };
 
   // handle state for search query by input
@@ -34,10 +62,15 @@ export default function Home() {
     setSearchQuery(event.target.value);
     setLinkState(1);
     setButtonText("Search");
-  }
+    setCodeObjectResult(
+      `${handleCommentIcon(event.target.value)} Your Code Snippet for ${
+        event.target.value
+      } ${endHTMLComment(event.target.value)}`
+    );
+  };
 
   // error message for axios fail
-  const ERROR_MESSAGE = "// An Error has occured, please try again"
+  const ERROR_MESSAGE = "// An Error has occured, please try again";
 
   // google code object fetcher
   const fetchGoogleCodeObj = async function () {
@@ -97,16 +130,16 @@ export default function Home() {
     setLinkState(1);
   }
 
-  // test editor 
+  // test editor
   function handleEditorChange(value, event) {
     console.log(value);
   }
 
   // getOutput();
-  console.log(searchEngine);
-  console.log(searchQuery);
-  console.log(language);
-  console.log(linkState);
+  // console.log(searchEngine);
+  // console.log(searchQuery);
+  // console.log(language);
+  // console.log(linkState);
 
   // console.log(codeObjectBing);
   // console.log(codeObjectGoogle);
@@ -145,7 +178,7 @@ export default function Home() {
                   <option value="javascript">JavaScript</option>
                   <option value="html">HTML</option>
                   <option value="java">Java</option>
-                  <option value="c plus plus">C++</option>
+                  <option value="cpp">C++</option>
                   <option value="c">C</option>
                   <option value="csharp">C#</option>
                   <option value="python">Python</option>
@@ -183,7 +216,7 @@ export default function Home() {
                   className="search-button"
                   id="searchButton"
                 >
-                  { buttonText }
+                  {buttonText}
                 </button>
               </form>
             </div>
