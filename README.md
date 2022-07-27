@@ -13,3 +13,8 @@ You will get the code you searched for in the editor below!
 Update 7/19/2022
 - Better Error handling
 - Using Forever.js
+
+Update 7/27/2022
+- Better State Management
+- Loading message during scraping
+- index.html updates
