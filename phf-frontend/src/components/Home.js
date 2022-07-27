@@ -36,6 +36,7 @@ export default function Home() {
     setSearchEngine(event.target.value);
     setLinkState(1);
     setButtonText("Search");
+    setSearchQuery("");
     setCodeObjectResult(
       `${handleCommentIcon(language)} Switch to ${event.target.value}`
     );
@@ -47,6 +48,7 @@ export default function Home() {
     setLanguage(event.target.value);
     setLinkState(1);
     setButtonText("Search");
+    setSearchQuery("");
     setCodeObjectResult(
       `${handleCommentIcon(event.target.value)} Your Code Snippet in ${
         event.target.value
@@ -131,13 +133,13 @@ export default function Home() {
 
   // test editor
   function handleEditorChange(value, event) {
-    //console.log(value);
+    // console.log(value);
   }
 
   // getOutput();
   // console.log(searchEngine);
   // console.log(searchQuery);
-  console.log(language);
+  // console.log(language);
   // console.log(linkState);
 
   // console.log(codeObjectBing);
