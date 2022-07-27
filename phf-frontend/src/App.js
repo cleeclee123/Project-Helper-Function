@@ -22,7 +22,7 @@ function App() {
         <div className="switch">
           <ReactSwitch onChange={toggleTheme} checked={theme === "dark"} />
         </div>
-        <div>
+        <div className="home-app">
           <Home/>
         </div> 
       </div>

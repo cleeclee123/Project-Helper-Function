@@ -1,33 +1,35 @@
 .home-container {
-  position: relative;
+  width: 100%;
+  height: 100%;
   padding-bottom: 12rem;
   clear: both;
 }
 
 .content-code {
-  float: center;
+  position: relative;
+  padding-right: 3.5rem;
   clear: both;
 }
 
 #light .content-info {
   color: black;
-  width: 70%;
+  width: 80%;
   margin: 0 auto;
 }
 #dark .content-info {
   color: white;
-  width: 70%;
+  width: 80%;
   margin: 0 auto;
 }
 
 #light .content-code {
   color: black;
-  width: 70%;
+  width: 80%;
   margin: 0 auto;
 }
 #dark .content-code {
   color: white;
-  width: 70%;
+  width: 80%;
   margin: 0 auto;
 }
 
