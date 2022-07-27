@@ -132,7 +132,7 @@ const fetchBingSearchData = async function (searchQuery) {
 // function helper for the search function to interpret the "++" in "c++"
 const helperConvertToWord = function (input) {
   var returnString = input.toLowerCase();
-  returnString = returnString.replace("+", "plus");
+  returnString = returnString.replace("+", "p");
   returnString = returnString.replace("#", "sharp");
   return returnString;
 }
