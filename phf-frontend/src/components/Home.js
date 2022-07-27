@@ -37,9 +37,7 @@ export default function Home() {
     setLinkState(1);
     setButtonText("Search");
     setCodeObjectResult(
-      `${handleCommentIcon(event.target.value)} Your Code Snippet for ${
-        event.target.value
-      } ${endHTMLComment(event.target.value)}`
+      `${handleCommentIcon(language)} Switch to ${event.target.value}`
     );
   };
 
@@ -50,7 +48,7 @@ export default function Home() {
     setLinkState(1);
     setButtonText("Search");
     setCodeObjectResult(
-      `${handleCommentIcon(event.target.value)} Your Code Snippet for ${
+      `${handleCommentIcon(event.target.value)} Your Code Snippet in ${
         event.target.value
       } ${endHTMLComment(event.target.value)}`
     );
@@ -63,9 +61,9 @@ export default function Home() {
     setLinkState(1);
     setButtonText("Search");
     setCodeObjectResult(
-      `${handleCommentIcon(event.target.value)} Your Code Snippet for ${
+      `${handleCommentIcon(language)} Your Code Snippet for ${
         event.target.value
-      } ${endHTMLComment(event.target.value)}`
+      } ${endHTMLComment(language)}in ${language}`
     );
   };
 
@@ -118,6 +116,7 @@ export default function Home() {
     event.preventDefault();
     setButtonText("Next Answer");
     setLinkState(linkState + 1);
+    setCodeObjectResult(`${handleCommentIcon(language)} Fetching the code for ${searchQuery} in ${language}`);
     if (searchEngine === "google") {
       fetchGoogleCodeObj();
     } else if (searchEngine === "bing") {
@@ -132,13 +131,13 @@ export default function Home() {
 
   // test editor
   function handleEditorChange(value, event) {
-    console.log(value);
+    //console.log(value);
   }
 
   // getOutput();
   // console.log(searchEngine);
   // console.log(searchQuery);
-  // console.log(language);
+  console.log(language);
   // console.log(linkState);
 
   // console.log(codeObjectBing);
