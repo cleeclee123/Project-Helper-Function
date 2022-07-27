@@ -51,9 +51,12 @@ const rotateUserAgent = async function () {
       const $ = cheerio.load(repsonse.data);
 
       // loop through tr tag, loop through table tag, grab second nth-child
-      // check for space (valid user agent) and will only scrap windows uas
+      // check for space (valid user agent) and will only scrap windows, mac, and linux uas
       $("tr > td:nth-child(2)").each((index, element) => {
-        if ($(element).text().includes(" ") && $(element).text().includes("(Windows")) {
+        if ($(element).text().includes(" ") && $(element).text().includes("(Windows") ||
+            $(element).text().includes(" ") && $(element).text().includes("(Macintosh") ||
+            $(element).text().includes(" ") && $(element).text().includes("(Linux")
+        ) {
           userAgents[index] = $(element).text();
         }
       });
@@ -80,10 +83,9 @@ const OPTIONS = {
       "Accept-Language": "en-US,en;q=0.9",
     Referer: 
       "https://www.bing.com",
-      "Sec-Ch-Ua":
-        '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
+      // "Sec-Ch-Ua": '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
       "Sec-Ch-Ua-Mobile": "?0",
-      "Sec-Ch-Ua-Platform": '"Windows"',
+      // "Sec-Ch-Ua-Platform": '"Windows"',
       "Sec-Fetch-Dest": "document",
       "Sec-Fetch-Mode": "navigate",
       "Sec-Fetch-Site": "cross-site",
