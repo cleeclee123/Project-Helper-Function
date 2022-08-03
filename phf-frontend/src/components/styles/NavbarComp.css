@@ -1,28 +1,50 @@
 .color-nav {
-  background: linear-gradient(
-    -45deg,
-    #e73c7e,
-    #23a6d5,
-    #23d5ab,
-    #e73c7e,
-    #23a6d5
-  );
-  background-size: 400% 400%;
-  /* animation: gradient 15s ease infinite; */
+  height: 60px;
 }
 
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+.nav-title {
+  color: white;
 }
 
 .phf-logo {
-  width: 19%;
+  width: 15%;
+}
+
+button {
+  border-radius: 8px;
+  cursor: pointer;
+  border: 0;
+  font-weight: 500;
+  margin: 0 8px;
+  width: 100px;
+  padding: 8px 0;
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
+  transition: 0.4s;
+}
+
+.reg {
+  border-radius: 20px;
+  color: rgb(255, 255, 255);
+  background-color: #00539b;
+  border: 1px solid #00539b;
+}
+
+
+.log {
+  border-radius: 20px;
+  color: #00539b;;
+  background-color: rgba(255, 255, 255, 1);
+  border: 1px solid #00539b;;
+}
+
+.log:hover {
+  color: white;
+  box-shadow: 0 0 20px #55adfa;
+  background-color: #00539b;
+}
+
+.reg:hover {
+  color: #00539b;
+  box-shadow: 0 0 20px #8dc7fa;
+  background-color: white;
 }

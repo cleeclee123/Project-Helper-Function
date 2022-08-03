@@ -448,11 +448,11 @@ module.exports = {
 };
 
 // simple testing
-const code = getResultDataLinks("hello world", "typescript", "1");
+/* const code = getResultDataLinks("hello world", "typescript", "1");
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
-});
+}); */
 
 /* const test = buildGoogleResultObject("hello world", "c++");
 test.then(async function (data) {

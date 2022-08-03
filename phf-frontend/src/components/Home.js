@@ -225,7 +225,7 @@ export default function Home() {
         </div>
         <div className="code-editor">
           <Editor
-            height="70vh"
+            height="75vh"
             defaultValue="// some comment"
             theme="vs-dark"
             language={language}
