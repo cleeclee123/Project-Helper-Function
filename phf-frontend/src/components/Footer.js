@@ -41,7 +41,7 @@ function Footer() {
           </CDBBox>
           <CDBBox>
             <p className="h5 mb-4" style={{ fontWeight: '600' }}>
-              Help
+              Help Out
             </p>
             <CDBBox flex="column" style={{ cursor: 'pointer', padding: '0' }}>
               <div className="link-footer"><a href="/">Report a Problem</a></div>
