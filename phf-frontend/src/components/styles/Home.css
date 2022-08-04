@@ -58,7 +58,7 @@
   float: right;
   width: 20%;
   padding: 11px;
-  background: #2196f3;
+  background: #00539b;
   color: white;
   font-size: 17px;
   border: 1px solid grey;
@@ -70,7 +70,7 @@
   float: left;
   width: 20%;
   padding: 11px;
-  background: #2196f3;
+  background: #00539b;
   color: white;
   font-size: 17px;
   border: 1px solid grey;
@@ -79,7 +79,7 @@
 }
 
 .search-button:hover {
-  background: #0b7dda;
+  background: #078bff;
 }
 
 .out-ph {

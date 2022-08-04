@@ -1,5 +1,5 @@
 import React from 'react';
-import { CDBFooter, CDBFooterLink, CDBBox, CDBBtn, CDBIcon } from 'cdbreact';
+import { CDBFooter, CDBBox, CDBBtn, CDBIcon } from 'cdbreact';
 import phfLogo from "../assets/phf-logo-ss-removebg-preview.png";
 import "./styles/Footer.css";
 
@@ -18,13 +18,13 @@ function Footer() {
             </p>
             <CDBBox display="flex" className="mt-3">
               <CDBBtn flat color="dark" className="p-3" href="https://github.com/cleeclee123/Project-Helper-Function" >
-                <CDBIcon fab icon="github"/>
+                <CDBIcon fab spin icon="github"/>
               </CDBBtn>
-              <CDBBtn flat color="dark" className="mx-4 p-3" href="https://github.com/cleeclee123/Project-Helper-Function">
-                <CDBIcon fab icon="linkedin" />
+              <CDBBtn flat color="dark" className="mx-4 p-3" href="https://www.linkedin.com/in/christopher-lee-4311241a6/">
+                <CDBIcon fab spin icon="linkedin" />
               </CDBBtn>
-              <CDBBtn flat color="dark" className="p-3" href="https://github.com/cleeclee123/Project-Helper-Function">
-                <CDBIcon fab icon="instagram" />
+              <CDBBtn flat color="dark" className="p-3" href="https://www.instagram.com/clee.99/">
+                <CDBIcon fab spin icon="instagram" />
               </CDBBtn>
             </CDBBox>
           </CDBBox>
@@ -34,9 +34,9 @@ function Footer() {
             </p>
             <CDBBox flex="column" style={{ cursor: 'pointer', padding: '0', color: 'white '}}>
               <div className="link-footer"><a href="/">Go Home</a></div>
-              <div className="link-footer"><a href="/">About the Project</a></div>
-              <div className="link-footer"><a href="/">Source Code</a></div>
-              <div className="link-footer"><a href="/">Message Chris</a></div>
+              <div className="link-footer"><a href="/scraper">Scraper</a></div>
+              <div className="link-footer"><a href="https://github.com/cleeclee123/Project-Helper-Function">Source Code</a></div>
+              <div className="link-footer"><a href="/messageme">Message Chris</a></div>
             </CDBBox>
           </CDBBox>
           <CDBBox>
@@ -44,10 +44,10 @@ function Footer() {
               Help Out
             </p>
             <CDBBox flex="column" style={{ cursor: 'pointer', padding: '0' }}>
-              <div className="link-footer"><a href="/">Report a Problem</a></div>
-              <div className="link-footer"><a href="/"> {"Contribute </>"} </a></div>
-              <div className="link-footer"><a href="/">Login</a></div>
-              <div className="link-footer"><a href="/">Sign Up</a></div>
+              <div className="link-footer"><a href="/report">Report a Problem</a></div>
+              <div className="link-footer"><a href="https://github.com/cleeclee123/Project-Helper-Function/pulls"> {"Contribute </>"} </a></div>
+              <div className="link-footer"><a href="/login">Login</a></div>
+              <div className="link-footer"><a href="/signup">Sign Up</a></div>
             </CDBBox>
           </CDBBox>
           <CDBBox>
@@ -55,10 +55,10 @@ function Footer() {
               About Chris
             </p>
             <CDBBox flex="column" style={{ cursor: 'pointer', padding: '0' }}>
-              <div className="link-footer"><a href="/">GitHub</a></div>
-              <div className="link-footer"><a href="/">Linkedin</a></div>
-              <div className="link-footer"><a href="/">Email</a></div>
-              <div className="link-footer"><a href="/"> {"Contribute $$$"} </a></div>
+              <div className="link-footer"><a href="https://github.com/cleeclee123">GitHub</a></div>
+              <div className="link-footer"><a href="https://www.linkedin.com/in/christopher-lee-4311241a6/">Linkedin</a></div>
+              <div className="link-footer"><a href="mailto: cl114@illinois.com">Email</a></div>
+              <div className="link-footer"><a href="/money"> {"Contribute $$$"} </a></div>
             </CDBBox>
           </CDBBox>
         </CDBBox>

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import NavbarComp from "./components/NavbarComp";
 import Home from "./components/Home";
+import Login from "./pages/Login";
 import Footer from "./components/Footer";
 
 export const ThemeContext = createContext(null);
@@ -29,12 +30,13 @@ function App() {
           </div>
           <div className="home-app">
             <Routes>
-              <Route exact path="/login" />
               <Route exact path="/scraper" element={<Home />} />
+              <Route exact path="/login" element={<Login />}/>
             </Routes>
           </div>
         </div>
         <Footer />
+
       </ThemeContext.Provider>
     </Router>
   );

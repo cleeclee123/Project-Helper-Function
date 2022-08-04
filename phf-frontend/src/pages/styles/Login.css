@@ -1,0 +1,19 @@
+.login-bg-wrapper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.forgotlink {
+  color: blue;
+}
+
+.login-img {
+  border-radius: 25px;
+}
+
+

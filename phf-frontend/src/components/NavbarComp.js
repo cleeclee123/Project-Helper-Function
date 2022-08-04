@@ -1,9 +1,6 @@
-import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import phfLogo from "../assets/phf-logo-ss-removebg-preview.png";
 import "./styles/NavbarComp.css";
 
@@ -15,10 +12,14 @@ function NavScrollExample() {
           <img className="phf-logo" src={phfLogo} />
           &nbsp; Project Helper Function
         </Navbar.Brand>
+       
         <Nav>
-          <Nav.Link href="/signin"> <button class="log"> Login </button> </Nav.Link> &nbsp;
-          <Nav.Link href="/signup"> <button class="reg"> Sign Up </button> </Nav.Link> &nbsp;
-          </Nav>
+          <Nav.Link href="/Home"> <button class="reg"> Home  </button> </Nav.Link> 
+          <Nav.Link href="/docs"> <button class="reg"> Docs  </button> </Nav.Link> 
+          <Nav.Link href="/login"> <button class="reg"> Login  </button> </Nav.Link> 
+          <Nav.Link href="/signup"> <button class="log"> Sign Up For Free </button> </Nav.Link> 
+        </Nav>
+          
       </Container>
     </Navbar>
   );
