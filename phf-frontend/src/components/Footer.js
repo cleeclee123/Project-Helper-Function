@@ -34,7 +34,7 @@ function Footer() {
             </p>
             <CDBBox flex="column" style={{ cursor: 'pointer', padding: '0', color: 'white '}}>
               <div className="link-footer"><a href="/">Go Home</a></div>
-              <div className="link-footer"><a href="/scraper">Scraper</a></div>
+              <div className="link-footer"><a href="https://cheerio.js.org/">Cheerio.js</a></div>
               <div className="link-footer"><a href="https://github.com/cleeclee123/Project-Helper-Function">Source Code</a></div>
               <div className="link-footer"><a href="/messageme">Message Chris</a></div>
             </CDBBox>
