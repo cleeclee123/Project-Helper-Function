@@ -16,4 +16,28 @@
   border-radius: 25px;
 }
 
+.reg-login {
+  border-radius: 8px;
+  cursor: pointer;
+  border: 0;
+  font-weight: 500;
+  margin: 0 7px;
+  width: 150px;
+  padding: 8px 0;
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
+  transition: 0.4s;
+}
+
+.reg-login {
+  border-radius: 20px;
+  color: rgb(255, 255, 255);
+  background-color: #00539b;
+  border: 1px solid #00539b;
+}
+
+.reg-login:hover {
+  color: #00539b;
+  box-shadow: 0 0 20px #8dc7fa;
+  background-color: white;
+}
 
