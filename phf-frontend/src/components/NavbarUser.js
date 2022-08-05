@@ -2,9 +2,24 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import phfLogo from "../assets/phf-logo-ss-removebg-preview.png";
+import { useNavigate } from "react-router-dom";
+import { UserAuth } from "../firebase/AuthContext";
 import "./styles/NavbarComp.css";
 
 function NavScrollExample() {
+  const { user, logout } = UserAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/");
+      console.log("You are logged out");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="color-nav">
       <Container fluid>
@@ -22,13 +37,16 @@ function NavScrollExample() {
             {" "}
             <button class="reg"> Docs </button>{" "}
           </Nav.Link>
-          <Nav.Link href="/login">
+          <Nav.Link href="/signout">
             {" "}
-            <button class="reg"> Login </button>{" "}
+            <button class="reg"> Sign Out </button>{" "}
           </Nav.Link>
-          <Nav.Link href="/signup">
+          <Nav.Link href="/home">
             {" "}
-            <button class="log"> Sign Up For More Features! </button>{" "}
+            <button class="log" onClick={handleLogout}>
+              {" "}
+              Signed in as ~username~ {" "}
+            </button>{" "}
           </Nav.Link>
         </Nav>
       </Container>
