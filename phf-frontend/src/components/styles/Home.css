@@ -48,7 +48,7 @@
 
 .search-term {
   width: 80%;
-  border: 2px solid #000000;
+  border: 1px solid grey;
   height: 50px;
   outline: none;
   color: #000000;

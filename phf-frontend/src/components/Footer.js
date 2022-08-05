@@ -62,7 +62,7 @@ function Footer() {
             </CDBBox>
           </CDBBox>
         </CDBBox>
-        <small className="text-center mt-5">&copy; Christopher Lee | Project Helper Function, 2022. All rights reserved.</small>
+        <small className="text-center mt-5 text-white">&copy; Christopher Lee | Project Helper Function, 2022. All rights reserved.</small>
       </CDBBox>
     </CDBFooter>
   );

@@ -1,10 +1,11 @@
 import "./App.css";
 import { createContext, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ReactSwitch from "react-switch";
 import NavbarComp from "./components/NavbarComp";
 import Home from "./components/Home";
 import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 import Footer from "./components/Footer";
 
 export const ThemeContext = createContext(null);
@@ -30,8 +31,10 @@ function App() {
           </div>
           <div className="home-app">
             <Routes>
-              <Route exact path="/scraper" element={<Home />} />
+              <Route path="/" element={<Navigate replace to="/home" />} />
+              <Route exact path="/home" element={<Home />} />
               <Route exact path="/login" element={<Login />}/>
+              <Route exact path="/signup" element={<SignUp />}/>
             </Routes>
           </div>
         </div>
