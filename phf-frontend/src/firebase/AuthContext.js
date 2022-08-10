@@ -6,14 +6,25 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "./firebase";
+import { updateProfile } from "firebase/auth";
+
 
 const UserContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
 
-  const createUser = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+  const createUser = (displayName, email, password) => {
+    return createUserWithEmailAndPassword(auth, email, password).then(function (userCreds) {
+      userCreds.user.displayName = displayName;
+      
+      updateProfile(auth.currentUser, {
+        displayName: displayName
+      }).catch((error) => {
+        console.log(error);
+      });
+    
+    });
   };
 
   const signIn = (email, password) => {

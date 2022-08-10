@@ -13,7 +13,8 @@ function NavScrollExample() {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate("/");
+      navigate("/login");
+      window.location.reload();
       console.log("You are logged out");
     } catch (error) {
       console.log(error.message);
@@ -37,15 +38,18 @@ function NavScrollExample() {
             {" "}
             <button class="reg"> Docs </button>{" "}
           </Nav.Link>
-          <Nav.Link href="/signout">
+          <Nav.Link href="/login">
             {" "}
-            <button class="reg"> Sign Out </button>{" "}
+            <button class="reg" onClick={handleLogout}>
+              {" "}
+              Sign Out{" "}
+            </button>{" "}
           </Nav.Link>
           <Nav.Link href="/home">
             {" "}
-            <button class="log" onClick={handleLogout}>
+            <button class="log" >
               {" "}
-              Signed in as ~username~ {" "}
+              Signed in as {user.displayName}{" "}
             </button>{" "}
           </Nav.Link>
         </Nav>
