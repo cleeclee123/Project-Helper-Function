@@ -223,7 +223,7 @@ const fetchFirstGoogleResultPage = async function (searchQuery, pLanguage) {
     // new link data promise
     const linkDataPromise = await linkData.data;
 
-    return { "source": data[0].link, "linkPromise": linkDataPromise };
+    return { source: data[0].link, linkPromise: linkDataPromise };
   });
 };
 
@@ -244,7 +244,7 @@ const fetchSecondGoogleResultPage = async function (searchQuery, pLanguage) {
     // new link data promise
     const linkDataPromise = await linkData.data;
 
-    return { "source": data[1].link, "linkPromise": linkDataPromise };
+    return { source: data[1].link, linkPromise: linkDataPromise };
   });
 };
 
@@ -265,7 +265,7 @@ const fetchThirdGoogleResultPage = async function (searchQuery, pLanguage) {
     // new link data promise
     const linkDataPromise = await linkData.data;
 
-    return { "source": data[2].link, "linkPromise": linkDataPromise };
+    return { source: data[2].link, linkPromise: linkDataPromise };
   });
 };
 
@@ -279,10 +279,9 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
   const CAPTCHA_MESSAGE =
     "Our systems have detected unusual traffic from your computer network";
 
-  const ERROR_MESSAGE = 
-    "// An Error has occured, please try again";
+  const ERROR_MESSAGE = "// An Error has occured, please try again";
 
-  const BAD_SCRAP = 
+  const BAD_SCRAP =
     "// We didn't have anything to scrape, please try again using a different engine";
 
   // linkState will scrap the corresponding website and checks captcha state
@@ -291,7 +290,6 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
     const googlePageOne = fetchFirstGoogleResultPage(searchQuery, pLanguage);
     return googlePageOne
       .then(async function (data) {
-
         // load markup with cheerio
         let $ = cheerio.load(data.linkPromise);
 
@@ -316,13 +314,13 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
             code[index] = $(element).text();
           });
         }
-        
+
         // if code is empty
         if (code.length === 0 || code == undefined) {
           return BAD_SCRAP;
         }
 
-        return { "source": data.source, "linkState": linkState, "code": code, };
+        return { source: data.source, linkState: linkState, code: code };
       })
       .catch(async function (error) {
         /* if (error.response.data.includes(CAPTCHA_MESSAGE)) {
@@ -337,7 +335,6 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
 
     return googlePageTwo
       .then(async function (data) {
-
         // load markup with cheerio
         let $ = cheerio.load(data.linkPromise);
 
@@ -368,7 +365,7 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
           return BAD_SCRAP;
         }
 
-        return { "source": data.source, "linkState": linkState, "code": code, };;
+        return { source: data.source, linkState: linkState, code: code };
       })
       .catch(async function (error) {
         /* if (error.response.data.includes(CAPTCHA_MESSAGE)) {
@@ -383,7 +380,6 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
 
     return googlePageThree
       .then(async function (data) {
-
         // load markup with cheerio
         let $ = cheerio.load(data.linkPromise);
 
@@ -421,7 +417,7 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
           return BAD_SCRAP;
         }
 
-        return { "source": data.source, "linkState": linkState, "code": code, };;
+        return { source: data.source, linkState: linkState, code: code };
       })
       .catch(async function (error) {
         /* if (error.repsonse.data.includes(CAPTCHA_MESSAGE)) {
@@ -440,7 +436,7 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
 module.exports = {
   getResultDataLinks,
   fetchGoogleSearchData,
-  buildGoogleResultObject
+  buildGoogleResultObject,
 };
 
 // simple testing
