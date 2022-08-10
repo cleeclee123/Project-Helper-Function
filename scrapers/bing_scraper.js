@@ -441,11 +441,11 @@ module.exports = {
 };
 
 // simple testing
-/* const code = getResultDataLinks("smallest substring of all characters", "python", 3);
+const code = getResultDataLinks("hello world", "python", "1");
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
-}); */
+});
 
 /* const proxy = generateProxy();
 proxy.then(async function(data) {
