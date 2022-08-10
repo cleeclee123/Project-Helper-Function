@@ -1,7 +1,7 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
 
-const ERROR_MESSAGE_R = "Sorry, an error as occured. Please try again"
+const ERROR_MESSAGE_R = "Sorry, an error as occured. Please try again";
 
 // scraps sslproxies.org for port numbers and ip addresses
 const generateProxy = async function () {
@@ -11,7 +11,7 @@ const generateProxy = async function () {
   await axios
     .get("https://sslproxies.org/")
     .then(async function (response) {
-      // load html data with cheerio 
+      // load html data with cheerio
       const $ = cheerio.load(response.data);
 
       // loop through table tag, grab second nth-child
@@ -23,29 +23,30 @@ const generateProxy = async function () {
       $("td:nth-child(2)").each((index, element) => {
         portNumbers[index] = $(element).text();
       });
-      
-      ipAddresses.join(", ");
-      portNumbers.join(", ");  
 
+      ipAddresses.join(", ");
+      portNumbers.join(", ");
     })
     .catch(async function (error) {
       // console.log(error.response);
       // throw new Error("Proxy Rotation Scrap Error");
-      return `${ERROR_MESSAGE_R} ${error}`
+      return `${ERROR_MESSAGE_R} ${error}`;
     });
 
   let randomNumber = Math.floor(Math.random() * 100);
   let proxy = `http://${ipAddresses[randomNumber]}:${portNumbers[randomNumber]}`;
-      
+
   return proxy;
-}
+};
 
 // function to rotate user agents by scrapping github repo, returns a string
 const rotateUserAgent = async function () {
   let userAgents = [];
 
   await axios
-    .get("https://github.com/tamimibrahim17/List-of-user-agents/blob/master/Chrome.txt")
+    .get(
+      "https://github.com/tamimibrahim17/List-of-user-agents/blob/master/Chrome.txt"
+    )
     .then(async function (repsonse) {
       // load html with cheerio
       const $ = cheerio.load(repsonse.data);
@@ -53,9 +54,13 @@ const rotateUserAgent = async function () {
       // loop through tr tag, loop through table tag, grab second nth-child
       // check for space (valid user agent) and will only scrap windows, mac, and linux uas
       $("tr > td:nth-child(2)").each((index, element) => {
-        if ($(element).text().includes(" ") && $(element).text().includes("(Windows") ||
-            $(element).text().includes(" ") && $(element).text().includes("(Macintosh") ||
-            $(element).text().includes(" ") && $(element).text().includes("(Linux")
+        if (
+          ($(element).text().includes(" ") &&
+            $(element).text().includes("(Windows")) ||
+          ($(element).text().includes(" ") &&
+            $(element).text().includes("(Macintosh")) ||
+          ($(element).text().includes(" ") &&
+            $(element).text().includes("(Linux"))
         ) {
           userAgents[index] = $(element).text();
         }
@@ -63,7 +68,7 @@ const rotateUserAgent = async function () {
 
       userAgents.join(", ");
     })
-    .catch(async function(error) {
+    .catch(async function (error) {
       // console.log(error.response);
       // throw new Error("User Agent Rotation Error");
       return `${ERROR_MESSAGE_R} ${error}`;
@@ -72,29 +77,27 @@ const rotateUserAgent = async function () {
   let randomNumber = Math.floor(Math.random() * 100);
   let rotatedUserAgent = userAgents[randomNumber];
   return String(rotatedUserAgent);
-}
+};
 
 // write request header interface for bing
 const OPTIONS = {
   headers: {
     Accept:
       "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-      // "Accept-Encoding": "gzip, deflate, br",
-      "Accept-Language": "en-US,en;q=0.9",
-    Referer: 
-      "https://www.bing.com",
-      // "Sec-Ch-Ua": '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
-      "Sec-Ch-Ua-Mobile": "?0",
-      // "Sec-Ch-Ua-Platform": '"Windows"',
-      "Sec-Fetch-Dest": "document",
-      "Sec-Fetch-Mode": "navigate",
-      "Sec-Fetch-Site": "cross-site",
-      "Sec-Fetch-User": "?1",
-      "Upgrade-Insecure-Requests": "1",
-      "User-Agent": rotateUserAgent(),
-      "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
-    Proxy:
-      generateProxy(),
+    // "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "en-US,en;q=0.9",
+    Referer: "https://www.bing.com",
+    // "Sec-Ch-Ua": '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
+    "Sec-Ch-Ua-Mobile": "?0",
+    // "Sec-Ch-Ua-Platform": '"Windows"',
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "cross-site",
+    "Sec-Fetch-User": "?1",
+    "Upgrade-Insecure-Requests": "1",
+    "User-Agent": rotateUserAgent(),
+    "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
+    Proxy: generateProxy(),
   },
 };
 
@@ -127,7 +130,7 @@ const fetchBingSearchData = async function (searchQuery) {
   const newBingSearchDataPromise = await bingSearchData.data;
 
   return newBingSearchDataPromise;
-}
+};
 
 // function helper for the search function to interpret the "++" in "c++"
 const helperConvertToWord = function (input) {
@@ -135,7 +138,7 @@ const helperConvertToWord = function (input) {
   returnString = returnString.replace("+", "p");
   returnString = returnString.replace("#", "sharp");
   return returnString;
-}
+};
 
 // scraps the top title and links for search query with programming language as a parameter
 // return array of result objects from bing search data
@@ -168,9 +171,7 @@ const buildBingResultObject = async function (searchQuery, pLanguage) {
   const encodedPLanguage = encodeURI(helperConvertToWord(pLanguage));
 
   // calls fetchBingSearchData from axios (promise)
-  const searchData = fetchBingSearchData(
-    searchQuery + " " + encodedPLanguage
-  );
+  const searchData = fetchBingSearchData(searchQuery + " " + encodedPLanguage);
 
   return searchData.then(async function (data) {
     let adata = await data;
@@ -203,11 +204,11 @@ const buildBingResultObject = async function (searchQuery, pLanguage) {
     }
     return results;
   });
-}
+};
 
 const sleep = function (time) {
   return new Promise((resolve) => setTimeout(resolve, time));
-}
+};
 
 // function to get data from the first link in the bing result object from axios
 const fetchFirstBingResultPage = async function (searchQuery, pLanguage) {
@@ -226,9 +227,9 @@ const fetchFirstBingResultPage = async function (searchQuery, pLanguage) {
     // new link data promise
     const linkDataPromise = await linkData.data;
 
-    return linkDataPromise;
+    return { source: data[0].link, linkPromise: linkDataPromise };
   });
-}
+};
 
 // function to get data from the second link in the bing result object from axios
 const fetchSecondBingResultPage = async function (searchQuery, pLanguage) {
@@ -247,9 +248,9 @@ const fetchSecondBingResultPage = async function (searchQuery, pLanguage) {
     // new link data promise
     const linkDataPromise = await linkData.data;
 
-    return linkDataPromise;
+    return { source: data[1].link, linkPromise: linkDataPromise };
   });
-}
+};
 
 // function to get data from the third link in the bing result object from axios
 const fetchThirdBingResultPage = async function (searchQuery, pLanguage) {
@@ -268,9 +269,9 @@ const fetchThirdBingResultPage = async function (searchQuery, pLanguage) {
     // new link data promise
     const linkDataPromise = await linkData.data;
 
-    return linkDataPromise;
+    return { source: data[2].link, linkPromise: linkDataPromise };
   });
-}
+};
 
 // returns "code" object
 // function to start scraping data from result object links, takes in searchQuery, pLanguage, and state of result link
@@ -282,10 +283,9 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
   const CAPTCHA_MESSAGE =
     "Our systems have detected unusual traffic from your computer network";
 
-  const ERROR_MESSAGE = 
-    "// An Error has occured, please try again";
+  const ERROR_MESSAGE = "// An Error has occured, please try again";
 
-  const BAD_SCRAP = 
+  const BAD_SCRAP =
     "// We didn't have anything to scrape, please try again using a different engine";
 
   // linkState will scrap the corresponding website and checks captcha state
@@ -295,10 +295,8 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
 
     return bingPageOne
       .then(async function (data) {
-        let adata = await data;
-
         // load markup with cheerio
-        let $ = cheerio.load(adata);
+        let $ = cheerio.load(data.linkPromise);
 
         // build "code" object
         let code = [];
@@ -327,7 +325,7 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
           return BAD_SCRAP;
         }
 
-        return code;
+        return { source: data.source, linkState: linkState, code: code };
       })
       .catch(async function (error) {
         /* if (error.response.includes(CAPTCHA_MESSAGE)) {
@@ -341,10 +339,8 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
 
     return bingPageTwo
       .then(async function (data) {
-        let adata = await data;
-
         // load markup with cheerio
-        let $ = cheerio.load(adata);
+        let $ = cheerio.load(data.linkPromise);
 
         // build "code" object
         let code = [];
@@ -373,7 +369,7 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
           return BAD_SCRAP;
         }
 
-        return code;
+        return { source: data.source, linkState: linkState, code: code };
       })
       .catch(async function (error) {
         /* if (error.response.includes(CAPTCHA_MESSAGE)) {
@@ -387,10 +383,8 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
 
     return bingPageThree
       .then(async function (data) {
-        let adata = await data;
-
         // load markup with cheerio
-        let $ = cheerio.load(adata);
+        let $ = cheerio.load(data.linkPromise);
 
         // build "code" object
         let code = [];
@@ -426,7 +420,7 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
           return BAD_SCRAP;
         }
 
-        return code;
+        return { source: data.source, linkState: linkState, code: code };
       })
       .catch(async function (error) {
         /* if (error.response.includes(CAPTCHA_MESSAGE)) {
@@ -443,7 +437,7 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
 module.exports = {
   getResultDataLinks,
   fetchFirstBingResultPage,
-  buildBingResultObject
+  buildBingResultObject,
 };
 
 // simple testing
