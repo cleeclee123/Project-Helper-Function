@@ -16,9 +16,9 @@ export default function Home() {
 
   // handle comment icon
   function handleCommentIcon(currentLanguage) {
-    if (currentLanguage == "python") {
+    if (currentLanguage === "python") {
       return "#";
-    } else if (currentLanguage == "html") {
+    } else if (currentLanguage === "html") {
       return "< ! ╌";
     }
     return "//";
