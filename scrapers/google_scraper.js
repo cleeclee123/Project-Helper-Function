@@ -244,7 +244,7 @@ const fetchSecondGoogleResultPage = async function (searchQuery, pLanguage) {
     // new link data promise
     const linkDataPromise = await linkData.data;
 
-    return { "source": data[1].link, "linkPromise": linkDataPromise };;
+    return { "source": data[1].link, "linkPromise": linkDataPromise };
   });
 };
 
