@@ -306,10 +306,65 @@ const fetchThirdBingResultPage = async function (searchQuery, pLanguage) {
   });
 };
 
+// function to get data from the third link in the bing result object from axios
+const fetchFourthBingResultPage = async function (searchQuery, pLanguage) {
+  // array of result objects, holds the top three results (link, title) from bing
+  const resultsBing = buildBingResultObject(searchQuery, pLanguage);
+
+  await sleep(1000);
+  // data is array of bing result objects
+  // makes call to axios to get data from the third link of bing result object
+  return await resultsBing.then(async function (data) {
+    await sleep(1000);
+
+    //console.log("bing linkstate 4", data.results[3].link);
+
+    // link data from array of bing result object with axios
+    const linkData = await axios.get(data.results[3].link, OPTIONS);
+
+    // new link data promise
+    const linkDataPromise = await linkData.data;
+
+    return {
+      source: data.results[3].link,
+      title: data.results[3].title,
+      linkPromise: linkDataPromise,
+      requestHeader: data.requestHeader,
+    };
+  });
+};
+
+// function to get data from the third link in the bing result object from axios
+const fetchFifthBingResultPage = async function (searchQuery, pLanguage) {
+  // array of result objects, holds the top three results (link, title) from bing
+  const resultsBing = buildBingResultObject(searchQuery, pLanguage);
+
+  await sleep(1000);
+  // data is array of bing result objects
+  // makes call to axios to get data from the third link of bing result object
+  return await resultsBing.then(async function (data) {
+    await sleep(1000);
+
+    //console.log("bing linkstate 5", data.results[4].link);
+
+    // link data from array of bing result object with axios
+    const linkData = await axios.get(data.results[4].link, OPTIONS);
+
+    // new link data promise
+    const linkDataPromise = await linkData.data;
+
+    return {
+      source: data.results[4].link,
+      title: data.results[4].title,
+      linkPromise: linkDataPromise,
+      requestHeader: data.requestHeader,
+    };
+  });
+};
+
 // returns "code" object
 // function to start scraping data from result object links, takes in searchQuery, pLanguage, and state of result link
-// linkState is an int that repersents which link in the result array (1, 2, 3)
-// linkState will be a dropdown menu/next button on the frontend
+// linkState is an int that represents which link in the result array (1, 2, 3, 4, 5)
 // default will be the code object from google search result object
 const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
   // captcha page message from response.data
@@ -368,7 +423,7 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
       })
       .catch(async function (error) {
         console.log(error);
-        if (String(error.repsonse.data).includes(CAPTCHA_MESSAGE)) {
+        if (String(error.response).includes(CAPTCHA_MESSAGE)) {
           return CAPTCHA_ERROR;
         }
         return `${LINK_STATE_ERROR} at ls:${linkState}`;
@@ -417,7 +472,7 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
         };
       })
       .catch(async function (error) {
-        if (String(error.repsonse.data).includes(CAPTCHA_MESSAGE)) {
+        if (String(error.response).includes(CAPTCHA_MESSAGE)) {
           return CAPTCHA_ERROR;
         }
         return `${LINK_STATE_ERROR} at ls:${linkState}`;
@@ -473,14 +528,126 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
         };
       })
       .catch(async function (error) {
-        if (String(error.repsonse.data).includes(CAPTCHA_MESSAGE)) {
+        if (String(error.response).includes(CAPTCHA_MESSAGE)) {
+          return CAPTCHA_ERROR;
+        }
+        return `${LINK_STATE_ERROR} at ls:${linkState}`;
+      });
+  } else if (linkState === "4") {
+    const bingPageFour = fetchFourthBingResultPage(searchQuery, pLanguage);
+
+    return bingPageFour
+      .then(async function (data) {
+        // load markup with cheerio
+        let $ = cheerio.load(data.linkPromise);
+
+        // build "code" object
+        let code = [];
+
+        // loop through code tag on page
+        $("code").each((index, element) => {
+          code[index] = $(element).text();
+        });
+
+        // if code array is empty, loop through all tags with class "code"
+        if (code.length === 0 || code === undefined) {
+          $(".code").each((index, element) => {
+            code[index] = $(element).text();
+          });
+        }
+
+        // if code array is empty, loop through pre tag on page
+        if (code.length === 0 || code === undefined) {
+          $("pre").each((index, element) => {
+            code[index] = $(element).text();
+          });
+        }
+
+        // if code array is empty, loop through td tag on page
+        if (code.length === 0 || code === undefined) {
+          $("td").each((index, element) => {
+            code[index] = $(element).text();
+          });
+        }
+
+        // if code is empty
+        if (code.length === 0 || code == undefined) {
+          return BAD_SCRAP;
+        }
+
+        return {
+          source: data.source,
+          title: data.title,
+          linkState: linkState,
+          code: code,
+          requestHeader: data.requestHeader,
+        };
+      })
+      .catch(async function (error) {
+        if (String(error.response).includes(CAPTCHA_MESSAGE)) {
+          return CAPTCHA_ERROR;
+        }
+        return `${LINK_STATE_ERROR} at ls:${linkState}`;
+      });
+  } else if (linkState === "5") {
+    const bingPageFive = fetchFifthBingResultPage(searchQuery, pLanguage);
+
+    return bingPageFive
+      .then(async function (data) {
+        // load markup with cheerio
+        let $ = cheerio.load(data.linkPromise);
+
+        // build "code" object
+        let code = [];
+
+        // loop through code tag on page
+        $("code").each((index, element) => {
+          code[index] = $(element).text();
+        });
+
+        // if code array is empty, loop through all tags with class "code"
+        if (code.length === 0 || code === undefined) {
+          $(".code").each((index, element) => {
+            code[index] = $(element).text();
+          });
+        }
+
+        // if code array is empty, loop through pre tag on page
+        if (code.length === 0 || code === undefined) {
+          $("pre").each((index, element) => {
+            code[index] = $(element).text();
+          });
+        }
+
+        // if code array is empty, loop through td tag on page
+        if (code.length === 0 || code === undefined) {
+          $("td").each((index, element) => {
+            code[index] = $(element).text();
+          });
+        }
+
+        // if code is empty
+        if (code.length === 0 || code == undefined) {
+          return BAD_SCRAP;
+        }
+
+        return {
+          source: data.source,
+          title: data.title,
+          linkState: linkState,
+          code: code,
+          requestHeader: data.requestHeader,
+        };
+      })
+      .catch(async function (error) {
+        if (String(error.response).includes(CAPTCHA_MESSAGE)) {
           return CAPTCHA_ERROR;
         }
         return `${LINK_STATE_ERROR} at ls:${linkState}`;
       });
   } else {
     return ERROR_MESSAGE;
-  }
+  };
 };
 
 module.exports = {
@@ -488,19 +655,3 @@ module.exports = {
   buildBingResultObject,
   getResultDataLinks,
 };
-
-// simple testing
-// const code = getResultDataLinks("hello world", "javascript", "2");
-// code.then(async function (data) {
-//   console.log(data);
-// });
-
-// const proxy = generateProxy();
-// proxy.then(async function(data) {
-//   console.log(data);
-// })
-
-// const ua = rotateUserAgent();
-// ua.then(async function(data) {
-//   console.log(data);
-// })
