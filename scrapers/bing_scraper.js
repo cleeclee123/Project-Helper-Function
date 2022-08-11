@@ -676,19 +676,3 @@ module.exports = {
   buildBingResultObject,
   getResultDataLinks,
 };
-
-// simple testing
-const code = buildBingResultObject("hello world", "java");
-code.then(async function (data) {
-  console.log(data);
-});
-
-// const proxy = generateProxy();
-// proxy.then(async function(data) {
-//   console.log(data);
-// })
-
-// const ua = rotateUserAgent();
-// ua.then(async function(data) {
-//   console.log(data);
-// })
