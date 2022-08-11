@@ -97,13 +97,14 @@ const OPTIONS = async function () {
     } else if (String(data.userAgent).includes("(Macintosh")) {
       platformUA = "macOS";
     } else if (String(data.userAgent).includes("(X11")) {
-      platformUA ="Linux"
+      platformUA = "Linux";
     } else {
       platformUA = "Chrome OS";
     }
     return (headersOptions = {
       headers: {
-        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         Referer: "https://www.bing.com",
         Connection: "keep-alive",
         DNT: "1",
@@ -111,7 +112,8 @@ const OPTIONS = async function () {
         "Accept-Language": "en-US,en;q=0.9",
         "Accept-Encoding": "gzip, deflate",
         "Cache-Control": "max-age=0",
-        "Sec-Ch-Ua": '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
+        "Sec-Ch-Ua":
+          '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
         "Sec-Ch-Ua-Mobile": "?0",
         "sec-ch-ua-platform": platformUA,
         "Sec-Fetch-Dest": "document",
@@ -119,7 +121,7 @@ const OPTIONS = async function () {
         "Sec-Fetch-Site": "none",
         "Sec-Fetch-User": "?1",
         "Upgrade-Insecure-Requests": "1",
-        "User-Agent": data.userAgent, 
+        "User-Agent": data.userAgent,
         "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
       },
     });
@@ -327,7 +329,7 @@ const fetchThirdBingResultPage = async function (searchQuery, pLanguage) {
   });
 };
 
-// function to get data from the third link in the bing result object from axios
+// function to get data from the fourth link in the bing result object from axios
 const fetchFourthBingResultPage = async function (searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
   const resultsBing = buildBingResultObject(searchQuery, pLanguage);
@@ -355,7 +357,7 @@ const fetchFourthBingResultPage = async function (searchQuery, pLanguage) {
   });
 };
 
-// function to get data from the third link in the bing result object from axios
+// function to get data from the fifth link in the bing result object from axios
 const fetchFifthBingResultPage = async function (searchQuery, pLanguage) {
   // array of result objects, holds the top three results (link, title) from bing
   const resultsBing = buildBingResultObject(searchQuery, pLanguage);
@@ -668,11 +670,10 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
       });
   } else {
     return ERROR_MESSAGE;
-  };
+  }
 };
 
 module.exports = {
-  fetchBingSearchData,
   buildBingResultObject,
   getResultDataLinks,
 };
