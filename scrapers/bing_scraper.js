@@ -490,10 +490,10 @@ module.exports = {
 };
 
 // simple testing
-const code = getResultDataLinks("hello world", "javascript", "2");
-code.then(async function (data) {
-  console.log(data);
-});
+// const code = getResultDataLinks("hello world", "javascript", "2");
+// code.then(async function (data) {
+//   console.log(data);
+// });
 
 // const proxy = generateProxy();
 // proxy.then(async function(data) {
