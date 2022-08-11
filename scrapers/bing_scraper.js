@@ -52,7 +52,7 @@ const rotateUserAgent = async function () {
       const $ = cheerio.load(repsonse.data);
 
       // loop through tr tag, loop through table tag, grab second nth-child
-      // check for space (valid user agent) and will only scrap windows, mac, and linux uas
+      // check for space (valid user agent) and will only scrap windows, mac, and x11 (linux) uas
       $("tr > td:nth-child(2)").each((index, element) => {
         if (
           ($(element).text().includes(" ") &&
@@ -60,7 +60,7 @@ const rotateUserAgent = async function () {
           ($(element).text().includes(" ") &&
             $(element).text().includes("(Macintosh")) ||
           ($(element).text().includes(" ") &&
-            $(element).text().includes("(Linux"))
+            $(element).text().includes("(X11"))
         ) {
           userAgents[index] = $(element).text();
         }
@@ -490,11 +490,10 @@ module.exports = {
 };
 
 // simple testing
-// const code = getResultDataLinks("hello world", "javascript", "1");
-// code.then(async function (data) {
-//   await sleep(1000);
-//   console.log(data);
-// });
+const code = getResultDataLinks("hello world", "javascript", "2");
+code.then(async function (data) {
+  console.log(data);
+});
 
 // const proxy = generateProxy();
 // proxy.then(async function(data) {
