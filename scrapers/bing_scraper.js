@@ -208,6 +208,7 @@ const buildBingResultObject = async function (searchQuery, pLanguage) {
     // array : store data points
     const links = [];
     const titles = [];
+    const captions = [];
 
     // loop through html class ".b_algo" to embedded h2 tag to a tag then getting hyperlink
     $(".b_algo > h2 > a").each((index, element) => {
@@ -219,12 +220,19 @@ const buildBingResultObject = async function (searchQuery, pLanguage) {
       titles[index] = $(element).text();
     });
 
+    // loop through html class ".b_algo" to second div child to p then getting text
+    $(".b_algo > div:nth-child(2) > p").each((index, element) => {
+      captions[index] = $(element).text();
+    });
+
     // fill array with result object
     const results = [];
     for (let i = 0; i < links.length; i++) {
       results[i] = {
         link: links[i],
         title: titles[i],
+        caption: captions[i],
+        dateScraped: new Date().toLocaleString(),
       };
     }
     return { results: results, requestHeader: data.requestHeader };
@@ -670,10 +678,10 @@ module.exports = {
 };
 
 // simple testing
-// const code = buildBingResultObject("hello world", "java");
-// code.then(async function (data) {
-//   console.log(data);
-// });
+const code = buildBingResultObject("hello world", "java");
+code.then(async function (data) {
+  console.log(data);
+});
 
 // const proxy = generateProxy();
 // proxy.then(async function(data) {
