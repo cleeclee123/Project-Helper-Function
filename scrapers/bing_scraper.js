@@ -80,7 +80,7 @@ const rotateUserAgent = async function () {
 };
 
 // util function to get user agent and proxy specifically
-function optionsUtils() {
+async function optionsUtils() {
   return rotateUserAgent().then(async function (ua) {
     return generateProxy().then(async function (proxy) {
       return { userAgent: ua, proxy: proxy };
@@ -91,23 +91,36 @@ function optionsUtils() {
 // write request header interface for bing
 const OPTIONS = async function () {
   return optionsUtils().then(async function (data) {
+    let platformUA = "";
+    if (String(data.userAgent).includes("(Windows")) {
+      platformUA = "Windows";
+    } else if (String(data.userAgent).includes("(Macintosh")) {
+      platformUA = "macOS";
+    } else if (String(data.userAgent).includes("(X11")) {
+      platformUA ="Linux"
+    } else {
+      platformUA = "Chrome OS";
+    }
     return (headersOptions = {
       headers: {
-        Accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-        "Accept-Language": "en-US,en;q=0.9",
+        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         Referer: "https://www.bing.com",
-        "Sec-Ch-Ua":
-          '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
+        Connection: "keep-alive",
+        DNT: "1",
+        Proxy: data.proxy,
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate",
+        "Cache-Control": "max-age=0",
+        "Sec-Ch-Ua": '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
         "Sec-Ch-Ua-Mobile": "?0",
+        "sec-ch-ua-platform": platformUA,
         "Sec-Fetch-Dest": "document",
         "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "cross-site",
+        "Sec-Fetch-Site": "none",
         "Sec-Fetch-User": "?1",
         "Upgrade-Insecure-Requests": "1",
-        "User-Agent": data.userAgent,
+        "User-Agent": data.userAgent, 
         "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
-        Proxy: data.proxy,
       },
     });
   });
@@ -655,3 +668,19 @@ module.exports = {
   buildBingResultObject,
   getResultDataLinks,
 };
+
+// simple testing
+// const code = buildBingResultObject("hello world", "java");
+// code.then(async function (data) {
+//   console.log(data);
+// });
+
+// const proxy = generateProxy();
+// proxy.then(async function(data) {
+//   console.log(data);
+// })
+
+// const ua = rotateUserAgent();
+// ua.then(async function(data) {
+//   console.log(data);
+// })
