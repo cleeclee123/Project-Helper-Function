@@ -79,26 +79,38 @@ const rotateUserAgent = async function () {
   return String(rotatedUserAgent);
 };
 
+// util function to get user agent and proxy specifically
+function optionsUtils() {
+  return rotateUserAgent().then(async function (ua) {
+    return generateProxy().then(async function (proxy) {
+      return { userAgent: ua, proxy: proxy };
+    });
+  });
+}
+
 // write request header interface for bing
-const OPTIONS = {
-  headers: {
-    Accept:
-      "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-    // "Accept-Encoding": "gzip, deflate, br",
-    "Accept-Language": "en-US,en;q=0.9",
-    Referer: "https://www.bing.com",
-    // "Sec-Ch-Ua": '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
-    "Sec-Ch-Ua-Mobile": "?0",
-    // "Sec-Ch-Ua-Platform": '"Windows"',
-    "Sec-Fetch-Dest": "document",
-    "Sec-Fetch-Mode": "navigate",
-    "Sec-Fetch-Site": "cross-site",
-    "Sec-Fetch-User": "?1",
-    "Upgrade-Insecure-Requests": "1",
-    "User-Agent": rotateUserAgent(),
-    "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
-    Proxy: generateProxy(),
-  },
+const OPTIONS = async function () {
+  return optionsUtils().then(async function (data) {
+    return (headersOptions = {
+      headers: {
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Accept-Language": "en-US,en;q=0.9",
+        Referer: "https://www.bing.com",
+        "Sec-Ch-Ua":
+          '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
+        "Sec-Ch-Ua-Mobile": "?0",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "cross-site",
+        "Sec-Fetch-User": "?1",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": data.userAgent,
+        "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
+        Proxy: data.proxy,
+      },
+    });
+  });
 };
 
 // function to get bing search results from axios
@@ -120,16 +132,18 @@ const fetchBingSearchData = async function (searchQuery) {
   */
   const numberOfResults = "&count=15";
 
-  // bing search data with axios
-  const bingSearchData = await axios.get(
-    `https://www.bing.com/search?q=${encodedSearch} + ${languageSearch} + ${countrySearch} + ${numberOfResults} `,
-    OPTIONS
-  );
+  // wrap inside OPTIONS function callback to return request headers
+  return OPTIONS().then(async function (data) {
+    // bing search data with axios
+    const bingSearchData = await axios.get(
+      `https://www.bing.com/search?q=${encodedSearch} + ${languageSearch} + ${countrySearch} + ${numberOfResults} `,
+      data
+    );
+    // new bing search data promise
+    const newBingSearchDataPromise = await bingSearchData.data;
 
-  // new bing search data promise
-  const newBingSearchDataPromise = await bingSearchData.data;
-
-  return newBingSearchDataPromise;
+    return { promise: newBingSearchDataPromise, requestHeader: data };
+  });
 };
 
 // function helper for the search function to interpret the "++" in "c++"
@@ -174,10 +188,8 @@ const buildBingResultObject = async function (searchQuery, pLanguage) {
   const searchData = fetchBingSearchData(searchQuery + " " + encodedPLanguage);
 
   return searchData.then(async function (data) {
-    let adata = await data;
-
     // load markup with cheerio
-    let $ = cheerio.load(adata);
+    let $ = cheerio.load(data.promise);
 
     // building result object
     // array : store data points
@@ -202,7 +214,7 @@ const buildBingResultObject = async function (searchQuery, pLanguage) {
         title: titles[i],
       };
     }
-    return results;
+    return { results: results, requestHeader: data.requestHeader };
   });
 };
 
@@ -220,14 +232,21 @@ const fetchFirstBingResultPage = async function (searchQuery, pLanguage) {
   // makes call to axios to get data from the first link of bing result object
   return await resultsBing.then(async function (data) {
     await sleep(1000);
-    console.log("bing linkstate 1", data[0].link);
+
+    // console.log("bing linkstate 1", data.results[0].link);
+
     // link data from array of bing result object with axios
-    const linkData = await axios.get(data[0].link, OPTIONS);
+    const linkData = await axios.get(data.results[0].link, OPTIONS);
 
     // new link data promise
     const linkDataPromise = await linkData.data;
 
-    return { source: data[0].link, linkPromise: linkDataPromise };
+    return {
+      source: data.results[0].link,
+      title: data.results[0].title,
+      linkPromise: linkDataPromise,
+      requestHeader: data.requestHeader,
+    };
   });
 };
 
@@ -241,14 +260,21 @@ const fetchSecondBingResultPage = async function (searchQuery, pLanguage) {
   // makes call to axios to get data from the second link of bing result object
   return await resultsBing.then(async function (data) {
     await sleep(1000);
-    console.log("bing linkstate 2", data[1].link);
+
+    //console.log("bing linkstate 2", data.results[1].link);
+
     // link data from array of result object with axios
-    const linkData = await axios.get(data[1].link, OPTIONS);
+    const linkData = await axios.get(data.results[1].link, OPTIONS);
 
     // new link data promise
     const linkDataPromise = await linkData.data;
 
-    return { source: data[1].link, linkPromise: linkDataPromise };
+    return {
+      source: data.results[1].link,
+      title: data.results[1].title,
+      linkPromise: linkDataPromise,
+      requestHeader: data.requestHeader,
+    };
   });
 };
 
@@ -262,14 +288,21 @@ const fetchThirdBingResultPage = async function (searchQuery, pLanguage) {
   // makes call to axios to get data from the third link of bing result object
   return await resultsBing.then(async function (data) {
     await sleep(1000);
-    console.log("bing linkstate 3", data[2].link);
+
+    //console.log("bing linkstate 3", data.results[2].link);
+
     // link data from array of bing result object with axios
-    const linkData = await axios.get(data[2].link, OPTIONS);
+    const linkData = await axios.get(data.results[2].link, OPTIONS);
 
     // new link data promise
     const linkDataPromise = await linkData.data;
 
-    return { source: data[2].link, linkPromise: linkDataPromise };
+    return {
+      source: data.results[2].link,
+      title: data.results[2].title,
+      linkPromise: linkDataPromise,
+      requestHeader: data.requestHeader,
+    };
   });
 };
 
@@ -282,9 +315,9 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
   // captcha page message from response.data
   const CAPTCHA_MESSAGE =
     "Our systems have detected unusual traffic from your computer network";
-
-  const ERROR_MESSAGE = "// An Error has occured, please try again";
-
+  const CAPTCHA_ERROR = "Captached";
+  const LINK_STATE_ERROR = "Link State Error";
+  const ERROR_MESSAGE = "An Error has ocurred, please try again";
   const BAD_SCRAP =
     "// We didn't have anything to scrape, please try again using a different engine";
 
@@ -325,14 +358,20 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
           return BAD_SCRAP;
         }
 
-        return { source: data.source, linkState: linkState, code: code };
+        return {
+          source: data.source,
+          title: data.title,
+          linkState: linkState,
+          code: code,
+          requestHeader: data.requestHeader,
+        };
       })
       .catch(async function (error) {
-        /* if (error.response.includes(CAPTCHA_MESSAGE)) {
-        throw new Error("Captcha Error")
-      } */
         console.log(error);
-        throw new Error("Link State 1 Error");
+        if (String(error.repsonse.data).includes(CAPTCHA_MESSAGE)) {
+          return CAPTCHA_ERROR;
+        }
+        return `${LINK_STATE_ERROR} at ls:${linkState}`;
       });
   } else if (linkState === "2") {
     const bingPageTwo = fetchSecondBingResultPage(searchQuery, pLanguage);
@@ -369,14 +408,19 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
           return BAD_SCRAP;
         }
 
-        return { source: data.source, linkState: linkState, code: code };
+        return {
+          source: data.source,
+          title: data.title,
+          linkState: linkState,
+          code: code,
+          requestHeader: data.requestHeader,
+        };
       })
       .catch(async function (error) {
-        /* if (error.response.includes(CAPTCHA_MESSAGE)) {
-        throw new Error("Captcha Error")
-      } */
-        console.log(error);
-        throw new Error("Link State 2 Error");
+        if (String(error.repsonse.data).includes(CAPTCHA_MESSAGE)) {
+          return CAPTCHA_ERROR;
+        }
+        return `${LINK_STATE_ERROR} at ls:${linkState}`;
       });
   } else if (linkState === "3") {
     const bingPageThree = fetchThirdBingResultPage(searchQuery, pLanguage);
@@ -420,40 +464,44 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
           return BAD_SCRAP;
         }
 
-        return { source: data.source, linkState: linkState, code: code };
+        return {
+          source: data.source,
+          title: data.title,
+          linkState: linkState,
+          code: code,
+          requestHeader: data.requestHeader,
+        };
       })
       .catch(async function (error) {
-        /* if (error.response.includes(CAPTCHA_MESSAGE)) {
-        throw new Error("Captcha Error")
-      } */
-        console.log(error);
-        throw new Error("Link State 3 Error");
+        if (String(error.repsonse.data).includes(CAPTCHA_MESSAGE)) {
+          return CAPTCHA_ERROR;
+        }
+        return `${LINK_STATE_ERROR} at ls:${linkState}`;
       });
   } else {
-    throw new Error("Link State Error");
+    return ERROR_MESSAGE;
   }
 };
 
 module.exports = {
-  getResultDataLinks,
-  fetchFirstBingResultPage,
+  fetchBingSearchData,
   buildBingResultObject,
+  getResultDataLinks,
 };
 
 // simple testing
-const code = getResultDataLinks("hello world", "python", "1");
-code.then(async function (data) {
-  await sleep(1000);
-  console.log(data);
-});
+// const code = getResultDataLinks("hello world", "javascript", "1");
+// code.then(async function (data) {
+//   await sleep(1000);
+//   console.log(data);
+// });
 
-/* const proxy = generateProxy();
-proxy.then(async function(data) {
-  console.log(data);
-})
-*/
-/* const ua = rotateUserAgent();
-ua.then(async function(data) {
-  console.log(data);
-})
- */
+// const proxy = generateProxy();
+// proxy.then(async function(data) {
+//   console.log(data);
+// })
+
+// const ua = rotateUserAgent();
+// ua.then(async function(data) {
+//   console.log(data);
+// })
