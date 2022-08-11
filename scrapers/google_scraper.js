@@ -3,17 +3,8 @@ const axios = require("axios");
 
 const ERROR_MESSAGE_R = "Sorry, an error as occured. Please try again";
 
-/* disregard this */
-// state must either be 0 === ip_address or 1 === port_numbers
-// returns the corresponding array (for axios header proxy options)
-/* disregard this */
-
 // scraps sslproxies.org for port numbers and ip addresses
-const generateProxy = async function (/* state */) {
-  /* if (state !== 0 || state !== 1) {
-    throw new Error("Generate Proxy State Error");
-  } */
-
+const generateProxy = async function () {
   let ip_addresses = [];
   let port_numbers = [];
 
@@ -46,18 +37,9 @@ const generateProxy = async function (/* state */) {
   let proxy = `http://${ip_addresses[random_number]}:${port_numbers[random_number]}`;
 
   return proxy;
-
-  /* if (state === 0) {
-    return ip_addresses[random_number];
-  } else if (state === 1) {
-    return port_numbers[random_number];
-  } else {
-    // should never get here
-    throw new Error("Generate Proxy State Error");
-  } */
 };
 
-// function to rotate user agents by scrapping github repo
+// function to rotate user agents (hard coded/mannual tested)
 const rotateUserAgent = function () {
   let userAgents = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
@@ -76,27 +58,47 @@ const rotateUserAgent = function () {
   return String(rotatedUserAgent);
 };
 
+// util function to get user agent and proxy specifically
+async function optionsUtils() {
+  return generateProxy().then(async function (proxy) {
+    return { userAgent: rotateUserAgent(), proxy: proxy };
+  });
+};
+
 // write request header interface for google
-const OPTIONS = {
-  headers: {
-    Accept:
-      "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-    //"Accept-Encoding": "gzip, deflate, br",
-    "Accept-Language": "en-US,en;q=0.9",
-    Referer: "https://www.google.com",
-    "Sec-Ch-Ua":
-      '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
-    "Sec-Ch-Ua-Mobile": "?0",
-    "Sec-Ch-Ua-Platform": '"Windows"',
-    "Sec-Fetch-Dest": "document",
-    "Sec-Fetch-Mode": "navigate",
-    "Sec-Fetch-Site": "cross-site",
-    "Sec-Fetch-User": "?1",
-    "Upgrade-Insecure-Requests": "1",
-    "User-Agent": rotateUserAgent(),
-    "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
-    Proxy: generateProxy(),
-  },
+const OPTIONS = async function () {
+  return optionsUtils().then(async function (data) {
+    let platformUA = "";
+    if (String(data.userAgent).includes("(Windows")) {
+      platformUA = "Windows";
+    } else if (String(data.userAgent).includes("(Macintosh")) {
+      platformUA = "macOS";
+    } else {
+      platformUA = "Chrome OS";
+    }
+    return (headersOptions = {
+      headers: {
+        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        Referer: "https://www.google.com",
+        Connection: "keep-alive",
+        DNT: "1",
+        Proxy: data.proxy,
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate",
+        "Cache-Control": "max-age=0",
+        "Sec-Ch-Ua": '" Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"',
+        "Sec-Ch-Ua-Mobile": "?0",
+        "Sec-Ch-Ua-Platform": platformUA,
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "cross-site",
+        "Sec-Fetch-User": "?1",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": data.userAgent, 
+        "X-Amzn-Trace-Id": "Root=1-629e4d2d-69ff09fd3184deac1df68d18",
+      },
+    });
+  });
 };
 
 // function to get google search results from axios
@@ -110,20 +112,21 @@ const fetchGoogleSearchData = async function (searchQuery) {
   // default united states
   const countrySearch = "&gl=us";
 
-  // default 3,4 results
-  // add "see another solution feature"
-  const numberOfResults = "&num=4";
+  // number of search results found
+  const numberOfResults = "&num=6";
 
-  // google search data with axios
-  const googleSearchData = await axios.get(
-    `https://www.google.com/search?q=${encodedSearch} + ${languageSearch} + ${countrySearch} + ${numberOfResults} `,
-    OPTIONS
-  );
+  // wrap inside OPTIONS function callback to return request headers
+   return OPTIONS().then(async function (data) {
+    // bing search data with axios
+    const googleSearchData = await axios.get(
+      `https://www.google.com/search?q=${encodedSearch} + ${languageSearch} + ${countrySearch} + ${numberOfResults} `,
+      data
+    );
+    // new google search data promise
+    const newGoogleSearchDataPromise = await googleSearchData.data;
 
-  // new google search data promise
-  const newGoogleSearchDataPromise = await googleSearchData.data;
-
-  return newGoogleSearchDataPromise;
+    return { promise: newGoogleSearchDataPromise, requestHeader: data };
+  });
 };
 
 // function helper for the search function to interpret the "++" in "c++"
@@ -170,15 +173,15 @@ const buildGoogleResultObject = async function (searchQuery, pLanguage) {
   );
 
   return searchData.then(async function (data) {
-    let adata = await data;
 
     // load markup with cheerio
-    let $ = cheerio.load(adata);
+    let $ = cheerio.load(data.promise);
 
     // building result object
     // array : store data points
     const links = [];
     const titles = [];
+    const captions = [];
 
     // loop through html class ".yuRUbf" to hyperlink tag
     $(".yuRUbf > a").each((index, element) => {
@@ -190,15 +193,22 @@ const buildGoogleResultObject = async function (searchQuery, pLanguage) {
       titles[index] = $(element).text();
     });
 
+    // loop through html class ".yuRUbf" to hyperlink tag to header tag
+    $("div.NJo7tc.Z26q7c.UK95Uc.uUuwM > div > span").each((index, element) => {
+      captions[index] = $(element).text();
+    });
+
     // fill array with result object
     const results = [];
     for (let i = 0; i < links.length; i++) {
       results[i] = {
         link: links[i],
         title: titles[i],
+        caption: captions[i],
+        dateScraped: new Date().toLocaleString(),
       };
     }
-    return results;
+    return { results: results, requestHeader: data.requestHeader };
   });
 };
 
@@ -440,7 +450,7 @@ module.exports = {
 };
 
 // simple testing
-const code = getResultDataLinks("hello world", "cpp", "3");
+const code = buildGoogleResultObject("hello world", "cpp");
 code.then(async function (data) {
   await sleep(1000);
   console.log(data);
