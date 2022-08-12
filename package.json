@@ -29,6 +29,7 @@
     "express": "^4.18.1",
     "fetch": "^1.1.0",
     "node-fetch": "^3.2.4",
+    "node-html-parser": "^5.4.2-0",
     "nodemon": "^2.0.16",
     "promise": "^8.1.0",
     "puppeteer": "^14.1.2",
