@@ -121,7 +121,7 @@ const fetchGoogleSearchData = async function (searchQuery) {
   return OPTIONS().then(async function (data) {
     // bing search data with axios
     const googleSearchData = await axios.get(
-      `https://www.google.com/search?q=${encodedSearch} + ${languageSearch} + ${countrySearch} + ${numberOfResults} `,
+      `https://www.google.com/search?q=${encodedSearch}${languageSearch}${countrySearch}${numberOfResults}`,
       data
     );
     // new google search data promise

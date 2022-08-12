@@ -151,7 +151,7 @@ const fetchBingSearchData = async function (searchQuery) {
   return OPTIONS().then(async function (data) {
     // bing search data with axios
     const bingSearchData = await axios.get(
-      `https://www.bing.com/search?q=${encodedSearch} + ${languageSearch} + ${countrySearch} + ${numberOfResults} `,
+      `https://www.bing.com/search?q=${encodedSearch}${languageSearch}${countrySearch}${numberOfResults}`,
       data
     );
     // new bing search data promise
