@@ -139,7 +139,7 @@ const fetchBingSearchData = async function (searchQuery) {
   // default united states
   const countrySearch = "&setmkt=en-WW";
 
-  // default 3 results
+  // default 5 results
   // add "see another solution feature"
   /* 
   edge case where bing's top choices have different html classes, 15 is an arbitrary number to 
