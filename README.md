@@ -1,6 +1,6 @@
 # Project-Helper-Function
 
-https://projecthelperfunction.herokuapp.com/
+https://projecthelperfunction.herokuapp.com/ | (scraper demo)
 
 Find the code snippet that you are looking for.
 1. Choose your Search Engine: Google or Bing (More coming later)
