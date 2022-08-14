@@ -281,7 +281,7 @@ const fetchFirstYahooResultPage = async function (searchQuery, pLanguage) {
       const linkDataPromise = await linkData.data;
 
       return {
-        source: data.results[0].link,
+        source: linkDataCB,
         title: data.results[0].title,
         linkPromise: linkDataPromise,
         requestHeader: data.requestHeader,
@@ -312,7 +312,7 @@ const fetchSecondYahooResultPage = async function (searchQuery, pLanguage) {
       const linkDataPromise = await linkData.data;
 
       return {
-        source: data.results[1].link,
+        source: linkDataCB,
         title: data.results[1].title,
         linkPromise: linkDataPromise,
         requestHeader: data.requestHeader,
@@ -343,7 +343,7 @@ const fetchThirdYahooResultPage = async function (searchQuery, pLanguage) {
       const linkDataPromise = await linkData.data;
 
       return {
-        source: data.results[2].link,
+        source: linkDataCB,
         title: data.results[2].title,
         linkPromise: linkDataPromise,
         requestHeader: data.requestHeader,
@@ -374,7 +374,7 @@ const fetchFourthYahooResultPage = async function (searchQuery, pLanguage) {
       const linkDataPromise = await linkData.data;
 
       return {
-        source: data.results[3].link,
+        source: linkDataCB,
         title: data.results[3].title,
         linkPromise: linkDataPromise,
         requestHeader: data.requestHeader,
@@ -405,7 +405,7 @@ const fetchFifthYahooResultPage = async function (searchQuery, pLanguage) {
       const linkDataPromise = await linkData.data;
 
       return {
-        source: data.results[4].link,
+        source: linkDataCB,
         title: data.results[4].title,
         linkPromise: linkDataPromise,
         requestHeader: data.requestHeader,
