@@ -1,5 +1,6 @@
 const googleResultObject = require("./scrapers/google_scraper");
 const bingResultObject = require("./scrapers/bing_scraper");
+const yahooResultObject = require("./scrapers/yahoo_scraper");
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -52,6 +53,24 @@ app.get("/bing", async function (request, response) {
     )) || "Search Failed"; 
   
   // code object from corresponding linkstate website from bing search result object to json
+  response.send(results);
+});
+
+// yahoo scraper route
+app.get("/yahoo", async function (request, response) {
+  var searchQuery = request.query.sq;
+  var languageChoice = request.query.lang;
+  var stateChoice = request.query.ls;
+
+  // call to scraper function
+  const results =
+    (await yahooResultObject.getResultDataLinks(
+      searchQuery,
+      languageChoice,
+      stateChoice
+    )) || "Search Failed"; 
+  
+  // code object from corresponding linkstate website from yahoo search result object to json
   response.send(results);
 });
 
