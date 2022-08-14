@@ -158,23 +158,6 @@ const helperConvertToWord = function (input) {
   return returnString;
 };
 
-// helper function to construct original link from yahoo redirect link
-const helperLinkBuilder = async function (yahooRedirectLink) {
-  return await axios
-    .get(yahooRedirectLink, OPTIONS)
-    .then(response => {
-      const $ = cheerio.load(response.data).html();
-      let root = HTMLParser.parse($);
-      let link = String(root.getElementsByTagName("script"));
-      let index1 = link.indexOf(`("`); 
-      let index2 = link.indexOf(`")`); 
-
-      return link.substring(index1+2, index2);
-  }).catch((error) => {
-    return `${ERROR_MESSAGE_R} ${error}`;
-  });
-}
-
 // scraps the top title and links for search query with programming language as a parameter
 // return array of result objects from yahoo search data
 const buildYahooResultObject = async function (searchQuery, pLanguage) {
@@ -240,33 +223,41 @@ const buildYahooResultObject = async function (searchQuery, pLanguage) {
       captions[index] = $(element).text();
     });
 
-    // fill array with result object with actual url
+    // fill array with result object
+    // TODO: current link is yahoo redirect url, handled in fetch functions below
     const results = [];
-    links.forEach(async (link) => {
-      let curr = helperLinkBuilder(link);
-      return curr.then(async function(newLink) {
-        for (let i = 0; i < links.length; i++) {
-          results[i] = {
-            link: newLink,
-            title: titles[i],
-            caption: captions[i],
-            dateScraped: new Date().toLocaleString(),
-          };     
-        }
-      });
-    });
-
-
-    // INTRODUCE LINK BUILDER FUNCTION LATER
-
-
-    // return { results: results, requestHeader: data.requestHeader };
+    for (let i = 0; i < links.length; i++) {
+      results[i] = {
+        link: links[i],
+        title: titles[i],
+        caption: captions[i],
+        dateScraped: new Date().toLocaleString(),
+      };     
+    }
+    return { results: results, requestHeader: data.requestHeader };
   });
 };
 
 const sleep = function (time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
+
+// helper function to construct original link from yahoo redirect link
+const helperLinkBuilder = async function (yahooRedirectLink) {
+  return await axios
+    .get(yahooRedirectLink, OPTIONS)
+    .then(response => {
+      const $ = cheerio.load(response.data).html();
+      let root = HTMLParser.parse($);
+      let link = String(root.getElementsByTagName("script"));
+      let index1 = link.indexOf(`("`); 
+      let index2 = link.indexOf(`")`); 
+
+      return link.substring(index1+2, index2);
+  }).catch((error) => {
+    return `${ERROR_MESSAGE_R} ${error}`;
+  });
+}
 
 // function to get data from the first link in the yahoo result object from axios
 const fetchFirstYahooResultPage = async function (searchQuery, pLanguage) {
@@ -276,23 +267,26 @@ const fetchFirstYahooResultPage = async function (searchQuery, pLanguage) {
   await sleep(1000);
   // data is array of yahoo result objects
   // makes call to axios to get data from the first link of yahoo result object
+  // makes a callback to helper function to get actual url from the yahoo redirect url
   return await resultsYahoo.then(async function (data) {
-    await sleep(1000);
+    return helperLinkBuilder(data.results[0].link).then(async function (linkDataCB) {
+      await sleep(1000);
 
-    // console.log("yahoo linkstate 1", data.results[0].link);
+      // console.log("yahoo linkstate 1", data.results[0].link);
 
-    // link data from array of yahoo result object with axios
-    const linkData = await axios.get(data.results[0].link, OPTIONS);
+      // link data from array of yahoo result object with axios
+      const linkData = await axios.get(linkDataCB, OPTIONS);
 
-    // new link data promise
-    const linkDataPromise = await linkData.data;
+      // new link data promise
+      const linkDataPromise = await linkData.data;
 
-    return {
-      source: data.results[0].link,
-      title: data.results[0].title,
-      linkPromise: linkDataPromise,
-      requestHeader: data.requestHeader,
-    };
+      return {
+        source: data.results[0].link,
+        title: data.results[0].title,
+        linkPromise: linkDataPromise,
+        requestHeader: data.requestHeader,
+      };
+    });
   });
 };
 
@@ -304,23 +298,26 @@ const fetchSecondYahooResultPage = async function (searchQuery, pLanguage) {
   await sleep(1000);
   // data is array of yahoo result objects
   // makes call to axios to get data from the second link of yahoo result object
+  // makes a callback to helper function to get actual url from the yahoo redirect url
   return await resultsYahoo.then(async function (data) {
-    await sleep(1000);
+    return helperLinkBuilder(data.results[1].link).then(async function (linkDataCB) {
+      await sleep(1000);
 
-    //console.log("yahoo linkstate 2", data.results[1].link);
+      // console.log("yahoo linkstate 2", data.results[1].link);
 
-    // link data from array of result object with axios
-    const linkData = await axios.get(data.results[1].link, OPTIONS);
+      // link data from array of yahoo result object with axios
+      const linkData = await axios.get(linkDataCB, OPTIONS);
 
-    // new link data promise
-    const linkDataPromise = await linkData.data;
+      // new link data promise
+      const linkDataPromise = await linkData.data;
 
-    return {
-      source: data.results[1].link,
-      title: data.results[1].title,
-      linkPromise: linkDataPromise,
-      requestHeader: data.requestHeader,
-    };
+      return {
+        source: data.results[1].link,
+        title: data.results[1].title,
+        linkPromise: linkDataPromise,
+        requestHeader: data.requestHeader,
+      };
+    });
   });
 };
 
@@ -332,23 +329,26 @@ const fetchThirdYahooResultPage = async function (searchQuery, pLanguage) {
   await sleep(1000);
   // data is array of yahoo result objects
   // makes call to axios to get data from the third link of yahoo result object
+  // makes a callback to helper function to get actual url from the yahoo redirect url
   return await resultsYahoo.then(async function (data) {
-    await sleep(1000);
+    return helperLinkBuilder(data.results[2].link).then(async function (linkDataCB) {
+      await sleep(1000);
 
-    //console.log("yahoo linkstate 3", data.results[2].link);
+      // console.log("yahoo linkstate 3", data.results[2].link);
 
-    // link data from array of yahoo result object with axios
-    const linkData = await axios.get(data.results[2].link, OPTIONS);
+      // link data from array of yahoo result object with axios
+      const linkData = await axios.get(linkDataCB, OPTIONS);
 
-    // new link data promise
-    const linkDataPromise = await linkData.data;
+      // new link data promise
+      const linkDataPromise = await linkData.data;
 
-    return {
-      source: data.results[2].link,
-      title: data.results[2].title,
-      linkPromise: linkDataPromise,
-      requestHeader: data.requestHeader,
-    };
+      return {
+        source: data.results[2].link,
+        title: data.results[2].title,
+        linkPromise: linkDataPromise,
+        requestHeader: data.requestHeader,
+      };
+    });
   });
 };
 
@@ -360,23 +360,26 @@ const fetchFourthYahooResultPage = async function (searchQuery, pLanguage) {
   await sleep(1000);
   // data is array of yahoo result objects
   // makes call to axios to get data from the third link of yahoo result object
+  // makes a callback to helper function to get actual url from the yahoo redirect url
   return await resultsYahoo.then(async function (data) {
-    await sleep(1000);
+    return helperLinkBuilder(data.results[3].link).then(async function (linkDataCB) {
+      await sleep(1000);
 
-    //console.log("yahoo linkstate 4", data.results[3].link);
+      // console.log("yahoo linkstate 4", data.results[3].link);
 
-    // link data from array of yahoo result object with axios
-    const linkData = await axios.get(data.results[3].link, OPTIONS);
+      // link data from array of yahoo result object with axios
+      const linkData = await axios.get(linkDataCB, OPTIONS);
 
-    // new link data promise
-    const linkDataPromise = await linkData.data;
+      // new link data promise
+      const linkDataPromise = await linkData.data;
 
-    return {
-      source: data.results[3].link,
-      title: data.results[3].title,
-      linkPromise: linkDataPromise,
-      requestHeader: data.requestHeader,
-    };
+      return {
+        source: data.results[3].link,
+        title: data.results[3].title,
+        linkPromise: linkDataPromise,
+        requestHeader: data.requestHeader,
+      };
+    });
   });
 };
 
@@ -388,23 +391,26 @@ const fetchFifthYahooResultPage = async function (searchQuery, pLanguage) {
   await sleep(1000);
   // data is array of yahoo result objects
   // makes call to axios to get data from the third link of yahoo result object
+  // makes a callback to helper function to get actual url from the yahoo redirect url
   return await resultsYahoo.then(async function (data) {
-    await sleep(1000);
+    return helperLinkBuilder(data.results[4].link).then(async function (linkDataCB) {
+      await sleep(1000);
 
-    //console.log("yahoo linkstate 5", data.results[4].link);
+      // console.log("yahoo linkstate 5", data.results[4].link);
 
-    // link data from array of yahoo result object with axios
-    const linkData = await axios.get(data.results[4].link, OPTIONS);
+      // link data from array of yahoo result object with axios
+      const linkData = await axios.get(linkDataCB, OPTIONS);
 
-    // new link data promise
-    const linkDataPromise = await linkData.data;
+      // new link data promise
+      const linkDataPromise = await linkData.data;
 
-    return {
-      source: data.results[4].link,
-      title: data.results[4].title,
-      linkPromise: linkDataPromise,
-      requestHeader: data.requestHeader,
-    };
+      return {
+        source: data.results[4].link,
+        title: data.results[4].title,
+        linkPromise: linkDataPromise,
+        requestHeader: data.requestHeader,
+      };
+    });
   });
 };
 
@@ -700,8 +706,3 @@ module.exports = {
   buildYahooResultObject,
   getResultDataLinks,
 };
-
-let test = buildYahooResultObject("hello world", "java");
-test.then(async function (data) {
-  console.log(data);
-});
