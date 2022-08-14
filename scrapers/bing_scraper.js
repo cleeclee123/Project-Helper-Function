@@ -166,6 +166,8 @@ const helperConvertToWord = function (input) {
   var returnString = input.toLowerCase();
   returnString = returnString.replace("+", "p");
   returnString = returnString.replace("#", "sharp");
+  returnString = returnString.replace("-", "minus");
+  returnString = returnString.replace("*", "star");
   return returnString;
 };
 
