@@ -112,6 +112,26 @@ export default function Home() {
       });
   };
 
+  // yahoo code object fetcher
+  const fetchYahooCodeObj = async function () {
+    const params = {
+      sq: searchQuery,
+      lang: language,
+      ls: linkState.toString(),
+    };
+    return await axios
+      .get("needToUpdateAPI/yahoo", { params })
+      .then((response) => {
+        // console.log(response);
+        // return response;
+        setCodeObjectResult(response.data.toString());
+      })
+      .catch((error) => {
+        setCodeObjectResult(ERROR_MESSAGE);
+        console.log(error);
+      });
+  };
+
   // onClick handler
   // handle which scraper to run given search engine state
   const handleClick = (event) => {
@@ -123,6 +143,8 @@ export default function Home() {
       fetchGoogleCodeObj();
     } else if (searchEngine === "bing") {
       fetchBingCodeObj();
+    } else if (searchEngine === "yahoo") {
+      fetchYahooCodeObj();
     }
   };
 
@@ -161,8 +183,8 @@ export default function Home() {
             <optgroup label="Search Engines">
               <option value="google">Google</option>
               <option value="bing">Bing</option>
-              <option value="duckduckgo">Duck Duck Go</option>
               <option value="yahoo">Yahoo</option>
+              <option value="duckduckgo">Duck Duck Go</option>
             </optgroup>
           </select>
           <div className="code-dropdown">
