@@ -7,7 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "BingScraper": "node ./scrapers/bing_scraper.js",
     "GoogleScraper": "node ./scrapers/google_scraper.js",
-    "DDGScraper": "node ./scrapers/duckduckgo_scraper.js",
     "YahooScraper": "node ./scrapers/yahoo_scraper.js",
     "devServerN": "node server.js",
     "devServerNM": "nodemon server.js",
