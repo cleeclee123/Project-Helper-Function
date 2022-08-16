@@ -41,3 +41,10 @@
   background-color: white;
 }
 
+.error-modal-body {
+  background-color: #f5d4d8;
+}
+
+.error-text {
+  color: #722e36
+}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
-import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import { CDBBtn, CDBIcon } from "cdbreact";
 import { useNavigate } from "react-router-dom";
 import { UserAuth } from "../firebase/AuthContext";
@@ -32,9 +32,34 @@ export default function Login() {
       setError(error.message);
     }
   };
-  
+
+  // login error pop up
+  function ErrorPopUp() {
+    if (show) {
+      return (
+        <Alert variant="danger" onClose={() => setShow(false)} dismissible>
+          <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+          <p className="error-text">What went wrong? {error}</p>
+        </Alert>
+      );
+    } else {
+      return;
+    }
+  }
+
   return (
     <div className="login-container">
+      <div className="error-popup">
+        <Modal
+          show={show}
+          size="lg"
+        >
+          <Modal.Body className="error-modal-body">
+            {" "}
+            <ErrorPopUp />{" "}
+          </Modal.Body>
+        </Modal>
+      </div>
       <div className="login-bg-wrapper">
         <div
           className="shadow-lg p-3 mb-5 bg-white rounded"
