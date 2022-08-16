@@ -27,7 +27,7 @@ export default function Login() {
     setError("");
     try {
       await createUser(name, email, password);
-      navigate("/home");
+      navigate("/dashboard");
     } catch (error) {
       setShow(true);
       setError(error.message);
@@ -73,9 +73,9 @@ export default function Login() {
                 </Form.Text>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Your Full Name</Form.Label>
+                  <Form.Label>Your Username</Form.Label>
                   <Form.Control
-                    placeholder="Enter your name"
+                    placeholder="Enter your username"
                     onChange={(event) => setName(event.target.value)}
                   />
                 </Form.Group>

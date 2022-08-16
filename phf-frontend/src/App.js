@@ -7,7 +7,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import ReactSwitch from "react-switch";
-import NavbarHandler from "./components/NavbarCurr";
+import NavbarHandler from "./components/Handler_Navbar";
+import DashboardHandler from "./components/Handler_Dashboard";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
@@ -42,6 +43,7 @@ function App() {
                 <Route exact path="/home" element={<Home />} />
                 <Route exact path="/login" element={<Login />} />
                 <Route exact path="/signup" element={<SignUp />} />
+                <Route path="/dashboard" element={<DashboardHandler />} />
               </Routes>
             </div>
           </div>
