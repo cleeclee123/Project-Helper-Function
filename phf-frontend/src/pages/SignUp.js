@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { UserAuth } from "../firebase/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
+import Alert from "react-bootstrap/Alert";
+import Modal from "react-bootstrap/Modal";
 import { CDBBtn, CDBIcon } from "cdbreact";
 import bgImage from "../assets/mask_totem_smoke_192795_3840x2160.jpg";
 import "./styles/Login.css";
@@ -10,6 +12,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [show, setShow] = useState(false);
   const [error, setError] = useState("");
 
   // auth context
@@ -23,16 +26,39 @@ export default function Login() {
     event.preventDefault();
     setError("");
     try {
-      navigate("/home");
       await createUser(name, email, password);
+      navigate("/home");
     } catch (error) {
+      setShow(true);
       setError(error.message);
       console.log(error.message);
     }
   };
 
+  // login error pop up
+  function ErrorPopUp() {
+    if (show) {
+      return (
+        <Alert variant="danger" onClose={() => setShow(false)} dismissible>
+          <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+          <p className="error-text">What went wrong? {error}</p>
+        </Alert>
+      );
+    } else {
+      return;
+    }
+  }
+
   return (
     <div className="login-container">
+      <div className="error-popup">
+        <Modal show={show} size="lg">
+          <Modal.Body className="error-modal-body">
+            {" "}
+            <ErrorPopUp />{" "}
+          </Modal.Body>
+        </Modal>
+      </div>
       <div className="login-bg-wrapper">
         <div
           className="shadow-lg p-3 mb-5 bg-white rounded"
