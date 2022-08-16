@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
-import { CDBFooter, CDBBox, CDBBtn, CDBIcon } from "cdbreact";
+import Alert from "react-bootstrap/Alert";
+import Button from "react-bootstrap/Button";
+import { CDBBtn, CDBIcon } from "cdbreact";
 import { useNavigate } from "react-router-dom";
 import { UserAuth } from "../firebase/AuthContext";
 import bgImage from "../assets/loginbg3.webp";
@@ -10,6 +12,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [show, setShow] = useState(false);
 
   // to /home
   const navigate = useNavigate();
@@ -25,11 +28,11 @@ export default function Login() {
       await signIn(email, password);
       navigate("/home");
     } catch (error) {
+      setShow(true);
       setError(error.message);
-      alert(error.message);
     }
   };
-
+  
   return (
     <div className="login-container">
       <div className="login-bg-wrapper">

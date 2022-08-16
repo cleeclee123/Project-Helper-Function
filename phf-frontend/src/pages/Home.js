@@ -10,7 +10,7 @@ export default function Home() {
   const [language, setLanguage] = useState("javascript");
   const [linkState, setLinkState] = useState(1);
   const [codeObjectResult, setCodeObjectResult] = useState(
-    `console.log("Hello World");`
+    `console.log("Hello World"); \n\n${handleCommentIcon(language)} Find the code snippet that you are looking for`
   );
   const [buttonText, setButtonText] = useState("Search");
 
