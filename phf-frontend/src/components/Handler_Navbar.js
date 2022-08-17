@@ -6,9 +6,8 @@ const handleNavbar = () => {
   const { user } = UserAuth();
   if (user) {
     return <NavbarUser/>
-  } else {
-    return <NavbarNorm/>
   } 
+  return <NavbarNorm/> 
 };
 
 export default handleNavbar;

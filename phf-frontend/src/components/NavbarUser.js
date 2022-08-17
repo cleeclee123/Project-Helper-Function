@@ -31,26 +31,23 @@ function NavScrollExample() {
 
         <Nav>
           <Nav.Link href="/home">
-            {" "}
-            <button class="reg"> Home </button>{" "}
+            <button class="reg"> Home </button>
           </Nav.Link>
           <Nav.Link href="/docs">
-            {" "}
-            <button class="reg"> Docs </button>{" "}
+            <button class="reg"> Docs </button>
           </Nav.Link>
           <Nav.Link href="/login">
-            {" "}
             <button class="reg" onClick={handleLogout}>
-              {" "}
-              Sign Out{" "}
-            </button>{" "}
+              Sign Out
+            </button>
           </Nav.Link>
-          <Nav.Link href="/home">
-            {" "}
+          <Nav.Link href="/dashboard">
+            <button class="log"> Go to Dashboard </button>
+          </Nav.Link>
+          <Nav.Link href="/dashboard">
             <button class="log" >
-              {" "}
-              Signed in as {user.displayName}{" "}
-            </button>{" "}
+              Signed in as {user.displayName}
+            </button>
           </Nav.Link>
         </Nav>
       </Container>
