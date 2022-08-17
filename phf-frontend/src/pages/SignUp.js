@@ -116,7 +116,7 @@ export default function Login() {
                     className="p-3"
                     href="https://www.instagram.com/clee.99/"
                   >
-                    <CDBIcon fab icon="google" /> &nbsp; Continue with Google
+                    <CDBIcon fab icon="google" /> &nbsp; Continue with Google &nbsp; <b>NW-TBD</b>
                   </CDBBtn>
                   <Form.Text> &nbsp; </Form.Text>
                   <CDBBtn
@@ -125,7 +125,7 @@ export default function Login() {
                     className="p-3"
                     href="https://www.instagram.com/clee.99/"
                   >
-                    <CDBIcon fab icon="github" /> &nbsp; Contiunue with GitHub
+                    <CDBIcon fab icon="github" /> &nbsp; Contiunue with GitHub &nbsp; <b>NW-TBD</b>
                   </CDBBtn>
                 </div>
               </Form>
