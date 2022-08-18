@@ -13,6 +13,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Footer from "./components/Footer";
+import Dash from "./pages/Dashboard";
 import { AuthContextProvider } from "./firebase/AuthContext";
 
 export const ThemeContext = createContext(null);
@@ -48,6 +49,7 @@ function App() {
             </div>
           </div>
         </AuthContextProvider>
+        <br></br><br></br>
         <Footer />
       </ThemeContext.Provider>
     </Router>
