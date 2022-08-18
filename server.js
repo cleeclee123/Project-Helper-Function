@@ -39,7 +39,7 @@ app.get("/google", async function (request, response) {
 });
 
 // bing scraper route
-app.get("/bing", async function (request, response) {
+app.get("/bingresult", async function (request, response) {
   var searchQuery = request.query.sq;
   var languageChoice = request.query.lang;
   var stateChoice = request.query.ls;
@@ -50,6 +50,21 @@ app.get("/bing", async function (request, response) {
       searchQuery,
       languageChoice,
       stateChoice
+    )) || "Search Failed"; 
+  
+  // code object from corresponding linkstate website from bing search result object to json
+  response.send(results);
+});
+
+app.get("/binglinks", async function (request, response) {
+  var searchQuery = request.query.sq;
+  var languageChoice = request.query.lang;
+
+  // call to scraper function
+  const results =
+    (await bingResultObject.buildBingResultObject(
+      searchQuery,
+      languageChoice,
     )) || "Search Failed"; 
   
   // code object from corresponding linkstate website from bing search result object to json

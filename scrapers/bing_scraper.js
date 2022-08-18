@@ -675,7 +675,14 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
   }
 };
 
+
+
+const fetchCodeFromLink = async function(link) {
+  await axios.get()
+};
+
 module.exports = {
   buildBingResultObject,
   getResultDataLinks,
+  fetchCodeFromLink,
 };
