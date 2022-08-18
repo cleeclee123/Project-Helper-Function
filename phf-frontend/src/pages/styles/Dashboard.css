@@ -12,6 +12,6 @@
   color: black;
 }
 
-.dash-results-wrapper {
-
+.modal-backdrop {
+  background-color: rgba(61, 61, 61, 0.233) !important;
 }
