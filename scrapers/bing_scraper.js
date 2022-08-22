@@ -678,6 +678,8 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
 const fetchCodeFromLink = async function (link) {
   const ERROR_MESSAGE = "An Error has ocurred, please try again";
   const CAPTCHA_ERROR = "Captached";
+  const CAPTCHA_MESSAGE =
+    "Our systems have detected unusual traffic from your computer network";
   const BAD_SCRAP =
     "// We didn't have anything to scrape, please try again using a different engine";
   return await axios
@@ -724,6 +726,7 @@ const fetchCodeFromLink = async function (link) {
       if (String(error.response).includes(CAPTCHA_MESSAGE)) {
         return CAPTCHA_ERROR;
       }
+      console.log(error);
       return ERROR_MESSAGE;
     });
 };

@@ -71,12 +71,12 @@ app.get("/binglinks", async function (request, response) {
 });
 
 app.get("/bingfromlink", async function (request, response) {
-  var link = request.query.link;
+  var linkQuery = request.query.link;
 
   // call to scraper function
   const results =
     (await bingResultObject.fetchCodeFromLink(
-      link,
+      linkQuery
     )) || "Search Failed"; 
   
   response.send(results);
