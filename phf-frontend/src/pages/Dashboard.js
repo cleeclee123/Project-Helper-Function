@@ -28,7 +28,6 @@ function VerticallyCenteredModal(props) {
           theme="vs-dark"
           language={props.language}
           value={props.value}
-          onChange={props.change}
         />
       </Modal.Body>
       <Modal.Footer>
@@ -42,6 +41,7 @@ export default function Dashboard() {
   const [modalShow, setModalShow] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [codeObject, setCodeObject] = useState("");
   const [language, setLanguage] = useState("javascript");
   const { height, width } = useWindowDimensions();
 
@@ -89,10 +89,31 @@ export default function Dashboard() {
       });
   };
 
+  // fetch code object from link
+  const fetchCodeObject = async (link) => {
+    const params = {
+      link: link,
+    };
+    axios
+      .get("http://localhost:8080/bingfromlink", { params })
+      .then((response) => {
+        setCodeObject(response.data.codeObject);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   // handle search button (on click)
   const handleClick = (event) => {
     event.preventDefault();
     bingCodeObject();
+  };
+
+  // handle modal click
+  const handleModalClick = (event) => {
+    event.preventDefault();
+
   };
 
   // util functions for card scroll
@@ -185,15 +206,17 @@ export default function Dashboard() {
                     {element.caption}
                   </Card.Text>
                 </Card.Body>
-                <Button variant="primary" onClick={() => setModalShow(true)}>
+                <Button variant="primary" onClick={() => { setModalShow(true); String(fetchCodeObject(element.link))}}>
                   See the code
                 </Button>
               </Card>
 
               <VerticallyCenteredModal
                 show={modalShow}
-                onHide={() => setModalShow(false)}
+                onHide={() => {setModalShow(false); setCodeObject("") }}
                 test="test"
+                language={language}
+                value={String(codeObject)}
               />
             </div>
           ))}
