@@ -67,7 +67,18 @@ app.get("/binglinks", async function (request, response) {
       languageChoice,
     )) || "Search Failed"; 
   
-  // code object from corresponding linkstate website from bing search result object to json
+  response.send(results);
+});
+
+app.get("/bingfromlink", async function (request, response) {
+  var link = request.query.link;
+
+  // call to scraper function
+  const results =
+    (await bingResultObject.fetchCodeFromLink(
+      link,
+    )) || "Search Failed"; 
+  
   response.send(results);
 });
 
