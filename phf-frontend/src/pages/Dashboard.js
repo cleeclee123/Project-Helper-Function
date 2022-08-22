@@ -61,6 +61,12 @@ export default function Dashboard() {
     return "";
   }
 
+  // handle searchquery
+  const handleSearchQuery = (event) => {
+    event.preventDefault();
+    setSearchQuery(event.target.value);
+  };
+
   // handle state for language by dropdown
   const handleChangeLang = (event) => {
     event.preventDefault();
@@ -68,10 +74,10 @@ export default function Dashboard() {
   };
 
   // bing route
-  useEffect(() => {
+  const bingCodeObject = async () => {
     const params = {
-      sq: "hello world",
-      lang: "javascript",
+      sq: searchQuery,
+      lang: language,
     };
     axios
       .get("http://localhost:8080/binglinks", { params })
@@ -81,8 +87,14 @@ export default function Dashboard() {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
-  
+  };
+
+  // handle search button (on click)
+  const handleClick = (event) => {
+    event.preventDefault();
+    bingCodeObject();
+  };
+
   // util functions for card scroll
   function handleMaxHeight() {
     if (height > 900) {
@@ -93,8 +105,12 @@ export default function Dashboard() {
   }
   const scrollStyle = {
     "overflow-y": "scroll",
-    "max-height": `${String(handleMaxHeight())}px`
-  }
+    "max-height": `${String(handleMaxHeight())}px`,
+  };
+
+  // manual testing
+  console.log(searchQuery);
+  console.log(language);
 
   return (
     <div className="dash-container">
@@ -143,8 +159,15 @@ export default function Dashboard() {
               type="text"
               placeholder="Search here"
               aria-label="Set users search query"
+              value={searchQuery}
+              onChange={handleSearchQuery}
             />
-            <button type="submit" className="search-button" id="searchButton">
+            <button
+              onClick={handleClick}
+              type="submit"
+              className="search-button"
+              id="searchButton"
+            >
               Search
             </button>
           </form>
@@ -166,7 +189,7 @@ export default function Dashboard() {
                   See the code
                 </Button>
               </Card>
-              
+
               <VerticallyCenteredModal
                 show={modalShow}
                 onHide={() => setModalShow(false)}
@@ -174,7 +197,6 @@ export default function Dashboard() {
               />
             </div>
           ))}
-           
         </Row>
       </div>
     </div>
