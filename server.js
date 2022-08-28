@@ -21,7 +21,7 @@ app.get("/testing", function (request, response) {
 });
 
 // google scraper route
-app.get("/google", async function (request, response) {
+app.get("/googleresult", async function (request, response) {
   var searchQuery = request.query.sq;
   var languageChoice = request.query.lang;
   var stateChoice = request.query.ls;
@@ -35,6 +35,32 @@ app.get("/google", async function (request, response) {
     )) || "Search Failed"; 
 
   // code object from corresponding linkstate website from google search result object to json
+  response.send(results);
+});
+
+app.get("/googlelinks", async function (request, response) {
+  var searchQuery = request.query.sq;
+  var languageChoice = request.query.lang;
+
+  // call to scraper function
+  const results =
+    (await googleResultObject.buildGoogleResultObject(
+      searchQuery,
+      languageChoice,
+    )) || "Search Failed"; 
+  
+  response.send(results);
+});
+
+app.get("/googlefromlink", async function (request, response) {
+  var linkQuery = request.query.link;
+
+  // call to scraper function
+  const results =
+    (await googleResultObject.fetchCodeFromLink(
+      linkQuery
+    )) || "Search Failed"; 
+  
   response.send(results);
 });
 
@@ -83,7 +109,7 @@ app.get("/bingfromlink", async function (request, response) {
 });
 
 // yahoo scraper route
-app.get("/yahoo", async function (request, response) {
+app.get("/yahooresult", async function (request, response) {
   var searchQuery = request.query.sq;
   var languageChoice = request.query.lang;
   var stateChoice = request.query.ls;
