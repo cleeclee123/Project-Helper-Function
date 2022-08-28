@@ -761,9 +761,3 @@ module.exports = {
   getResultDataLinks,
   fetchCodeFromLink,
 };
-
-
-let test = helperLinkBuilder("https://r.search.yahoo.com/_ylt=AwrhRvivtgtj0WchMMhXNyoA;_ylu=Y29sbwNiZjEEcG9zAzMEdnRpZANMT0NVSTA1NV8xBHNlYwNzcg--/RV=2/RE=1661740847/RO=10/RU=https%3a%2f%2fwww.programiz.com%2fjavascript%2fexamples%2fhello-world/RK=2/RS=NCqCMizYRPKLW9gSEkhb.UFwZq8-");
-test.then(function(response) {
-  console.log(response);
-});
