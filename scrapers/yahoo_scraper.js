@@ -702,7 +702,64 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
   }
 };
 
+const fetchCodeFromLink = async function (link) {
+  const ERROR_MESSAGE = "An Error has ocurred, please try again";
+  const CAPTCHA_ERROR = "Captached";
+  const CAPTCHA_MESSAGE =
+    "Our systems have detected unusual traffic from your computer network";
+  const BAD_SCRAP =
+    "// We didn't have anything to scrape, please try again using a different engine";
+  return await axios
+    .get(link, OPTIONS)
+    .then(async function (response) {
+      let $ = cheerio.load(response.data);
+      let code = [];
+
+      // loop through code tag on page
+      $("code").each((index, element) => {
+        code[index] = $(element).text();
+      });
+
+      // if code array is empty, loop through all tags with class "code"
+      if (code.length === 0 || code === undefined) {
+        $(".code").each((index, element) => {
+          code[index] = $(element).text();
+        });
+      }
+
+      // if code array is empty, loop through pre tag on page
+      if (code.length === 0 || code === undefined) {
+        $("pre").each((index, element) => {
+          code[index] = $(element).text();
+        });
+      }
+
+      // if code array is empty, loop through td tag on page
+      if (code.length === 0 || code === undefined) {
+        $("td").each((index, element) => {
+          code[index] = $(element).text();
+        });
+      }
+
+      // if code is empty
+      if (code.length === 0 || code == undefined) {
+        return BAD_SCRAP;
+      }
+
+      // console.log(code);
+      return { codeObject: code }
+    })
+    .catch(async function (error) {
+      if (String(error.response).includes(CAPTCHA_MESSAGE)) {
+        return CAPTCHA_ERROR;
+      }
+      console.log(error);
+      return ERROR_MESSAGE;
+    });
+};
+
 module.exports = {
+  fetchCodeFromLink,
   buildYahooResultObject,
   getResultDataLinks,
 };

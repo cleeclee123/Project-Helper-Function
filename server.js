@@ -100,6 +100,32 @@ app.get("/yahoo", async function (request, response) {
   response.send(results);
 });
 
+app.get("/yahoolinks", async function (request, response) {
+  var searchQuery = request.query.sq;
+  var languageChoice = request.query.lang;
+
+  // call to scraper function
+  const results =
+    (await yahooResultObject.buildYahooResultObject(
+      searchQuery,
+      languageChoice,
+    )) || "Search Failed"; 
+  
+  response.send(results);
+});
+
+app.get("/yahoofromlink", async function (request, response) {
+  var linkQuery = request.query.link;
+
+  // call to scraper function
+  const results =
+    (await yahooResultObject.fetchCodeFromLink(
+      linkQuery
+    )) || "Search Failed"; 
+  
+  response.send(results);
+});
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('phf-frontend/build'))
 }
