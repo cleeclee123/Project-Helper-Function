@@ -1,5 +1,6 @@
 const cheerio = require("cheerio");
 const axios = require("axios");
+const HTMLParser = require('node-html-parser');
 
 const ERROR_MESSAGE_R = "Sorry, an error as occured. Please try again";
 
@@ -675,6 +676,27 @@ const getResultDataLinks = async function (searchQuery, pLanguage, linkState) {
   }
 };
 
+// helper function to construct original link from yahoo redirect link
+const helperLinkBuilder = async function (yahooRedirectLink) {
+  const ERROR_MESSAGE = "An Error has ocurred, please try again";
+  if (!yahooRedirectLink.includes("yahoo")) {
+    return yahooRedirectLink;
+  }
+  return await axios
+    .get(yahooRedirectLink, OPTIONS)
+    .then((response) => {
+      const $ = cheerio.load(response.data).html();
+      let root = HTMLParser.parse($);
+      let link = String(root.getElementsByTagName("script"));
+      let index1 = link.indexOf(`("`);
+      let index2 = link.indexOf(`")`);
+
+      return link.substring(index1 + 2, index2);
+    })
+    .catch((error) => {
+      return `${ERROR_MESSAGE_R} ${error}`;
+    });
+};
 const fetchCodeFromLink = async function (link) {
   const ERROR_MESSAGE = "An Error has ocurred, please try again";
   const CAPTCHA_ERROR = "Captached";
@@ -682,53 +704,56 @@ const fetchCodeFromLink = async function (link) {
     "Our systems have detected unusual traffic from your computer network";
   const BAD_SCRAP =
     "// We didn't have anything to scrape, please try again using a different engine";
-  return await axios
-    .get(link, OPTIONS)
-    .then(async function (response) {
-      let $ = cheerio.load(response.data);
-      let code = [];
 
-      // loop through code tag on page
-      $("code").each((index, element) => {
-        code[index] = $(element).text();
+  return helperLinkBuilder(link).then(async function (responseLinkCB) {
+    return await axios
+      .get(responseLinkCB, OPTIONS)
+      .then(async function (response) {
+        let $ = cheerio.load(response.data);
+        let code = [];
+
+        // loop through code tag on page
+        $("code").each((index, element) => {
+          code[index] = $(element).text();
+        });
+
+        // if code array is empty, loop through all tags with class "code"
+        if (code.length === 0 || code === undefined) {
+          $(".code").each((index, element) => {
+            code[index] = $(element).text();
+          });
+        }
+
+        // if code array is empty, loop through pre tag on page
+        if (code.length === 0 || code === undefined) {
+          $("pre").each((index, element) => {
+            code[index] = $(element).text();
+          });
+        }
+
+        // if code array is empty, loop through td tag on page
+        if (code.length === 0 || code === undefined) {
+          $("td").each((index, element) => {
+            code[index] = $(element).text();
+          });
+        }
+
+        // if code is empty
+        if (code.length === 0 || code == undefined) {
+          return BAD_SCRAP;
+        }
+
+        // console.log(code);
+        return { codeObject: code };
+      })
+      .catch(async function (error) {
+        if (String(error.response).includes(CAPTCHA_MESSAGE)) {
+          return CAPTCHA_ERROR;
+        }
+        console.log(error);
+        return ERROR_MESSAGE;
       });
-
-      // if code array is empty, loop through all tags with class "code"
-      if (code.length === 0 || code === undefined) {
-        $(".code").each((index, element) => {
-          code[index] = $(element).text();
-        });
-      }
-
-      // if code array is empty, loop through pre tag on page
-      if (code.length === 0 || code === undefined) {
-        $("pre").each((index, element) => {
-          code[index] = $(element).text();
-        });
-      }
-
-      // if code array is empty, loop through td tag on page
-      if (code.length === 0 || code === undefined) {
-        $("td").each((index, element) => {
-          code[index] = $(element).text();
-        });
-      }
-
-      // if code is empty
-      if (code.length === 0 || code == undefined) {
-        return BAD_SCRAP;
-      }
-
-      // console.log(code);
-      return { codeObject: code }
-    })
-    .catch(async function (error) {
-      if (String(error.response).includes(CAPTCHA_MESSAGE)) {
-        return CAPTCHA_ERROR;
-      }
-      console.log(error);
-      return ERROR_MESSAGE;
-    });
+  });
 };
 
 module.exports = {
@@ -736,3 +761,9 @@ module.exports = {
   getResultDataLinks,
   fetchCodeFromLink,
 };
+
+
+let test = helperLinkBuilder("https://r.search.yahoo.com/_ylt=AwrhRvivtgtj0WchMMhXNyoA;_ylu=Y29sbwNiZjEEcG9zAzMEdnRpZANMT0NVSTA1NV8xBHNlYwNzcg--/RV=2/RE=1661740847/RO=10/RU=https%3a%2f%2fwww.programiz.com%2fjavascript%2fexamples%2fhello-world/RK=2/RS=NCqCMizYRPKLW9gSEkhb.UFwZq8-");
+test.then(function(response) {
+  console.log(response);
+});
