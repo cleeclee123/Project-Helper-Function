@@ -40,9 +40,15 @@ function VerticallyCenteredModal(props) {
 export default function Dashboard() {
   const [modalShow, setModalShow] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [codeObject, setCodeObject] = useState("");
   const [language, setLanguage] = useState("javascript");
+
+  const [googleSearchResults, setGoogleSearchResults] = useState([]);
+  const [bingSearchResults, setBingSearchResults] = useState([]);
+  const [yahooSearchResults, setYahooSearchResults] = useState([]);
+
+  const [finalSearchResults, setFinalSearchResults] = useState([]);
+  const [codeObject, setCodeObject] = useState("");
+
   const { height, width } = useWindowDimensions();
 
   // handle comment icon
@@ -73,8 +79,24 @@ export default function Dashboard() {
     setLanguage(event.target.value);
   };
 
+  // google route
+  const fetchGoogleResults = async () => {
+    const params = {
+      sq: searchQuery,
+      lang: language,
+    };
+    axios
+      .get("http://localhost:8080/googlelinks", { params })
+      .then((response) => {
+        setGoogleSearchResults(response.data.results);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   // bing route
-  const bingCodeObject = async () => {
+  const fetchBingResults = async () => {
     const params = {
       sq: searchQuery,
       lang: language,
@@ -82,14 +104,30 @@ export default function Dashboard() {
     axios
       .get("http://localhost:8080/binglinks", { params })
       .then((response) => {
-        setSearchResults(response.data.results);
+        setBingSearchResults(response.data.results);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  
+  // yahoo route
+  const fetchYahooResults = async () => {
+    const params = {
+      sq: searchQuery,
+      lang: language,
+    };
+    axios
+      .get("http://localhost:8080/yahoolinks", { params })
+      .then((response) => {
+        setYahooSearchResults(response.data.results);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  // fetch code object from link
+  // using method from bing route (all the same anyways)
   const fetchCodeObject = async (link) => {
     const params = {
       link: link,
@@ -104,17 +142,25 @@ export default function Dashboard() {
       });
   };
 
+  // handler for final search result state
+  const fetchSearchResults = async () => {
+    await fetchGoogleResults(); 
+    await fetchBingResults();
+    await fetchYahooResults();
+  };
+
+  const handleFinalSearchResult = async () => {
+    await fetchSearchResults();
+    let searchResultSet = new Set([/* ...googleSearchResults, */ ...bingSearchResults, ...yahooSearchResults]);
+    setFinalSearchResults([...searchResultSet]);
+  };
+  
   // handle search button (on click)
   const handleClick = (event) => {
     event.preventDefault();
-    bingCodeObject();
+    handleFinalSearchResult();
   };
-
-  // handle modal click
-  const handleModalClick = (event) => {
-    event.preventDefault();
-
-  };
+  console.log(finalSearchResults);
 
   // util functions for card scroll
   function handleMaxHeight() {
@@ -196,7 +242,7 @@ export default function Dashboard() {
       </div>
       <div className="dash-results-wrapper" style={scrollStyle}>
         <Row className="mx-2 row row-cols-3">
-          {searchResults.map((element) => (
+          {finalSearchResults.map((element) => (
             <div className="dash-results">
               <Card style={{ width: "25rem", height: "20rem" }}>
                 <Card.Img variant="top" />
@@ -206,14 +252,23 @@ export default function Dashboard() {
                     {element.caption}
                   </Card.Text>
                 </Card.Body>
-                <Button variant="primary" onClick={() => { setModalShow(true); String(fetchCodeObject(element.link))}}>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setModalShow(true);
+                    String(fetchCodeObject(element.link));
+                  }}
+                >
                   See the code
                 </Button>
               </Card>
 
               <VerticallyCenteredModal
                 show={modalShow}
-                onHide={() => {setModalShow(false); setCodeObject("") }}
+                onHide={() => {
+                  setModalShow(false);
+                  setCodeObject("");
+                }}
                 test="test"
                 language={language}
                 value={String(codeObject)}
