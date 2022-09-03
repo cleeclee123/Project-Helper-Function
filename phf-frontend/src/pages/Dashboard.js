@@ -119,12 +119,11 @@ export default function Dashboard() {
   };
 
   const handleFinalSearchResult = async () => {
-    await fetchGoogleResults();
+    // await fetchGoogleResults();
     await fetchBingResults();
-    await fetchYahooResults();
+    // await fetchYahooResults();
 
     const searchResultSet = new Set([
-      ...googleSearchResults,
       ...bingSearchResults,
       ...yahooSearchResults,
     ]);
