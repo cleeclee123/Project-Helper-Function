@@ -247,7 +247,7 @@ export default function Dashboard() {
       </div>
       <div className="dash-results-wrapper" style={scrollStyle}>
         <Row className="mx-2 row row-cols-3">
-          {finalSearchResults?.map((element) => (
+          {finalSearchResults.map((element) => (
             <div className="dash-results">
               <Card style={{ width: "25rem", height: "20rem" }}>
                 <Card.Img variant="top" />

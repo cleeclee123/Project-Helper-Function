@@ -1,3 +1,4 @@
+import React from 'react'
 import NavbarNorm from "./NavbarComp";
 import NavbarUser from "./NavbarUser";
 import { UserAuth } from "../firebase/AuthContext";
