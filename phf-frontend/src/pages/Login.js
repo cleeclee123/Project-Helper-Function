@@ -138,6 +138,7 @@ export default function Login() {
           <img
             className="shadow-lg rounded"
             src={bgImage}
+            alt="project helper function sign in"  
             style={{ width: "35rem", height: "37rem" }}
           />
         </div>

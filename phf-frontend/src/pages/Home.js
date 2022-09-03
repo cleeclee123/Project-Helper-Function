@@ -182,7 +182,7 @@ export default function Home() {
             </optgroup>
           </select>
           <div className="code-dropdown">
-            <form id="form" role="select" onSubmit={handleClick}>
+            <form id="form" onSubmit={handleClick}>
               <label htmlFor="lang">Choose or Type a Language:</label>
               &nbsp;&nbsp;
               <select

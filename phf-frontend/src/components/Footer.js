@@ -10,7 +10,7 @@ function Footer() {
         <CDBBox display="flex" justifyContent="between" className="flex-wrap">
           <CDBBox>
             <a href="/" className="d-flex align-items-center p-0 text-dark">
-              <img className="phf-logo" src={phfLogo} />
+              <img className="phf-logo" src={phfLogo} alt="project helper function"/>
               <div className="footer-title "><span className="h5 font-weight-bold"> Project Helper Function </span></div>
             </a>
             <p className="my-3" style={{ padding: '5px', width: '275px' }}>

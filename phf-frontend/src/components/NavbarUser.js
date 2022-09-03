@@ -26,7 +26,7 @@ function NavScrollExample() {
     <Navbar bg="dark" variant="dark" expand="lg" className="color-nav">
       <Container fluid>
         <Navbar.Brand href="/home">
-          <img className="phf-logo" src={phfLogo} />
+          <img className="phf-logo" src={phfLogo} alt="project helper function"/>
           &nbsp; Project Helper Function
         </Navbar.Brand>
 

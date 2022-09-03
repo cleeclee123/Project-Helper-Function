@@ -49,7 +49,7 @@ export default function Dashboard() {
   const [finalSearchResults, setFinalSearchResults] = useState([]);
   const [codeObject, setCodeObject] = useState("");
 
-  const { height, width } = useWindowDimensions();
+  const { height /* , width */ } = useWindowDimensions();
 
   // google route
   const fetchGoogleResults = async () => {
@@ -119,7 +119,7 @@ export default function Dashboard() {
   };
 
   const handleFinalSearchResult = async () => {
-    // await fetchGoogleResults();
+    await fetchGoogleResults();
     await fetchBingResults();
     await fetchYahooResults();
 
@@ -188,7 +188,7 @@ export default function Dashboard() {
     <div className="dash-container">
       <div className="code-search">
         <div className="code-dropdown">
-          <form id="form" role="select">
+          <form id="form">
             <label htmlFor="lang" className="dash-searchbar">
               Choose or Type in a Language:
             </label>
