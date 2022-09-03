@@ -53,7 +53,7 @@ const rotateUserAgent = function () {
     "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36 OPR/65.0.3467.48",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Safari/605.1.15",
   ];
-  let randomNumber = Math.floor(Math.random() * userAgents.length - 1);
+  let randomNumber = Math.floor(Math.random() * userAgents.length);
   let rotatedUserAgent = userAgents[randomNumber];
   return String(rotatedUserAgent);
 };
@@ -196,8 +196,8 @@ const buildGoogleResultObject = async function (searchQuery, pLanguage) {
       titles[index] = $(element).text();
     });
 
-    // loop through html class ".yuRUbf" to hyperlink tag to header tag
-    $("div.NJo7tc.Z26q7c.UK95Uc.uUuwM > div > span").each((index, element) => {
+    // captions, sometimes only grabs the date, second loop to scrape actual caption
+    $("div.Z26q7c.UK95Uc.uUuwM > div").each((index, element) => {
       captions[index] = $(element).text();
     });
 
@@ -707,3 +707,9 @@ module.exports = {
   buildGoogleResultObject,
   fetchCodeFromLink
 };
+
+
+let test = buildGoogleResultObject("hello world", "java");
+test.then(async function(data) {
+  console.log(data);
+})
