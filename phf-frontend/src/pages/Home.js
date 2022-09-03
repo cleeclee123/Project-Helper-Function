@@ -80,11 +80,9 @@ export default function Home() {
       ls: linkState.toString(),
     };
     return await axios
-      .get("https://dry-brook-48028.herokuapp.com/google", { params })
+      .get("http://localhost:8080/googleresult", { params })
       .then((response) => {
-        // console.log(response);
-        // return response;
-        setCodeObjectResult(response.data.toString());
+        setCodeObjectResult(response.data.code.toString());
       })
       .catch((error) => {
         setCodeObjectResult(ERROR_MESSAGE);
@@ -100,11 +98,9 @@ export default function Home() {
       ls: linkState.toString(),
     };
     return await axios
-      .get("https://dry-brook-48028.herokuapp.com/bing", { params })
+      .get("http://localhost:8080/bingresult", { params })
       .then((response) => {
-        // console.log(response);
-        // return response;
-        setCodeObjectResult(response.data.toString());
+        setCodeObjectResult(response.data.code.toString());
       })
       .catch((error) => {
         setCodeObjectResult(ERROR_MESSAGE);
@@ -120,11 +116,9 @@ export default function Home() {
       ls: linkState.toString(),
     };
     return await axios
-      .get("needToUpdateAPI/yahoo", { params })
+      .get("http://localhost:8080/yahooresult", { params })
       .then((response) => {
-        // console.log(response);
-        // return response;
-        setCodeObjectResult(response.data.toString());
+        setCodeObjectResult(response.data.code.toString());
       })
       .catch((error) => {
         setCodeObjectResult(ERROR_MESSAGE);
