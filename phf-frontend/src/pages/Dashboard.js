@@ -39,7 +39,7 @@ function VerticallyCenteredModal(props) {
 
 export default function Dashboard() {
   const [modalShow, setModalShow] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("hello world");
   const [language, setLanguage] = useState("javascript");
 
   const [googleSearchResults, setGoogleSearchResults] = useState([]);
@@ -51,34 +51,6 @@ export default function Dashboard() {
 
   const { height, width } = useWindowDimensions();
 
-  // handle comment icon
-  function handleCommentIcon(currentLanguage) {
-    if (currentLanguage === "python") {
-      return "#";
-    } else if (currentLanguage === "html") {
-      return "< ! ╌";
-    }
-    return "//";
-  }
-  function endHTMLComment(currentLanguage) {
-    if (currentLanguage === "html") {
-      return "╌>";
-    }
-    return "";
-  }
-
-  // handle searchquery
-  const handleSearchQuery = (event) => {
-    event.preventDefault();
-    setSearchQuery(event.target.value);
-  };
-
-  // handle state for language by dropdown
-  const handleChangeLang = (event) => {
-    event.preventDefault();
-    setLanguage(event.target.value);
-  };
-
   // google route
   const fetchGoogleResults = async () => {
     const params = {
@@ -88,7 +60,8 @@ export default function Dashboard() {
     axios
       .get("http://localhost:8080/googlelinks", { params })
       .then((response) => {
-        setGoogleSearchResults(response.data.results);
+        const shadowVar = response.data.results;
+        setGoogleSearchResults(shadowVar);
       })
       .catch((error) => {
         console.log(error);
@@ -104,13 +77,14 @@ export default function Dashboard() {
     axios
       .get("http://localhost:8080/binglinks", { params })
       .then((response) => {
-        setBingSearchResults(response.data.results);
+        const shadowVar = response.data.results;
+        setBingSearchResults(shadowVar);
       })
       .catch((error) => {
         console.log(error);
       });
   };
-  
+
   // yahoo route
   const fetchYahooResults = async () => {
     const params = {
@@ -120,7 +94,8 @@ export default function Dashboard() {
     axios
       .get("http://localhost:8080/yahoolinks", { params })
       .then((response) => {
-        setYahooSearchResults(response.data.results);
+        const shadowVar = response.data.results;
+        setYahooSearchResults(shadowVar);
       })
       .catch((error) => {
         console.log(error);
@@ -135,32 +110,62 @@ export default function Dashboard() {
     axios
       .get("http://localhost:8080/bingfromlink", { params })
       .then((response) => {
-        setCodeObject(response.data.codeObject);
+        const shadowVar = response.data.codeObject;
+        setCodeObject(shadowVar);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  // handler for final search result state
-  const fetchSearchResults = async () => {
-    await fetchGoogleResults(); 
+  const handleFinalSearchResult = async () => {
+    await fetchGoogleResults();
     await fetchBingResults();
     await fetchYahooResults();
+
+    const searchResultSet = new Set([
+      ...googleSearchResults,
+      ...bingSearchResults,
+      ...yahooSearchResults,
+    ]);
+
+    setFinalSearchResults([...searchResultSet]);
   };
 
-  const handleFinalSearchResult = async () => {
-    await fetchSearchResults();
-    let searchResultSet = new Set([/* ...googleSearchResults, */ ...bingSearchResults, ...yahooSearchResults]);
-    setFinalSearchResults([...searchResultSet]);
+  useEffect(() => {
+    if (!searchQuery || !language) {
+      return setFinalSearchResults([]);
+    }
+    handleFinalSearchResult();
+  }, [searchQuery, language]);
+
+  console.log(finalSearchResults);
+  
+  // handle searchquery
+  const handleSearchQuery = (event) => {
+    event.preventDefault();
+    setSearchQuery(event.target.value);
+    setGoogleSearchResults([]);
+    setBingSearchResults([]);
+    setYahooSearchResults([]);
+    setFinalSearchResults([]);
+  };
+
+  // handle state for language by dropdown
+  const handleChangeLang = (event) => {
+    event.preventDefault();
+    setLanguage(event.target.value);
+    setGoogleSearchResults([]);
+    setBingSearchResults([]);
+    setYahooSearchResults([]);
+    setFinalSearchResults([]);
   };
   
   // handle search button (on click)
-  const handleClick = (event) => {
+  const handleClick = async (event) => {
     event.preventDefault();
-    handleFinalSearchResult();
+    await handleFinalSearchResult();
   };
-  console.log(finalSearchResults);
 
   // util functions for card scroll
   function handleMaxHeight() {
@@ -233,7 +238,7 @@ export default function Dashboard() {
               onClick={handleClick}
               type="submit"
               className="search-button"
-              id="searchButton"
+              id="searchButtonid"
             >
               Search
             </button>
@@ -242,14 +247,16 @@ export default function Dashboard() {
       </div>
       <div className="dash-results-wrapper" style={scrollStyle}>
         <Row className="mx-2 row row-cols-3">
-          {finalSearchResults.map((element) => (
+          {finalSearchResults?.map((element) => (
             <div className="dash-results">
               <Card style={{ width: "25rem", height: "20rem" }}>
                 <Card.Img variant="top" />
                 <Card.Body>
                   <Card.Title>{element.title}</Card.Title>
                   <Card.Text className="card-caption">
-                    {element.caption}
+                    {String(element.caption).length === 0
+                      ? "No Caption Avaliable"
+                      : element.caption}
                   </Card.Text>
                 </Card.Body>
                 <Button
