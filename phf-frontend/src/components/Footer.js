@@ -36,7 +36,7 @@ function Footer() {
               <div className="link-footer"><a href="/">Go Home</a></div>
               <div className="link-footer"><a href="https://cheerio.js.org/">Cheerio.js</a></div>
               <div className="link-footer"><a href="https://github.com/cleeclee123/Project-Helper-Function">Source Code</a></div>
-              <div className="link-footer"><a href="/messageme">Message Chris</a></div>
+              <div className="link-footer"><a href="mailto: cl114@illinois.com">Message Chris</a></div>
             </CDBBox>
           </CDBBox>
           <CDBBox>
@@ -58,7 +58,7 @@ function Footer() {
               <div className="link-footer"><a href="https://github.com/cleeclee123">GitHub</a></div>
               <div className="link-footer"><a href="https://www.linkedin.com/in/christopher-lee-4311241a6/">Linkedin</a></div>
               <div className="link-footer"><a href="mailto: cl114@illinois.com">Email</a></div>
-              <div className="link-footer"><a href="/money"> {"Contribute $$$"} </a></div>
+              <div className="link-footer"><a href="https://www.gofundme.com/discover"> {"Contribute $$$"} </a></div>
             </CDBBox>
           </CDBBox>
         </CDBBox>

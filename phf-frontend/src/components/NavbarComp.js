@@ -18,7 +18,7 @@ function NavScrollExample() {
             {" "}
             <button class="reg"> Home </button>{" "}
           </Nav.Link>
-          <Nav.Link href="/docs">
+          <Nav.Link href="https://docs.google.com/document/d/1ZfFRDnd3BNNShxv60tJXETFf32aAVfhG_fcy6JGVySA/edit?usp=sharing">
             {" "}
             <button class="reg"> Docs </button>{" "}
           </Nav.Link>
