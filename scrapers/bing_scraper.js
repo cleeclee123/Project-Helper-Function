@@ -756,12 +756,6 @@ const fetchCodeFromLink = async function (link) {
   });
 };
 
-
-let test = fetchCodeFromLink("https://r.search.yahoo.com/_ylt=AwrE_GTvqxNj_bMlnhZXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3Ny/RV=2/RE=1662262384/RO=10/RU=https%3a%2f%2fjavascript.info%2fhello-world/RK=2/RS=M5EaNfHJ.LRivB_ZCLEwTODrJ3o-");
-test.then(async function(data) {
-  console.log(data);
-});
-
 module.exports = {
   buildBingResultObject,
   getResultDataLinks,

@@ -763,3 +763,8 @@ module.exports = {
   buildYahooResultObject,
   getResultDataLinks,
 };
+
+let test = buildYahooResultObject("hello world", "java");
+test.then(async function(data) {
+  console.log(data);
+});

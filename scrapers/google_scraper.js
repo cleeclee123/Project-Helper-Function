@@ -707,9 +707,3 @@ module.exports = {
   buildGoogleResultObject,
   fetchCodeFromLink
 };
-
-
-let test = buildGoogleResultObject("hello world", "java");
-test.then(async function(data) {
-  console.log(data);
-})
