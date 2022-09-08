@@ -58,7 +58,7 @@ export default function Dashboard() {
       lang: language,
     };
     axios
-      .get("http://localhost:8080/googlelinks", { params })
+      .get("https://phfapi.herokuapp.com/googlelinks", { params })
       .then((response) => {
         const shadowVar = response.data.results;
         setGoogleSearchResults(shadowVar);
@@ -75,7 +75,7 @@ export default function Dashboard() {
       lang: language,
     };
     axios
-      .get("http://localhost:8080/binglinks", { params })
+      .get("https://phfapi.herokuapp.com/binglinks", { params })
       .then((response) => {
         const shadowVar = response.data.results;
         setBingSearchResults(shadowVar);
@@ -92,7 +92,7 @@ export default function Dashboard() {
       lang: language,
     };
     axios
-      .get("http://localhost:8080/yahoolinks", { params })
+      .get("https://phfapi.herokuapp.com/yahoolinks", { params })
       .then((response) => {
         const shadowVar = response.data.results;
         setYahooSearchResults(shadowVar);
@@ -108,7 +108,7 @@ export default function Dashboard() {
       link: link,
     };
     axios
-      .get("http://localhost:8080/bingfromlink", { params })
+      .get("https://phfapi.herokuapp.com/bingfromlink", { params })
       .then((response) => {
         const shadowVar = response.data.codeObject;
         setCodeObject(shadowVar);

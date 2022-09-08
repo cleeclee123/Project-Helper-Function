@@ -80,7 +80,7 @@ export default function Home() {
       ls: linkState.toString(),
     };
     return await axios
-      .get("http://localhost:8080/googleresult", { params })
+      .get("https://phfapi.herokuapp.com/googleresult", { params })
       .then((response) => {
         setCodeObjectResult(response.data.code.toString());
       })
@@ -98,7 +98,7 @@ export default function Home() {
       ls: linkState.toString(),
     };
     return await axios
-      .get("http://localhost:8080/bingresult", { params })
+      .get("https://phfapi.herokuapp.com/bingresult", { params })
       .then((response) => {
         setCodeObjectResult(response.data.code.toString());
       })
@@ -116,7 +116,7 @@ export default function Home() {
       ls: linkState.toString(),
     };
     return await axios
-      .get("http://localhost:8080/yahooresult", { params })
+      .get("https://phfapi.herokuapp.com/yahooresult", { params })
       .then((response) => {
         setCodeObjectResult(response.data.code.toString());
       })
