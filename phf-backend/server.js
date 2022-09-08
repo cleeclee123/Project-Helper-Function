@@ -152,10 +152,6 @@ app.get("/yahoofromlink", async function (request, response) {
   response.send(results);
 });
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('phf-frontend/build'))
-}
-
 // route doesn't exist 
 app.use(function (request, response, next) {
   response.status(404).send("Not found");
