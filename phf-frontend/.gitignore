@@ -4,7 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
-
+env
+env.js
 
 # testing
 /coverage
@@ -13,10 +14,8 @@
 /build
 
 # .env
-/env.js
-/env
+env
 ./src/firebase/env.js
-.env.js
 
 # misc
 .DS_Store
