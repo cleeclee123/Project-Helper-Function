@@ -13,6 +13,7 @@
 /build
 
 # .env
+/env.js
 ./src/firebase/env.js
 .env.js
 
