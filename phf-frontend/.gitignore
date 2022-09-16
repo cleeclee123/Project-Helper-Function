@@ -13,8 +13,8 @@
 /build
 
 # .env
-env.js
-env
+./src/firebase/env.js
+.env.js
 
 # misc
 .DS_Store
