@@ -2,6 +2,7 @@ node_modules
 
 i.html
 
-env.js
+env_two
+env_two.js
 
 phf-frontend\src\firebase\env.js
